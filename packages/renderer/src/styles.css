@@ -125,19 +125,68 @@ body,
   color: var(--ss-ink-soft);
   font-family: var(--ss-ui-font);
 }
-.ss-screen-body {
+/* --- banded layout (top nav / main / bottom bar) --- */
+.ss-screen-layout {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  padding: 4px 12px 12px;
+  padding: 6px 12px 12px;
+  gap: 12px;
 }
-.ss-element {
+.ss-band {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+/* the top band reads as a header/nav strip; the bottom as an action bar */
+.ss-band-top {
+  padding-bottom: 8px;
+  border-bottom: 1px dashed var(--ss-line);
+}
+.ss-band-bottom {
+  padding-top: 8px;
+  border-top: 1px dashed var(--ss-line);
+  margin-top: auto;
+}
+/* main band grows so top stays pinned up and bottom stays pinned down */
+.ss-band-main {
+  flex: 1;
+}
+
+/* a row = one or more elements shown side by side, with a horizontal alignment */
+.ss-row {
+  display: flex;
+  gap: 8px;
   width: 100%;
 }
+.ss-row-full > .ss-cell {
+  flex: 1;
+}
+.ss-row-left {
+  justify-content: flex-start;
+}
+.ss-row-center {
+  justify-content: center;
+}
+.ss-row-right {
+  justify-content: flex-end;
+}
+/* a centered/side element shouldn't stretch full width — size to content-ish */
+.ss-cell-center,
+.ss-cell-left,
+.ss-cell-right {
+  flex: 0 1 auto;
+  min-width: 96px;
+  max-width: 100%;
+}
+.ss-cell-full {
+  flex: 1;
+}
+
 .ss-empty {
   font-size: 12px;
   color: var(--ss-ink-soft);
   font-style: italic;
+  padding: 8px 12px 12px;
 }
 
 /* --- wireframe elements --- */

@@ -1,6 +1,7 @@
 import Dagre from "@dagrejs/dagre";
 import type { Edge, Node } from "@xyflow/react";
 import type { ProjectMapT, ScreenSpecT } from "@sketchscreens/core-schema";
+import { layoutElements, rowCount } from "./elementLayout";
 
 /** Data carried by each screen node. */
 export interface ScreenNodeData extends Record<string, unknown> {
@@ -11,14 +12,17 @@ export interface ScreenNodeData extends Record<string, unknown> {
 export type ScreenNode = Node<ScreenNodeData, "screen">;
 export type AnyNode = ScreenNode;
 
-const SCREEN_WIDTH = 240;
+const SCREEN_WIDTH = 260;
 
-/** Estimate a screen node's height from its element count (kept in sync with ScreenNode). */
+/** Estimate a screen node's height from its banded row layout (kept in sync with ScreenNode). */
 export function estimateScreenSize(screen: ScreenSpecT): { width: number; height: number } {
-  const header = 54; // title + route + optional group badge
-  const perElement = 26;
-  const padding = 22;
-  return { width: SCREEN_WIDTH, height: header + screen.elements.length * perElement + padding };
+  const layout = layoutElements(screen.elements);
+  const rows = rowCount(layout);
+  const header = 58; // title + route + section badge
+  const perRow = 34; // a laid-out row (taller than a bare element: labels + gaps)
+  const bandGaps = 16; // spacing between top/main/bottom bands
+  const padding = 26;
+  return { width: SCREEN_WIDTH, height: header + rows * perRow + bandGaps + padding };
 }
 
 /**
@@ -52,7 +56,8 @@ function pickRoot(map: ProjectMapT): string | undefined {
  */
 export function buildGraph(map: ProjectMapT): { nodes: AnyNode[]; edges: Edge[] } {
   const g = new Dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}));
-  g.setGraph({ rankdir: "TB", nodesep: 34, ranksep: 78, marginx: 40, marginy: 40 });
+  // Generous separation so screens never crowd/overlap and the tree breathes.
+  g.setGraph({ rankdir: "TB", nodesep: 90, ranksep: 130, marginx: 60, marginy: 60 });
 
   const ids = new Set(map.screens.map((s) => s.id));
   const root = pickRoot(map);

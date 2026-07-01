@@ -41,6 +41,11 @@ Produce a single JSON object matching this shape (validated by `@sketchscreens/c
 - `secure: true` for password fields; `required: true` if the source marks it required.
 - element `group` = an optional key; elements sharing it render inside one card/section (distinct from the screen-level `group` below).
 
+**Layout — make the sketch mirror the real screen.** Set each element's coarse position so it's drawn where it actually sits (still hand-drawn, just arranged right):
+- `region`: `"top"` for a header / nav bar / tab strip pinned to the top; `"bottom"` for a footer or sticky action bar (a Save/Cancel bar at the bottom); `"main"` (default) for the body.
+- `align`: `"center"` for a centered element (a hero/primary button like *Continue* or *Verify*, a centered card); `"right"` for right-aligned actions (a Cancel/Save pair); `"left"` to hug the left; `"full"` (default for fields/inputs/lists) to stretch edge-to-edge.
+- Infer from obvious markup cues — a `<nav>`/top bar → `region: top`; `mx-auto`/centered container or a lone primary CTA → `align: center`; a sticky/bottom button row → `region: bottom`; a flex row of buttons → they share a row (give them the same non-`full` align so they sit side by side). Don't read exact CSS; just capture the evident arrangement.
+
 ## The journey — `parent`, `isEntry`, and `group`
 
 The renderer draws a **single top-down journey tree**, rooted at what the user sees FIRST, flowing the way people actually navigate. Model that, don't just bucket by feature:

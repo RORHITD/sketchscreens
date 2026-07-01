@@ -2,6 +2,7 @@ import { Handle, Position, type NodeProps } from "@xyflow/react";
 import type { ScreenNode as ScreenNodeType } from "./layout";
 import { WireframeElement } from "./WireframeElement";
 import { RoughFrame } from "./RoughFrame";
+import { layoutElements, type Row } from "./elementLayout";
 
 // A small stable hash so each screen's sketch frame has its own hand-drawn
 // wobble (deterministic per id — same screen redraws identically).
@@ -19,10 +20,26 @@ function seedFor(id: string): number {
  * receives the tree line from its group; a Bottom handle emits nav-flow edges.
  * Left/Right handles catch nav edges arriving from the sides.
  */
+/** Render one row of elements with the row's horizontal alignment. */
+function RowBand({ row, band }: { row: Row; band: string }) {
+  // The row's alignment comes from its (first) element's align.
+  const align = row[0]?.align ?? "full";
+  return (
+    <div className={`ss-row ss-row-${align} ss-band-${band}`}>
+      {row.map((item, i) => (
+        <div className={`ss-cell ss-cell-${item.align}`} key={i}>
+          <WireframeElement element={item.element} />
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export function ScreenNode({ data, selected }: NodeProps<ScreenNodeType>) {
   const { screen, isRoot } = data;
   // The deepest segment of the group path is the section label badge.
   const section = screen.group?.split("›").map((s) => s.trim()).filter(Boolean).pop();
+  const layout = layoutElements(screen.elements);
   return (
     <div
       className={`ss-screen${selected ? " ss-screen-selected" : ""}${isRoot ? " ss-screen-root" : ""}`}
@@ -40,17 +57,33 @@ export function ScreenNode({ data, selected }: NodeProps<ScreenNodeType>) {
           {screen.route && <span className="ss-screen-route">{screen.route}</span>}
         </div>
 
-        <div className="ss-screen-body">
-          {screen.elements.length === 0 ? (
-            <div className="ss-empty">no elements extracted</div>
-          ) : (
-            screen.elements.map((el, i) => (
-              <div className="ss-element" key={i}>
-                <WireframeElement element={el} />
+        {screen.elements.length === 0 ? (
+          <div className="ss-empty">no elements extracted</div>
+        ) : (
+          <div className="ss-screen-layout">
+            {layout.top.length > 0 && (
+              <div className="ss-band ss-band-top">
+                {layout.top.map((row, i) => (
+                  <RowBand row={row} band="top" key={i} />
+                ))}
               </div>
-            ))
-          )}
-        </div>
+            )}
+            {layout.main.length > 0 && (
+              <div className="ss-band ss-band-main">
+                {layout.main.map((row, i) => (
+                  <RowBand row={row} band="main" key={i} />
+                ))}
+              </div>
+            )}
+            {layout.bottom.length > 0 && (
+              <div className="ss-band ss-band-bottom">
+                {layout.bottom.map((row, i) => (
+                  <RowBand row={row} band="bottom" key={i} />
+                ))}
+              </div>
+            )}
+          </div>
+        )}
       </RoughFrame>
 
       <Handle type="source" position={Position.Bottom} className="ss-handle-hidden" />

@@ -49,6 +49,24 @@ export const ElementVariant = z.enum([
 export type ElementVariant = z.infer<typeof ElementVariant>;
 
 /**
+ * Which vertical band of the screen an element sits in. `top` = a header / nav
+ * bar pinned to the top; `bottom` = a footer / sticky action bar; `main` = the
+ * scrollable body (the default). Lets the sketch mirror the real screen's
+ * coarse layout without pixel positions.
+ */
+export const ElementRegion = z.enum(["top", "main", "bottom"]);
+export type ElementRegion = z.infer<typeof ElementRegion>;
+
+/**
+ * Horizontal placement of an element within its band. `full` stretches edge to
+ * edge (inputs, nav bars, lists); `center` is a centered block (a hero button,
+ * a centered card); `left`/`right` hug a side. Default is `full` for fields and
+ * `left` for text.
+ */
+export const ElementAlign = z.enum(["left", "center", "right", "full"]);
+export type ElementAlign = z.infer<typeof ElementAlign>;
+
+/**
  * One UI element on a screen. `label` is the visible text (button caption,
  * field label, heading text). Order in the `elements` array = top-to-bottom
  * position in the sketch (structural fidelity, not pixel-exact).
@@ -70,6 +88,16 @@ export const ScreenElement = z.object({
    * card/section, preserving the source's visual grouping.
    */
   group: z.string().optional(),
+  /**
+   * Which band of the screen this element sits in (top nav / main / bottom
+   * bar). Defaults to "main". Lets the sketch mirror the real layout.
+   */
+  region: ElementRegion.optional(),
+  /**
+   * Horizontal placement within the band. Defaults sensibly by type (fields
+   * full-width, text left). Set "center" for a centered hero button/card.
+   */
+  align: ElementAlign.optional(),
   /** Free-form note the extractor wants to surface (e.g. "conditionally shown"). */
   note: z.string().optional(),
 });

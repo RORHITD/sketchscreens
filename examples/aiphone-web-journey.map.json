@@ -11,7 +11,9 @@
       "elements": [
         {
           "type": "nav",
-          "label": "Front Desk · Calls · Contacts · AI Settings · Billing"
+          "label": "Front Desk · Calls · Contacts · AI Settings · Billing",
+          "region": "top",
+          "align": "full"
         },
         {
           "type": "heading",
@@ -27,7 +29,9 @@
         },
         {
           "type": "tabs",
-          "label": "All · Calls · Voicemails · Texts · Live Chats"
+          "label": "All · Calls · Voicemails · Texts · Live Chats",
+          "region": "top",
+          "align": "full"
         },
         {
           "type": "list",
@@ -101,7 +105,9 @@
         },
         {
           "type": "tabs",
-          "label": "Phone · Inbox"
+          "label": "Phone · Inbox",
+          "region": "top",
+          "align": "full"
         },
         {
           "type": "input",
@@ -114,12 +120,14 @@
         {
           "type": "button",
           "label": "Refresh",
-          "variant": "secondary"
+          "variant": "secondary",
+          "align": "left"
         },
         {
           "type": "button",
           "label": "Export",
-          "variant": "secondary"
+          "variant": "secondary",
+          "align": "left"
         },
         {
           "type": "list",
@@ -139,12 +147,14 @@
         {
           "type": "button",
           "label": "Back to Calls",
-          "variant": "link"
+          "variant": "link",
+          "align": "left"
         },
         {
           "type": "button",
           "label": "Ask AI",
-          "variant": "primary"
+          "variant": "primary",
+          "align": "center"
         },
         {
           "type": "heading",
@@ -161,7 +171,8 @@
         {
           "type": "button",
           "label": "Call Back",
-          "variant": "secondary"
+          "variant": "secondary",
+          "align": "left"
         },
         {
           "type": "card",
@@ -189,7 +200,8 @@
         {
           "type": "button",
           "label": "Search by name, phone, or email",
-          "variant": "secondary"
+          "variant": "secondary",
+          "align": "left"
         },
         {
           "type": "heading",
@@ -202,17 +214,20 @@
         {
           "type": "button",
           "label": "Backspace",
-          "variant": "secondary"
+          "variant": "secondary",
+          "align": "left"
         },
         {
           "type": "button",
           "label": "Call",
-          "variant": "primary"
+          "variant": "primary",
+          "align": "center"
         },
         {
           "type": "button",
           "label": "Voice input (mic)",
-          "variant": "secondary"
+          "variant": "secondary",
+          "align": "left"
         }
       ],
       "description": "The dialer.",
@@ -240,12 +255,14 @@
         {
           "type": "button",
           "label": "Show more",
-          "variant": "link"
+          "variant": "link",
+          "align": "left"
         },
         {
           "type": "button",
           "label": "Mark read · Archive",
-          "variant": "secondary"
+          "variant": "secondary",
+          "align": "left"
         }
       ],
       "description": "Voicemail list.",
@@ -265,12 +282,14 @@
         {
           "type": "button",
           "label": "Record",
-          "variant": "primary"
+          "variant": "primary",
+          "align": "center"
         },
         {
           "type": "button",
           "label": "Import",
-          "variant": "primary"
+          "variant": "primary",
+          "align": "center"
         },
         {
           "type": "list",
@@ -297,7 +316,9 @@
         },
         {
           "type": "tabs",
-          "label": "List · Pipeline"
+          "label": "List · Pipeline",
+          "region": "top",
+          "align": "full"
         },
         {
           "type": "input",
@@ -306,7 +327,8 @@
         {
           "type": "button",
           "label": "Add Contact",
-          "variant": "primary"
+          "variant": "primary",
+          "align": "center"
         },
         {
           "type": "list",
@@ -335,7 +357,8 @@
         {
           "type": "button",
           "label": "Back to Contacts",
-          "variant": "link"
+          "variant": "link",
+          "align": "left"
         },
         {
           "type": "heading",
@@ -348,7 +371,8 @@
         {
           "type": "button",
           "label": "Call Back",
-          "variant": "primary"
+          "variant": "primary",
+          "align": "center"
         },
         {
           "type": "card",
@@ -391,7 +415,9 @@
         },
         {
           "type": "tabs",
-          "label": "List · Pipeline"
+          "label": "List · Pipeline",
+          "region": "top",
+          "align": "full"
         },
         {
           "type": "card",
@@ -419,7 +445,8 @@
         {
           "type": "button",
           "label": "Back to Contacts",
-          "variant": "link"
+          "variant": "link",
+          "align": "left"
         },
         {
           "type": "heading",
@@ -428,7 +455,8 @@
         {
           "type": "button",
           "label": "Add Field",
-          "variant": "primary"
+          "variant": "primary",
+          "align": "center"
         },
         {
           "type": "list",
@@ -460,11 +488,14 @@
         {
           "type": "button",
           "label": "Analytics",
-          "variant": "link"
+          "variant": "link",
+          "align": "left"
         },
         {
           "type": "tabs",
-          "label": "All · SMS · Live Chat"
+          "label": "All · SMS · Live Chat",
+          "region": "top",
+          "align": "full"
         },
         {
           "type": "list",
@@ -473,7 +504,9 @@
         {
           "type": "button",
           "label": "New Chat",
-          "variant": "primary"
+          "variant": "primary",
+          "region": "bottom",
+          "align": "center"
         }
       ],
       "description": "Live chat + SMS conversations.",
@@ -489,7 +522,8 @@
         {
           "type": "button",
           "label": "Back",
-          "variant": "secondary"
+          "variant": "secondary",
+          "align": "left"
         },
         {
           "type": "heading",
@@ -498,12 +532,14 @@
         {
           "type": "button",
           "label": "Take Over",
-          "variant": "primary"
+          "variant": "primary",
+          "align": "center"
         },
         {
           "type": "button",
           "label": "Hand to AI",
-          "variant": "secondary"
+          "variant": "secondary",
+          "align": "left"
         },
         {
           "type": "list",
@@ -516,7 +552,9 @@
         {
           "type": "button",
           "label": "Send",
-          "variant": "primary"
+          "variant": "primary",
+          "region": "bottom",
+          "align": "center"
         }
       ],
       "description": "One conversation thread.",
@@ -536,12 +574,14 @@
         {
           "type": "button",
           "label": "Auto-fill from website",
-          "variant": "secondary"
+          "variant": "secondary",
+          "align": "left"
         },
         {
           "type": "button",
           "label": "Help Center Articles",
-          "variant": "primary"
+          "variant": "primary",
+          "align": "center"
         },
         {
           "type": "textarea",
@@ -554,7 +594,8 @@
         {
           "type": "button",
           "label": "Upload document (PDF/DOCX)",
-          "variant": "secondary"
+          "variant": "secondary",
+          "align": "left"
         },
         {
           "type": "list",
@@ -582,11 +623,14 @@
         {
           "type": "button",
           "label": "Invite Member",
-          "variant": "primary"
+          "variant": "primary",
+          "align": "center"
         },
         {
           "type": "tabs",
-          "label": "Members · Invitations"
+          "label": "Members · Invitations",
+          "region": "top",
+          "align": "full"
         },
         {
           "type": "list",
@@ -609,7 +653,9 @@
         },
         {
           "type": "tabs",
-          "label": "AI Rules · Voice · Call Routing · AI Agents · On-Hold · Scheduling · Improvements"
+          "label": "AI Rules · Voice · Call Routing · AI Agents · On-Hold · Scheduling · Improvements",
+          "region": "top",
+          "align": "full"
         },
         {
           "type": "card",
@@ -626,7 +672,8 @@
         {
           "type": "button",
           "label": "Add rule",
-          "variant": "secondary"
+          "variant": "secondary",
+          "align": "left"
         },
         {
           "type": "list",
@@ -645,7 +692,9 @@
       "elements": [
         {
           "type": "tabs",
-          "label": "AI Settings sub-nav (Voice)"
+          "label": "AI Settings sub-nav (Voice)",
+          "region": "top",
+          "align": "full"
         },
         {
           "type": "card",
@@ -674,7 +723,9 @@
         {
           "type": "button",
           "label": "Change Voice",
-          "variant": "primary"
+          "variant": "primary",
+          "region": "bottom",
+          "align": "center"
         }
       ],
       "description": "Standard vs Realtime voice.",
@@ -689,7 +740,9 @@
       "elements": [
         {
           "type": "tabs",
-          "label": "AI Settings sub-nav (Call Routing)"
+          "label": "AI Settings sub-nav (Call Routing)",
+          "region": "top",
+          "align": "full"
         },
         {
           "type": "textarea",
@@ -718,7 +771,9 @@
         {
           "type": "button",
           "label": "Save routing",
-          "variant": "primary"
+          "variant": "primary",
+          "region": "bottom",
+          "align": "center"
         }
       ],
       "description": "Who answers + topic routing.",
@@ -733,7 +788,9 @@
       "elements": [
         {
           "type": "tabs",
-          "label": "AI Settings sub-nav (AI Agents)"
+          "label": "AI Settings sub-nav (AI Agents)",
+          "region": "top",
+          "align": "full"
         },
         {
           "type": "heading",
@@ -746,7 +803,8 @@
         {
           "type": "button",
           "label": "New Agent",
-          "variant": "primary"
+          "variant": "primary",
+          "align": "center"
         },
         {
           "type": "list",
@@ -765,7 +823,9 @@
       "elements": [
         {
           "type": "tabs",
-          "label": "AI Settings sub-nav (Scheduling)"
+          "label": "AI Settings sub-nav (Scheduling)",
+          "region": "top",
+          "align": "full"
         },
         {
           "type": "toggle",
@@ -786,7 +846,9 @@
         {
           "type": "button",
           "label": "Save Changes",
-          "variant": "primary"
+          "variant": "primary",
+          "region": "bottom",
+          "align": "center"
         }
       ],
       "description": "Booking config.",
@@ -801,7 +863,9 @@
       "elements": [
         {
           "type": "tabs",
-          "label": "AI Settings sub-nav (On-Hold)"
+          "label": "AI Settings sub-nav (On-Hold)",
+          "region": "top",
+          "align": "full"
         },
         {
           "type": "heading",
@@ -822,7 +886,9 @@
         {
           "type": "button",
           "label": "Add Text Message",
-          "variant": "secondary"
+          "variant": "secondary",
+          "region": "bottom",
+          "align": "center"
         }
       ],
       "description": "On-hold messages.",
@@ -837,7 +903,9 @@
       "elements": [
         {
           "type": "tabs",
-          "label": "AI Settings sub-nav (Improvements)"
+          "label": "AI Settings sub-nav (Improvements)",
+          "region": "top",
+          "align": "full"
         },
         {
           "type": "heading",
@@ -850,7 +918,8 @@
         {
           "type": "button",
           "label": "Scan for improvements",
-          "variant": "primary"
+          "variant": "primary",
+          "align": "center"
         },
         {
           "type": "list",
@@ -874,7 +943,8 @@
         {
           "type": "button",
           "label": "Add Field",
-          "variant": "primary"
+          "variant": "primary",
+          "align": "center"
         },
         {
           "type": "text",
@@ -914,22 +984,26 @@
         {
           "type": "button",
           "label": "Edit",
-          "variant": "secondary"
+          "variant": "secondary",
+          "align": "left"
         },
         {
           "type": "button",
           "label": "Change email",
-          "variant": "secondary"
+          "variant": "secondary",
+          "align": "left"
         },
         {
           "type": "button",
           "label": "Change phone",
-          "variant": "secondary"
+          "variant": "secondary",
+          "align": "left"
         },
         {
           "type": "button",
           "label": "Delete My Account",
-          "variant": "destructive"
+          "variant": "destructive",
+          "align": "left"
         }
       ],
       "description": "Profile / email / phone (OTP-verified) + danger zone.",
@@ -949,7 +1023,8 @@
         {
           "type": "button",
           "label": "Edit",
-          "variant": "link"
+          "variant": "link",
+          "align": "left"
         },
         {
           "type": "input",
@@ -969,7 +1044,9 @@
         {
           "type": "button",
           "label": "Save Changes",
-          "variant": "primary"
+          "variant": "primary",
+          "region": "bottom",
+          "align": "center"
         }
       ],
       "description": "Organization Info only (name/email/website).",
@@ -1009,7 +1086,9 @@
         {
           "type": "button",
           "label": "Save settings",
-          "variant": "primary"
+          "variant": "primary",
+          "region": "bottom",
+          "align": "center"
         }
       ],
       "description": "Caller-verify + operator SMS.",
@@ -1038,7 +1117,9 @@
         },
         {
           "type": "tabs",
-          "label": "All · Updates · Created · Deleted · Logins"
+          "label": "All · Updates · Created · Deleted · Logins",
+          "region": "top",
+          "align": "full"
         },
         {
           "type": "input",
@@ -1061,7 +1142,9 @@
       "elements": [
         {
           "type": "tabs",
-          "label": "Settings · Blocked Numbers · DNC List · Review"
+          "label": "Settings · Blocked Numbers · DNC List · Review",
+          "region": "top",
+          "align": "full"
         },
         {
           "type": "toggle",
@@ -1078,7 +1161,8 @@
         {
           "type": "button",
           "label": "Block",
-          "variant": "primary"
+          "variant": "primary",
+          "align": "center"
         },
         {
           "type": "list",
@@ -1102,7 +1186,8 @@
         {
           "type": "button",
           "label": "Get New Number",
-          "variant": "primary"
+          "variant": "primary",
+          "align": "center"
         },
         {
           "type": "card",
@@ -1111,12 +1196,16 @@
         {
           "type": "button",
           "label": "Set as Primary",
-          "variant": "secondary"
+          "variant": "secondary",
+          "region": "bottom",
+          "align": "right"
         },
         {
           "type": "button",
           "label": "Release Number",
-          "variant": "destructive"
+          "variant": "destructive",
+          "region": "bottom",
+          "align": "right"
         }
       ],
       "description": "Manage AI phone numbers.",
@@ -1140,7 +1229,8 @@
         {
           "type": "button",
           "label": "$10 · $25 · $50 top-up",
-          "variant": "secondary"
+          "variant": "secondary",
+          "align": "left"
         },
         {
           "type": "card",
@@ -1149,7 +1239,8 @@
         {
           "type": "button",
           "label": "Change Plan",
-          "variant": "primary"
+          "variant": "primary",
+          "align": "center"
         },
         {
           "type": "list",
@@ -1169,7 +1260,8 @@
         {
           "type": "button",
           "label": "Back to Billing",
-          "variant": "ghost"
+          "variant": "ghost",
+          "align": "left"
         },
         {
           "type": "heading",
@@ -1186,12 +1278,16 @@
         {
           "type": "button",
           "label": "Select Plan",
-          "variant": "primary"
+          "variant": "primary",
+          "region": "bottom",
+          "align": "right"
         },
         {
           "type": "button",
           "label": "Cancel Subscription",
-          "variant": "destructive"
+          "variant": "destructive",
+          "region": "bottom",
+          "align": "right"
         }
       ],
       "description": "Choose/change plan.",
@@ -1206,7 +1302,9 @@
       "elements": [
         {
           "type": "nav",
-          "label": "Billing › Usage Credits"
+          "label": "Billing › Usage Credits",
+          "region": "top",
+          "align": "full"
         },
         {
           "type": "heading",
@@ -1219,16 +1317,20 @@
         {
           "type": "button",
           "label": "$10 · $25 · $50 · $100",
-          "variant": "secondary"
+          "variant": "secondary",
+          "align": "left"
         },
         {
           "type": "button",
           "label": "Make A Purchase",
-          "variant": "primary"
+          "variant": "primary",
+          "align": "center"
         },
         {
           "type": "tabs",
-          "label": "Usage History · Transactions"
+          "label": "Usage History · Transactions",
+          "region": "top",
+          "align": "full"
         }
       ],
       "description": "Buy credits + history. (AutoRechargeCard is orphaned — not rendered here.)",
@@ -1255,7 +1357,9 @@
         },
         {
           "type": "tabs",
-          "label": "Category tabs"
+          "label": "Category tabs",
+          "region": "top",
+          "align": "full"
         },
         {
           "type": "list",
@@ -1264,7 +1368,8 @@
         {
           "type": "button",
           "label": "Connect",
-          "variant": "secondary"
+          "variant": "secondary",
+          "align": "left"
         },
         {
           "type": "card",
@@ -1316,7 +1421,8 @@
         {
           "type": "button",
           "label": "Continue",
-          "variant": "primary"
+          "variant": "primary",
+          "align": "center"
         },
         {
           "type": "divider",
@@ -1325,12 +1431,16 @@
         {
           "type": "button",
           "label": "Continue with Google",
-          "variant": "secondary"
+          "variant": "secondary",
+          "region": "bottom",
+          "align": "right"
         },
         {
           "type": "button",
           "label": "Continue with Apple",
-          "variant": "secondary"
+          "variant": "secondary",
+          "region": "bottom",
+          "align": "right"
         }
       ],
       "description": "New-user path: phone-first sign up.",
@@ -1355,12 +1465,16 @@
         {
           "type": "button",
           "label": "Continue",
-          "variant": "primary"
+          "variant": "primary",
+          "region": "bottom",
+          "align": "right"
         },
         {
           "type": "button",
           "label": "Continue with Google",
-          "variant": "secondary"
+          "variant": "secondary",
+          "region": "bottom",
+          "align": "right"
         }
       ],
       "description": "Returning-user path: phone login.",
@@ -1389,7 +1503,9 @@
         {
           "type": "button",
           "label": "Verify",
-          "variant": "primary"
+          "variant": "primary",
+          "region": "bottom",
+          "align": "center"
         }
       ],
       "description": "OTP after sign up.",
@@ -1414,7 +1530,9 @@
         {
           "type": "button",
           "label": "Verify",
-          "variant": "primary"
+          "variant": "primary",
+          "region": "bottom",
+          "align": "center"
         }
       ],
       "description": "OTP after login.",
@@ -1443,7 +1561,9 @@
         {
           "type": "button",
           "label": "Choose a plan",
-          "variant": "primary"
+          "variant": "primary",
+          "region": "bottom",
+          "align": "center"
         }
       ],
       "description": "New users set up their business + AI before reaching the app.",

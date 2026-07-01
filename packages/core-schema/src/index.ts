@@ -9,6 +9,8 @@
 export {
   ElementType,
   ElementVariant,
+  ElementRegion,
+  ElementAlign,
   ScreenElement,
   ScreenSpec,
   Edge,
@@ -21,6 +23,8 @@ export {
 export type {
   ElementType as ElementTypeT,
   ElementVariant as ElementVariantT,
+  ElementRegion as ElementRegionT,
+  ElementAlign as ElementAlignT,
   ScreenElement as ScreenElementT,
   ScreenSpec as ScreenSpecT,
   Edge as EdgeT,
