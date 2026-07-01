@@ -4,7 +4,10 @@
   "private": true,
   "description": "Auto-generate hand-drawn sketch wireframes of every screen in an app — straight from its source code. (Monorepo root — the published CLI is the `sketchscreens` package under packages/cli.)",
   "license": "MIT",
-  "author": "Houston IT Developers",
+  "author": {
+    "name": "Houston IT Developers",
+    "url": "https://houstonitdevelopers.com"
+  },
   "homepage": "https://sketchscreens.com",
   "repository": {
     "type": "git",

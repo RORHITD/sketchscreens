@@ -4,7 +4,9 @@
 
 Point it at a repo. It finds the screens, the fields and buttons on each, and how you navigate between them — and draws it all as a hand-sketched wireframe map you can review without ever opening the running app.
 
-Local-first · agent-driven · MIT · [sketchscreens.com](https://sketchscreens.com)
+Local-first · agent-driven · MIT
+
+🌐 **Website:** [sketchscreens.com](https://sketchscreens.com) &nbsp;·&nbsp; 🏗 **Built by:** [Houston IT Developers](https://houstonitdevelopers.com)
 
 ## Install / run
 
@@ -37,6 +39,12 @@ Every `map`/`open` run prints a **provenance + coverage report** — how many so
 
 Runs entirely on your machine. The viewer binds to `localhost`. Nothing about your code leaves your machine.
 
+## Links
+
+- 🌐 Website — [sketchscreens.com](https://sketchscreens.com)
+- 📦 Source — [github.com/RORHITD/sketchscreens](https://github.com/RORHITD/sketchscreens)
+- 🏗 Built & maintained by [Houston IT Developers](https://houstonitdevelopers.com) — custom software, web & mobile apps
+
 ## License
 
-[MIT](https://github.com/RORHITD/sketchscreens) © Houston IT Developers
+[MIT](https://github.com/RORHITD/sketchscreens) © [Houston IT Developers](https://houstonitdevelopers.com)
