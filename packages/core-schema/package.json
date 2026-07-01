@@ -1,9 +1,12 @@
 {
   "name": "@sketchscreens/core-schema",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "The ProjectMap / ScreenSpec contract — the stack-agnostic shape that the extractor produces and the renderer consumes.",
   "license": "MIT",
   "type": "module",
+  "publishConfig": {
+    "access": "public"
+  },
   "main": "./dist/index.js",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",

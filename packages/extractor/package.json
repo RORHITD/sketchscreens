@@ -1,9 +1,12 @@
 {
   "name": "@sketchscreens/extractor",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "The agent-first extraction contract: the prompt + parse-signal guidance an agent uses to turn a codebase into a ProjectMap, plus a validate-and-write helper.",
   "license": "MIT",
   "type": "module",
+  "publishConfig": {
+    "access": "public"
+  },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "bin": {

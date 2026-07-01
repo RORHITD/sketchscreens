@@ -1,12 +1,18 @@
 {
   "name": "@sketchscreens/viewer",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "A tiny local server that serves the SketchScreens renderer and a map.json, then opens the browser. Local-first: binds to localhost only.",
   "license": "MIT",
   "type": "module",
+  "publishConfig": {
+    "access": "public"
+  },
   "bin": {
     "sketchscreens-view": "./bin/view.js"
   },
+  "files": [
+    "bin"
+  ],
   "scripts": {
     "typecheck": "tsc --noEmit"
   },

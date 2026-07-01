@@ -1,14 +1,35 @@
 {
   "name": "sketchscreens",
-  "version": "0.0.0",
-  "description": "SketchScreens CLI — auto-generate hand-drawn sketch wireframes of an app's screens + flows from its source code.",
+  "version": "0.1.0",
+  "description": "Auto-generate hand-drawn sketch wireframes of an app's screens + user-journey flow, straight from its source code. Local-first, agent-driven.",
   "license": "MIT",
+  "author": "Houston IT Developers",
+  "homepage": "https://sketchscreens.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/houstonitd/sketchscreens.git"
+  },
+  "keywords": [
+    "wireframe",
+    "sketch",
+    "diagram",
+    "codebase",
+    "screens",
+    "user-flow",
+    "documentation",
+    "claude",
+    "cli"
+  ],
   "type": "module",
+  "publishConfig": {
+    "access": "public"
+  },
   "bin": {
     "sketchscreens": "./bin/sketchscreens.js"
   },
   "files": [
-    "bin"
+    "bin",
+    "README.md"
   ],
   "dependencies": {
     "@sketchscreens/core-schema": "workspace:*",

@@ -9,7 +9,7 @@
  * leaves the machine. The map is validated before serving.
  */
 import { createServer } from "node:http";
-import { readFile } from "node:fs/promises";
+import { readFile, writeFile, readdir } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, extname, join, resolve } from "node:path";
@@ -18,6 +18,43 @@ import { spawn } from "node:child_process";
 import { validateProjectMap } from "@sketchscreens/core-schema";
 
 const here = dirname(fileURLToPath(import.meta.url));
+
+/**
+ * Build ONE self-contained HTML string: the renderer's built JS + CSS inlined
+ * (so there are no external asset requests) plus the map on `window`. The
+ * result opens in any browser offline and can be emailed/hosted as a single file.
+ * @param {string} dist
+ * @param {string} indexHtml
+ * @param {unknown} map
+ */
+async function buildStandaloneHtml(dist, indexHtml, map) {
+  const assetsDir = join(dist, "assets");
+  const files = existsSync(assetsDir) ? await readdir(assetsDir) : [];
+  const jsFile = files.find((f) => f.endsWith(".js"));
+  const cssFile = files.find((f) => f.endsWith(".css"));
+  const js = jsFile ? await readFile(join(assetsDir, jsFile), "utf8") : "";
+  const css = cssFile ? await readFile(join(assetsDir, cssFile), "utf8") : "";
+
+  // Base64 the JS bundle into a data: URI. This sidesteps every HTML-parsing
+  // pitfall of inlining a huge minified bundle (a literal "</script>" inside the
+  // JS would otherwise close the tag early and corrupt the document).
+  const jsDataUri = "data:text/javascript;base64," + Buffer.from(js, "utf8").toString("base64");
+  // The map JSON goes in a normal script; escape "</script" just in case.
+  const mapJson = JSON.stringify(map).replace(/<\/(script)/gi, "<\\/$1");
+
+  let html = indexHtml;
+  // Drop the external stylesheet link(s) and the external module script tag —
+  // we inline/redirect both below.
+  html = html.replace(/<link[^>]+rel="stylesheet"[^>]*>/g, "");
+  html = html.replace(/<script[^>]+src="[^"]+"[^>]*><\/script>/g, "");
+
+  const head =
+    `<script>window.__SKETCHSCREENS_MAP__ = ${mapJson};</script>` +
+    (css ? `\n<style>${css}</style>` : "");
+  html = html.replace("</head>", `${head}\n</head>`);
+  html = html.replace("</body>", `<script type="module" src="${jsDataUri}"></script>\n</body>`);
+  return html;
+}
 
 /** @type {Record<string, string>} */
 const MIME = {
@@ -32,12 +69,13 @@ const MIME = {
 
 /** @param {string[]} argv */
 function parseArgs(argv) {
-  /** @type {{ mapPath: string | null, port: number, open: boolean }} */
-  const args = { mapPath: null, port: 4318, open: true };
+  /** @type {{ mapPath: string | null, port: number, open: boolean, exportHtml: string | null }} */
+  const args = { mapPath: null, port: 4318, open: true, exportHtml: null };
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
     if (a === "--port") args.port = Number(argv[++i]);
     else if (a === "--no-open") args.open = false;
+    else if (a === "--export-html") args.exportHtml = argv[++i] || "sketchscreens.html";
     else if (!a.startsWith("--")) args.mapPath = a;
   }
   return args;
@@ -75,10 +113,11 @@ function openBrowser(url) {
 }
 
 async function main() {
-  const { mapPath, port, open } = parseArgs(process.argv.slice(2));
+  const opts = parseArgs(process.argv.slice(2));
+  const { mapPath, port, open } = opts;
 
   if (!mapPath) {
-    console.error("Usage: sketchscreens-view <path-to-map.json> [--port N] [--no-open]");
+    console.error("Usage: sketchscreens-view <path-to-map.json> [--port N] [--no-open] [--export-html [file]]");
     process.exit(1);
   }
 
@@ -112,6 +151,19 @@ async function main() {
     "<head>",
     `<head>\n<script>window.__SKETCHSCREENS_MAP__ = ${JSON.stringify(map)};</script>`,
   );
+
+  // --export-html: emit ONE self-contained .html (renderer JS+CSS + map all
+  // inlined) — a portable file you can email/host anywhere, no server, no
+  // account. The free "share a file" story.
+  if (opts.exportHtml) {
+    const html = await buildStandaloneHtml(dist, indexHtml, map);
+    const outPath = resolve(process.cwd(), opts.exportHtml);
+    await writeFile(outPath, html, "utf8");
+    const kb = Math.round(Buffer.byteLength(html) / 1024);
+    console.log(`\n  Exported self-contained map → ${outPath} (${kb} KB)`);
+    console.log("  Open it in any browser, or email/host it anywhere.\n");
+    return;
+  }
 
   const server = createServer(async (req, res) => {
     const url = (req.url || "/").split("?")[0];

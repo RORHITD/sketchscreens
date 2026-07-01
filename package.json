@@ -1,8 +1,8 @@
 {
-  "name": "sketchscreens",
-  "version": "0.0.0",
+  "name": "sketchscreens-monorepo",
+  "version": "0.1.0",
   "private": true,
-  "description": "Auto-generate hand-drawn sketch wireframes of every screen in an app — straight from its source code.",
+  "description": "Auto-generate hand-drawn sketch wireframes of every screen in an app — straight from its source code. (Monorepo root — the published CLI is the `sketchscreens` package under packages/cli.)",
   "license": "MIT",
   "author": "Houston IT Developers",
   "homepage": "https://sketchscreens.com",

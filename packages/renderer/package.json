@@ -1,9 +1,12 @@
 {
   "name": "@sketchscreens/renderer",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Renders a ProjectMap as an interactive canvas of hand-drawn screen wireframes connected by flow arrows.",
   "license": "MIT",
   "type": "module",
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
