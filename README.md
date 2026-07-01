@@ -6,7 +6,15 @@
 
 Point it at a repo. It finds the screens, the fields and buttons on each, and the flow between them — and draws it all as a hand-sketched wireframe map. Review a whole app without ever opening the running app.
 
+[![npm](https://img.shields.io/npm/v/sketchscreens?color=2f6f8f&label=npm)](https://www.npmjs.com/package/sketchscreens)
+[![license](https://img.shields.io/badge/license-MIT-2f6f8f)](./LICENSE)
+[![local-first](https://img.shields.io/badge/local--first-%E2%9C%93-2f6f8f)](#safe-by-design)
+
 [sketchscreens.com](https://sketchscreens.com) · MIT · local-first · agent-driven
+
+```bash
+npx sketchscreens --help
+```
 
 </div>
 

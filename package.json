@@ -8,7 +8,7 @@
   "homepage": "https://sketchscreens.com",
   "repository": {
     "type": "git",
-    "url": "https://github.com/houstonitd/sketchscreens.git"
+    "url": "https://github.com/RORHITD/sketchscreens.git"
   },
   "packageManager": "pnpm@10.30.3",
   "engines": {

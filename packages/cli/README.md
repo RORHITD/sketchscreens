@@ -39,4 +39,4 @@ Runs entirely on your machine. The viewer binds to `localhost`. Nothing about yo
 
 ## License
 
-[MIT](https://github.com/houstonitd/sketchscreens) © Houston IT Developers
+[MIT](https://github.com/RORHITD/sketchscreens) © Houston IT Developers
