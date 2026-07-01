@@ -1,7 +1,7 @@
 import Dagre from "@dagrejs/dagre";
 import type { Edge, Node } from "@xyflow/react";
 import type { ProjectMapT, ScreenSpecT } from "@sketchscreens/core-schema";
-import { layoutElements, rowCount } from "./elementLayout";
+import { layoutElements, bandsHeight } from "./elementLayout";
 
 /** Data carried by each screen node. */
 export interface ScreenNodeData extends Record<string, unknown> {
@@ -14,15 +14,13 @@ export type AnyNode = ScreenNode;
 
 const SCREEN_WIDTH = 260;
 
-/** Estimate a screen node's height from its banded row layout (kept in sync with ScreenNode). */
+/** Estimate a screen node's height from its banded, type-weighted layout. */
 export function estimateScreenSize(screen: ScreenSpecT): { width: number; height: number } {
   const layout = layoutElements(screen.elements);
-  const rows = rowCount(layout);
-  const header = 58; // title + route + section badge
-  const perRow = 34; // a laid-out row (taller than a bare element: labels + gaps)
-  const bandGaps = 16; // spacing between top/main/bottom bands
-  const padding = 26;
-  return { width: SCREEN_WIDTH, height: header + rows * perRow + bandGaps + padding };
+  const header = 60; // title + route + section badge + description caption
+  const padding = 24;
+  const body = screen.elements.length === 0 ? 28 : bandsHeight(layout);
+  return { width: SCREEN_WIDTH, height: header + body + padding };
 }
 
 /**
@@ -56,8 +54,10 @@ function pickRoot(map: ProjectMapT): string | undefined {
  */
 export function buildGraph(map: ProjectMapT): { nodes: AnyNode[]; edges: Edge[] } {
   const g = new Dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}));
-  // Generous separation so screens never crowd/overlap and the tree breathes.
-  g.setGraph({ rankdir: "TB", nodesep: 90, ranksep: 130, marginx: 60, marginy: 60 });
+  // With an accurate per-type height estimate (elementHeight), separation can be
+  // modest — screens are spaced, not sprawling. (Was cranked to 90/130 only to
+  // paper over a height estimate that under-counted tall elements.)
+  g.setGraph({ rankdir: "TB", nodesep: 48, ranksep: 90, marginx: 48, marginy: 48 });
 
   const ids = new Set(map.screens.map((s) => s.id));
   const root = pickRoot(map);

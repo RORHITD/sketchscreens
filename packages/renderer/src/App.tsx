@@ -8,18 +8,6 @@ import {
   type Node,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
-// Import only the wired-elements we render. The barrel ("wired-elements") also
-// pulls in wired-card / wired-progress / wired-item, whose hachure fill calls a
-// rough.js method that throws in this RC — so we register components à la carte
-// and draw frames/lists ourselves with rough.js (RoughFrame / RoughBox).
-import "wired-elements/lib/wired-input.js";
-import "wired-elements/lib/wired-textarea.js";
-import "wired-elements/lib/wired-button.js";
-import "wired-elements/lib/wired-checkbox.js";
-import "wired-elements/lib/wired-radio.js";
-import "wired-elements/lib/wired-divider.js";
-// NOTE: wired-toggle is intentionally NOT imported — its knob fill calls a
-// rough.js method that throws in this RC. We use RoughToggle instead.
 
 import type { ProjectMapT } from "@sketchscreens/core-schema";
 import { buildGraph, type AnyNode } from "./layout";

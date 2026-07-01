@@ -208,41 +208,101 @@ body,
   font-size: 11px;
   color: var(--ss-ink-soft);
 }
-.ss-field wired-input,
-.ss-field wired-textarea {
-  width: 100%;
-  display: block;
-}
-
-/* rough.js hand-drawn box (used for selects + list boxes) */
-.ss-roughbox {
+/* --- rough.js primitives (input/textarea/button/select/image/etc.) --- */
+.ss-prim {
   position: relative;
   width: 100%;
-}
-.ss-roughbox-svg {
-  position: absolute;
-  inset: 0;
-  overflow: visible;
-}
-.ss-roughbox-content {
-  position: relative;
-  padding: 5px 22px 5px 8px;
-  font-size: 12px;
-  color: var(--ss-ink-soft);
-  height: 100%;
   display: flex;
   align-items: center;
 }
-.ss-select-value {
+.ss-prim-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+.ss-prim-placeholder {
+  position: relative;
+  padding: 0 8px;
+  font-size: 12px;
+  color: #a8a49a;
   line-height: 1.1;
 }
-.ss-list-rows {
+.ss-prim-textarea {
+  align-items: flex-start;
+}
+.ss-prim-textarea .ss-prim-placeholder {
+  padding-top: 5px;
+}
+.ss-prim-button {
+  justify-content: center;
+  width: auto;
+  min-width: 72px;
+  padding: 0 10px;
+}
+.ss-prim-btn-label {
+  position: relative;
+  font-family: var(--ss-sketch-font);
+  font-size: 13px;
+  white-space: nowrap;
+}
+.ss-btn-primary .ss-prim-btn-label {
+  font-weight: 700;
+}
+.ss-btn-destructive .ss-prim-btn-label {
+  color: #a6432b;
+}
+.ss-btn-link {
+  min-width: 0;
+  padding: 0;
+  justify-content: flex-start;
+}
+.ss-btn-link .ss-prim-btn-label {
+  color: var(--ss-accent);
+  text-decoration: underline;
+  text-decoration-style: wavy;
+  text-decoration-thickness: 0.5px;
+  font-family: var(--ss-ui-font);
+  font-size: 12px;
+}
+.ss-prim-select .ss-prim-placeholder {
+  padding-right: 22px;
+}
+.ss-prim-image {
+  justify-content: center;
+}
+.ss-prim-image-label {
+  position: relative;
+  font-size: 11px;
+  color: var(--ss-ink-soft);
+}
+.ss-prim-checkbox,
+.ss-prim-radio {
+  position: relative;
+  flex-shrink: 0;
+}
+.ss-prim-divider {
+  justify-content: center;
+}
+.ss-prim-divider-label {
+  position: relative;
+  font-size: 10px;
+  color: #a8a49a;
+  background: var(--ss-paper);
+  padding: 0 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.ss-field {
   display: flex;
   flex-direction: column;
-  gap: 3px;
-  width: 100%;
-  padding: 3px 0;
-  align-items: flex-start;
+  gap: 2px;
+}
+.ss-field-label {
+  font-size: 11px;
+  color: var(--ss-ink-soft);
 }
 .ss-inline {
   display: flex;
@@ -254,50 +314,138 @@ body,
   overflow: visible;
   flex-shrink: 0;
 }
-.ss-btn {
-  font-family: var(--ss-sketch-font);
-  font-size: 13px;
+
+/* --- descriptive (tool-summarized) labels read distinctly --- */
+.ss-descriptive {
+  font-style: italic;
+  color: #9a968c;
 }
-.ss-btn-primary {
-  --wired-button-bg-color: var(--ss-accent-soft);
-  font-weight: 700;
-}
-.ss-nav {
-  font-size: 12px;
-  padding: 4px 6px;
-  border: 1.5px solid var(--ss-line);
-  border-radius: 4px;
-  text-align: center;
-  color: var(--ss-ink-soft);
-}
-.ss-tabs {
-  font-size: 12px;
-  border-bottom: 2px solid var(--ss-line);
-  padding-bottom: 3px;
-  color: var(--ss-ink-soft);
-}
-.ss-image {
-  height: 44px;
-  border: 1.5px dashed var(--ss-line);
-  border-radius: 4px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 12px;
-  color: var(--ss-ink-soft);
-}
+
+/* --- list: real column headers + skeleton rows (no fake "Item one") --- */
 .ss-list {
   display: flex;
   flex-direction: column;
   gap: 2px;
 }
-.ss-divider {
-  width: 100%;
+.ss-listframe .ss-frame-content {
+  padding: 6px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
 }
+.ss-list-cols {
+  display: flex;
+  gap: 8px;
+  border-bottom: 1px dashed var(--ss-line);
+  padding-bottom: 3px;
+}
+.ss-list-col {
+  font-size: 9.5px;
+  font-weight: 600;
+  color: var(--ss-ink-soft);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+.ss-list-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 2px 0;
+}
+.ss-list-row {
+  height: 5px;
+  border-radius: 3px;
+  background: repeating-linear-gradient(90deg, #e6e3da 0 40%, transparent 40% 46%, #e6e3da 46% 100%);
+  opacity: 0.7;
+}
+.ss-list-row:nth-child(2) {
+  width: 88%;
+}
+.ss-list-row:nth-child(3) {
+  width: 72%;
+}
+
+/* --- card: title + skeleton body lines --- */
 .ss-subcard .ss-frame-content {
   font-size: 12px;
-  padding: 10px;
+  padding: 9px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.ss-subcard-title {
+  font-weight: 700;
+  font-size: 12px;
+}
+.ss-subcard-line {
+  height: 5px;
+  border-radius: 3px;
+  background: #e6e3da;
+  opacity: 0.7;
+}
+.ss-subcard-line-short {
+  width: 60%;
+}
+
+/* --- metric tile (stat cards) --- */
+.ss-metric .ss-frame-content {
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  align-items: flex-start;
+}
+.ss-metric-value {
+  font-family: var(--ss-sketch-font);
+  font-weight: 700;
+  font-size: 22px;
+  line-height: 1;
+  color: var(--ss-ink);
+}
+.ss-metric-label {
+  font-size: 10px;
   color: var(--ss-ink-soft);
+}
+
+/* --- nav / tabs as real chips --- */
+.ss-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 6px;
+  padding: 4px 2px;
+}
+.ss-nav-item {
+  font-size: 10px;
+  padding: 1px 7px;
+  border-radius: 9px;
+  border: 1px solid var(--ss-line);
+  color: var(--ss-ink-soft);
+  white-space: nowrap;
+}
+.ss-nav-active {
+  border-color: var(--ss-accent);
+  color: var(--ss-accent);
+  background: var(--ss-accent-soft);
+}
+.ss-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 10px;
+  border-bottom: 1.5px solid var(--ss-line);
+  padding-bottom: 3px;
+}
+.ss-tab {
+  font-size: 11px;
+  color: var(--ss-ink-soft);
+  white-space: nowrap;
+  padding-bottom: 2px;
+}
+.ss-tab-active {
+  color: var(--ss-ink);
+  font-weight: 700;
+  border-bottom: 2px solid var(--ss-accent);
+  margin-bottom: -4.5px;
 }
 
 .ss-handle {
