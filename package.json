@@ -1,0 +1,26 @@
+{
+  "name": "sketchscreens",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Auto-generate hand-drawn sketch wireframes of every screen in an app — straight from its source code.",
+  "license": "MIT",
+  "author": "Houston IT Developers",
+  "homepage": "https://sketchscreens.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/houstonitd/sketchscreens.git"
+  },
+  "packageManager": "pnpm@10.30.3",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "pnpm -r --filter=./packages/* build",
+    "typecheck": "pnpm -r typecheck",
+    "test": "pnpm -r test",
+    "dev:renderer": "pnpm --filter @sketchscreens/renderer dev"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.2"
+  }
+}

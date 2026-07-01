@@ -1,0 +1,32 @@
+# dependencies
+node_modules/
+.pnpm-store/
+
+# builds
+dist/
+build/
+*.tsbuildinfo
+
+# vite
+.vite/
+packages/**/dist/
+apps/**/dist/
+
+# generated maps (users run the tool here; don't commit their app maps)
+*.map.json
+!examples/*.map.json
+
+# env / secrets
+.env
+.env.*
+!.env.example
+
+# editor / os
+.DS_Store
+.idea/
+.vscode/
+*.log
+
+# logs
+npm-debug.log*
+pnpm-debug.log*
