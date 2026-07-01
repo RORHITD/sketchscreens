@@ -1,0 +1,381 @@
+/* SketchScreens renderer — a deliberately hand-drawn, paper-sketch aesthetic.
+   The sketch font + warm paper background + muted ink make the wireframes read
+   as "sketch to review", not "polished design". */
+
+@import url("https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&display=swap");
+
+:root {
+  --ss-sketch-font: "Kalam", "Comic Sans MS", cursive;
+  --ss-ui-font: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --ss-paper: #fdfdfb;
+  --ss-paper-2: #f6f5f0;
+  --ss-ink: #2b2b2b;
+  --ss-ink-soft: #6a6a6a;
+  --ss-line: #d9d6cc;
+  --ss-accent: #2f6f8f;
+  --ss-accent-soft: #d7e6ee;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  height: 100%;
+  background: var(--ss-paper);
+  color: var(--ss-ink);
+  font-family: var(--ss-ui-font);
+}
+
+.ss-root {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* --- top bar --- */
+.ss-topbar {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  padding: 10px 18px;
+  border-bottom: 1px solid var(--ss-line);
+  background: var(--ss-paper-2);
+}
+.ss-logo {
+  font-family: var(--ss-sketch-font);
+  font-weight: 700;
+  font-size: 20px;
+  color: var(--ss-ink);
+}
+.ss-map-name {
+  font-weight: 600;
+  font-size: 14px;
+}
+.ss-surface-badge {
+  font-family: var(--ss-sketch-font);
+  font-size: 12px;
+  padding: 1px 9px;
+  border: 1.5px solid var(--ss-accent);
+  border-radius: 10px;
+  color: var(--ss-accent);
+  text-transform: lowercase;
+}
+.ss-count {
+  margin-left: auto;
+  font-size: 12px;
+  color: var(--ss-ink-soft);
+}
+
+/* --- canvas --- */
+.ss-canvas {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+}
+.react-flow__renderer {
+  background: var(--ss-paper);
+}
+
+/* --- screen node (the wireframe) --- */
+.ss-screen {
+  width: 260px;
+  font-family: var(--ss-sketch-font);
+}
+/* rough.js hand-drawn frame (screen card + card element) */
+.ss-frame {
+  position: relative;
+  width: 100%;
+}
+.ss-frame-svg {
+  position: absolute;
+  inset: 0;
+  overflow: visible;
+  pointer-events: none;
+}
+.ss-frame-content {
+  position: relative;
+}
+.ss-screen-card {
+  width: 100%;
+}
+.ss-screen-selected .ss-screen-card .ss-frame-svg rect {
+  /* selection highlight handled via the outer wrapper below */
+}
+.ss-screen-selected {
+  filter: drop-shadow(0 0 0 2px var(--ss-accent-soft));
+}
+.ss-screen-titlebar {
+  display: flex;
+  flex-direction: column;
+  padding: 10px 12px 6px;
+  border-bottom: 1px dashed var(--ss-line);
+  margin-bottom: 6px;
+}
+.ss-screen-name {
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 1.1;
+}
+.ss-screen-route {
+  font-size: 11px;
+  color: var(--ss-ink-soft);
+  font-family: var(--ss-ui-font);
+}
+.ss-screen-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 4px 12px 12px;
+}
+.ss-element {
+  width: 100%;
+}
+.ss-empty {
+  font-size: 12px;
+  color: var(--ss-ink-soft);
+  font-style: italic;
+}
+
+/* --- wireframe elements --- */
+.ss-heading {
+  font-weight: 700;
+  font-size: 15px;
+}
+.ss-text {
+  font-size: 12px;
+  color: var(--ss-ink-soft);
+  line-height: 1.2;
+}
+.ss-field {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.ss-field-label {
+  font-size: 11px;
+  color: var(--ss-ink-soft);
+}
+.ss-field wired-input,
+.ss-field wired-textarea {
+  width: 100%;
+  display: block;
+}
+
+/* rough.js hand-drawn box (used for selects + list boxes) */
+.ss-roughbox {
+  position: relative;
+  width: 100%;
+}
+.ss-roughbox-svg {
+  position: absolute;
+  inset: 0;
+  overflow: visible;
+}
+.ss-roughbox-content {
+  position: relative;
+  padding: 5px 22px 5px 8px;
+  font-size: 12px;
+  color: var(--ss-ink-soft);
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+.ss-select-value {
+  line-height: 1.1;
+}
+.ss-list-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  width: 100%;
+  padding: 3px 0;
+  align-items: flex-start;
+}
+.ss-inline {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+}
+.ss-toggle-svg {
+  overflow: visible;
+  flex-shrink: 0;
+}
+.ss-btn {
+  font-family: var(--ss-sketch-font);
+  font-size: 13px;
+}
+.ss-btn-primary {
+  --wired-button-bg-color: var(--ss-accent-soft);
+  font-weight: 700;
+}
+.ss-nav {
+  font-size: 12px;
+  padding: 4px 6px;
+  border: 1.5px solid var(--ss-line);
+  border-radius: 4px;
+  text-align: center;
+  color: var(--ss-ink-soft);
+}
+.ss-tabs {
+  font-size: 12px;
+  border-bottom: 2px solid var(--ss-line);
+  padding-bottom: 3px;
+  color: var(--ss-ink-soft);
+}
+.ss-image {
+  height: 44px;
+  border: 1.5px dashed var(--ss-line);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  color: var(--ss-ink-soft);
+}
+.ss-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.ss-divider {
+  width: 100%;
+}
+.ss-subcard .ss-frame-content {
+  font-size: 12px;
+  padding: 10px;
+  color: var(--ss-ink-soft);
+}
+
+.ss-handle {
+  width: 8px;
+  height: 8px;
+  background: var(--ss-accent);
+  border: none;
+}
+
+/* --- detail panel --- */
+.ss-detail {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 320px;
+  height: 100%;
+  background: var(--ss-paper-2);
+  border-left: 1px solid var(--ss-line);
+  padding: 16px 18px;
+  overflow-y: auto;
+  box-shadow: -4px 0 16px rgba(0, 0, 0, 0.06);
+}
+.ss-detail-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.ss-detail-head h2 {
+  font-family: var(--ss-sketch-font);
+  margin: 0;
+  font-size: 20px;
+}
+.ss-detail-close {
+  border: none;
+  background: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: var(--ss-ink-soft);
+  line-height: 1;
+}
+.ss-detail-row {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: 12px;
+}
+.ss-detail-key {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--ss-ink-soft);
+}
+.ss-detail-row code {
+  font-size: 12px;
+  background: var(--ss-paper);
+  padding: 2px 6px;
+  border-radius: 3px;
+  border: 1px solid var(--ss-line);
+  word-break: break-all;
+}
+.ss-detail-source {
+  color: var(--ss-accent);
+}
+.ss-detail-desc {
+  font-size: 13px;
+  color: var(--ss-ink-soft);
+  line-height: 1.35;
+}
+.ss-detail-elements {
+  list-style: none;
+  padding: 0;
+  margin: 6px 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.ss-detail-elements li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  padding: 4px 6px;
+  background: var(--ss-paper);
+  border: 1px solid var(--ss-line);
+  border-radius: 3px;
+}
+.ss-detail-type {
+  font-family: var(--ss-ui-font);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--ss-accent);
+  min-width: 60px;
+}
+.ss-detail-elabel {
+  flex: 1;
+}
+.ss-detail-tag {
+  font-size: 10px;
+  padding: 0 5px;
+  border-radius: 8px;
+  background: var(--ss-accent-soft);
+  color: var(--ss-accent);
+}
+.ss-detail-tag.ss-req {
+  background: #f3ddd7;
+  color: #a6432b;
+}
+
+/* --- loading / error --- */
+.ss-loading,
+.ss-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  gap: 12px;
+  font-family: var(--ss-sketch-font);
+}
+.ss-error pre {
+  font-family: var(--ss-ui-font);
+  font-size: 13px;
+  color: #a6432b;
+  background: var(--ss-paper-2);
+  padding: 12px 16px;
+  border-radius: 6px;
+  max-width: 640px;
+  white-space: pre-wrap;
+}

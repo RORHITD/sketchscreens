@@ -1,0 +1,29 @@
+{
+  "name": "@sketchscreens/renderer",
+  "version": "0.0.0",
+  "description": "Renders a ProjectMap as an interactive canvas of hand-drawn screen wireframes connected by flow arrows.",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@dagrejs/dagre": "3.0.0",
+    "@sketchscreens/core-schema": "workspace:*",
+    "@xyflow/react": "12.11.1",
+    "react": "19.2.7",
+    "react-dom": "19.2.7",
+    "roughjs": "4.6.6",
+    "wired-elements": "3.0.0-rc.6"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@vitejs/plugin-react": "6.0.3",
+    "typescript": "^5.7.2",
+    "vite": "8.1.2"
+  }
+}
