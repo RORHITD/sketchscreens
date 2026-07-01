@@ -1,0 +1,24 @@
+{
+  "name": "@sketchscreens/extractor",
+  "version": "0.0.0",
+  "description": "The agent-first extraction contract: the prompt + parse-signal guidance an agent uses to turn a codebase into a ProjectMap, plus a validate-and-write helper.",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "bin": {
+    "sketchscreens-write-map": "./bin/write-map.js"
+  },
+  "files": ["dist", "src", "bin", "prompts"],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@sketchscreens/core-schema": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.7.2"
+  }
+}

@@ -1,0 +1,248 @@
+{
+  "version": 1,
+  "name": "AI Phone 360 — Auth Flow (live-extracted)",
+  "surface": "web",
+  "screens": [
+    {
+      "id": "auth",
+      "name": "Login / Sign Up",
+      "route": "/auth",
+      "sourceFile": "src/components/auth/LoginForm.tsx",
+      "elements": [
+        {
+          "type": "image",
+          "label": "AI Phone 360 logo"
+        },
+        {
+          "type": "card",
+          "label": "Feature carousel"
+        },
+        {
+          "type": "heading",
+          "label": "Create your account"
+        },
+        {
+          "type": "text",
+          "label": "Get an AI phone number for your business in under two minutes."
+        },
+        {
+          "type": "text",
+          "label": "From $19.99/mo · Cancel anytime · 90-second setup"
+        },
+        {
+          "type": "input",
+          "label": "Phone number",
+          "placeholder": "(555) 555-5555",
+          "required": true
+        },
+        {
+          "type": "button",
+          "label": "Continue",
+          "variant": "primary"
+        },
+        {
+          "type": "divider",
+          "label": "or continue with"
+        },
+        {
+          "type": "button",
+          "label": "Continue with Google",
+          "variant": "secondary"
+        },
+        {
+          "type": "button",
+          "label": "Continue with Apple",
+          "variant": "secondary"
+        }
+      ],
+      "description": "Phone-first auth. Signup framing when ?source=signup."
+    },
+    {
+      "id": "verify",
+      "name": "Verify your number",
+      "route": "/verify",
+      "sourceFile": "src/app/(auth)/verify/page.tsx",
+      "elements": [
+        {
+          "type": "button",
+          "label": "← Back",
+          "variant": "link"
+        },
+        {
+          "type": "image",
+          "label": "AI Phone 360 logo"
+        },
+        {
+          "type": "heading",
+          "label": "Verify your number"
+        },
+        {
+          "type": "text",
+          "label": "We sent a code to your phone"
+        },
+        {
+          "type": "button",
+          "label": "Edit",
+          "variant": "link"
+        },
+        {
+          "type": "input",
+          "label": "6-digit code",
+          "required": true
+        },
+        {
+          "type": "button",
+          "label": "Verify",
+          "variant": "primary"
+        },
+        {
+          "type": "button",
+          "label": "Didn't receive code? Resend",
+          "variant": "link"
+        }
+      ],
+      "description": "OTP entry. 6-digit code, resend after countdown."
+    },
+    {
+      "id": "select-account",
+      "name": "Choose an account",
+      "route": "/select-account",
+      "sourceFile": "src/app/(auth)/select-account/page.tsx",
+      "elements": [
+        {
+          "type": "image",
+          "label": "AI Phone 360 logo"
+        },
+        {
+          "type": "heading",
+          "label": "Choose an account"
+        },
+        {
+          "type": "text",
+          "label": "Multiple accounts are linked to this phone number"
+        },
+        {
+          "type": "list",
+          "label": "Account cards (name · email · businesses · last login)"
+        },
+        {
+          "type": "card",
+          "label": "Create New Account — Start fresh with a new account"
+        },
+        {
+          "type": "button",
+          "label": "Use a different phone number",
+          "variant": "link"
+        }
+      ],
+      "description": "Shown when multiple accounts share a phone number."
+    },
+    {
+      "id": "settings-profile",
+      "name": "Organization Info",
+      "route": "/settings/profile",
+      "sourceFile": "src/components/settings/BusinessInfoCard.tsx",
+      "elements": [
+        {
+          "type": "image",
+          "label": "Organization icon"
+        },
+        {
+          "type": "heading",
+          "label": "Organization Info"
+        },
+        {
+          "type": "button",
+          "label": "Edit",
+          "variant": "link"
+        },
+        {
+          "type": "text",
+          "label": "Organization Name + value"
+        },
+        {
+          "type": "text",
+          "label": "Contact Email + value"
+        },
+        {
+          "type": "text",
+          "label": "Website + value"
+        },
+        {
+          "type": "divider"
+        },
+        {
+          "type": "heading",
+          "label": "Edit Organization Info (dialog)"
+        },
+        {
+          "type": "input",
+          "label": "Import from website URL",
+          "placeholder": "https://yourwebsite.com"
+        },
+        {
+          "type": "button",
+          "label": "Import",
+          "variant": "secondary"
+        },
+        {
+          "type": "input",
+          "label": "Organization Name",
+          "placeholder": "Acme Corporation"
+        },
+        {
+          "type": "input",
+          "label": "Contact Email",
+          "placeholder": "hello@acme.com"
+        },
+        {
+          "type": "input",
+          "label": "Website",
+          "placeholder": "https://acme.com"
+        },
+        {
+          "type": "button",
+          "label": "Cancel",
+          "variant": "ghost"
+        },
+        {
+          "type": "button",
+          "label": "Save Changes",
+          "variant": "primary"
+        }
+      ],
+      "description": "Route is named 'profile' but the component is Organization Info (business name/email/website). Edit opens a dialog with the form."
+    }
+  ],
+  "edges": [
+    {
+      "from": "auth",
+      "to": "verify",
+      "trigger": "Continue",
+      "kind": "push"
+    },
+    {
+      "from": "verify",
+      "to": "auth",
+      "trigger": "Back / Edit",
+      "kind": "push"
+    },
+    {
+      "from": "verify",
+      "to": "select-account",
+      "trigger": "Verify (multi-account)",
+      "kind": "push"
+    },
+    {
+      "from": "select-account",
+      "to": "auth",
+      "trigger": "Use a different phone number",
+      "kind": "push"
+    }
+  ],
+  "meta": {
+    "generator": "sketchscreens-agent",
+    "repoRoot": "/Users/richyorozco/C/aiphone360-web-app",
+    "extraction": "agent"
+  }
+}

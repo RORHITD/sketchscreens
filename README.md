@@ -70,8 +70,8 @@ sketchscreens/
 ### Roadmap
 
 - [x] **Phase 0** — monorepo + the `ProjectMap` contract + a sample map
-- [ ] **Phase 1** — the renderer (hand-drawn wireframes + flow arrows)
-- [ ] **Phase 2** — the extractor + the `/visual-map` skill (the headline)
+- [x] **Phase 1** — the renderer (hand-drawn wireframes + flow arrows)
+- [x] **Phase 2** — the extractor + the `/visual-map` skill (the headline)
 - [ ] **Phase 3** — the self-hostable platform + static-parse accelerators
 
 ## Built with
