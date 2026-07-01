@@ -97,8 +97,25 @@ export const ScreenSpec = z.object({
   elements: z.array(ScreenElement).default([]),
   /** Optional short description / purpose of the screen. */
   description: z.string().optional(),
+  /**
+   * Optional hierarchy path this screen belongs under, most-general first,
+   * using " › " as the separator — e.g. "Settings › AI Settings". The renderer
+   * builds a top-down tree from these paths (a screen with no group sits at the
+   * root). Deriveable from the route (e.g. /ai-settings/voice → the AI Settings
+   * group), but the extractor may set it explicitly for a cleaner tree.
+   */
+  group: z.string().optional(),
 });
 export type ScreenSpec = z.infer<typeof ScreenSpec>;
+
+/** Split a group path ("Settings › AI Settings") into its segments. */
+export function groupSegments(group: string | undefined): string[] {
+  if (!group) return [];
+  return group
+    .split("›")
+    .map((s) => s.trim())
+    .filter(Boolean);
+}
 
 // ---------------------------------------------------------------------------
 // Edges — navigation between screens

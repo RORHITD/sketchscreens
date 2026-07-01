@@ -55,7 +55,8 @@
           "variant": "secondary"
         }
       ],
-      "description": "Phone-first auth. Signup framing when ?source=signup."
+      "description": "Phone-first auth. Signup framing when ?source=signup.",
+      "group": "Auth"
     },
     {
       "id": "verify",
@@ -101,7 +102,8 @@
           "variant": "link"
         }
       ],
-      "description": "OTP entry. 6-digit code, resend after countdown."
+      "description": "OTP entry. 6-digit code, resend after countdown.",
+      "group": "Auth"
     },
     {
       "id": "select-account",
@@ -135,7 +137,8 @@
           "variant": "link"
         }
       ],
-      "description": "Shown when multiple accounts share a phone number."
+      "description": "Shown when multiple accounts share a phone number.",
+      "group": "Auth"
     },
     {
       "id": "settings-profile",
@@ -211,7 +214,8 @@
           "variant": "primary"
         }
       ],
-      "description": "Route is named 'profile' but the component is Organization Info (business name/email/website). Edit opens a dialog with the form."
+      "description": "Route is named 'profile' but the component is Organization Info (business name/email/website). Edit opens a dialog with the form.",
+      "group": "Settings"
     }
   ],
   "edges": [

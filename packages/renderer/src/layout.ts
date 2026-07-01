@@ -1,72 +1,146 @@
 import Dagre from "@dagrejs/dagre";
 import type { Edge, Node } from "@xyflow/react";
-import type { ProjectMapT, ScreenSpecT } from "@sketchscreens/core-schema";
+import { groupSegments, type ProjectMapT, type ScreenSpecT } from "@sketchscreens/core-schema";
 
 /** Data carried by each screen node. */
 export interface ScreenNodeData extends Record<string, unknown> {
   screen: ScreenSpecT;
 }
-
 export type ScreenNode = Node<ScreenNodeData, "screen">;
 
-/**
- * Estimate a node's rendered height so dagre can space rows without overlap.
- * A wireframe is a titled frame + one row per element. Kept in sync with the
- * ScreenNode component's sizing.
- */
-export function estimateNodeSize(screen: ScreenSpecT): { width: number; height: number } {
-  const width = 260;
-  const header = 56; // title + route
-  const perElement = 30;
-  const padding = 24;
-  const height = header + screen.elements.length * perElement + padding;
-  return { width, height };
+/** Data carried by each group (section-header) node. */
+export interface GroupNodeData extends Record<string, unknown> {
+  label: string;
+  /** Full path of this group, e.g. "Settings › AI Settings". */
+  path: string;
+  /** Depth in the tree (root groups = 0). */
+  depth: number;
+}
+export type GroupNode = Node<GroupNodeData, "group">;
+
+export type AnyNode = ScreenNode | GroupNode;
+
+const SCREEN_WIDTH = 240;
+
+/** Estimate a screen node's height from its element count (kept in sync with ScreenNode). */
+export function estimateScreenSize(screen: ScreenSpecT): { width: number; height: number } {
+  const header = 52;
+  const perElement = 26;
+  const padding = 22;
+  return { width: SCREEN_WIDTH, height: header + screen.elements.length * perElement + padding };
 }
 
+const GROUP_WIDTH = 200;
+const GROUP_HEIGHT = 46;
+
 /**
- * Turn a ProjectMap into laid-out React Flow nodes + edges.
+ * Build a top-down hierarchy (org-chart) graph from a ProjectMap.
  *
- * Uses dagre with `rankdir: 'LR'` for a clean left-to-right flow — the reading
- * order most people expect for a screen-flow diagram.
+ * Each screen's `group` path ("Settings › AI Settings") is expanded into a
+ * chain of group nodes; the screen hangs beneath its deepest group. Screens
+ * with no group hang beneath a synthetic root for their... well, they attach to
+ * the root. The result is laid out top-to-bottom with dagre so parents sit
+ * above their children like an org chart.
+ *
+ * Real navigation edges are returned separately (as faint "flow" edges) so the
+ * tree stays the dominant structure.
  */
-export function buildGraph(map: ProjectMapT): { nodes: ScreenNode[]; edges: Edge[] } {
+export function buildGraph(map: ProjectMapT): { nodes: AnyNode[]; edges: Edge[] } {
   const g = new Dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}));
-  g.setGraph({ rankdir: "LR", nodesep: 60, ranksep: 120, marginx: 40, marginy: 40 });
+  g.setGraph({ rankdir: "TB", nodesep: 28, ranksep: 70, marginx: 30, marginy: 30 });
+
+  // --- 1. Materialize group nodes from every screen's group path ---
+  // groupId -> { label, path, depth, parentId | null }
+  const groups = new Map<string, GroupNodeData & { parentId: string | null }>();
+  const groupId = (segments: string[]) => "grp:" + segments.join(" › ");
 
   for (const screen of map.screens) {
-    const { width, height } = estimateNodeSize(screen);
+    const segs = groupSegments(screen.group);
+    for (let i = 0; i < segs.length; i++) {
+      const path = segs.slice(0, i + 1);
+      const id = groupId(path);
+      if (!groups.has(id)) {
+        groups.set(id, {
+          label: path[i]!,
+          path: path.join(" › "),
+          depth: i,
+          parentId: i > 0 ? groupId(path.slice(0, i)) : null,
+        });
+      }
+    }
+  }
+
+  // --- 2. Register nodes with dagre (group nodes + screen nodes) ---
+  for (const [id] of groups) {
+    g.setNode(id, { width: GROUP_WIDTH, height: GROUP_HEIGHT });
+  }
+  for (const screen of map.screens) {
+    const { width, height } = estimateScreenSize(screen);
     g.setNode(screen.id, { width, height });
   }
-  for (const edge of map.edges) {
-    // dagre throws if an edge references a node it doesn't know; the schema
-    // validator already guarantees both ends exist, so this is safe.
-    g.setEdge(edge.from, edge.to);
+
+  // --- 3. Hierarchy edges: parent group -> child group, group -> its screens ---
+  const treeEdges: Array<{ from: string; to: string }> = [];
+  for (const [id, data] of groups) {
+    if (data.parentId) treeEdges.push({ from: data.parentId, to: id });
   }
+  for (const screen of map.screens) {
+    const segs = groupSegments(screen.group);
+    if (segs.length > 0) treeEdges.push({ from: groupId(segs), to: screen.id });
+  }
+  for (const { from, to } of treeEdges) g.setEdge(from, to);
 
   Dagre.layout(g);
 
-  const nodes: ScreenNode[] = map.screens.map((screen) => {
-    const { x, y } = g.node(screen.id);
-    const { width, height } = estimateNodeSize(screen);
-    return {
+  // --- 4. Emit React Flow nodes ---
+  const nodes: AnyNode[] = [];
+  for (const [id, data] of groups) {
+    const p = g.node(id);
+    nodes.push({
+      id,
+      type: "group",
+      position: { x: p.x - GROUP_WIDTH / 2, y: p.y - GROUP_HEIGHT / 2 },
+      data: { label: data.label, path: data.path, depth: data.depth },
+      draggable: false,
+      selectable: false,
+    });
+  }
+  for (const screen of map.screens) {
+    const p = g.node(screen.id);
+    const { width, height } = estimateScreenSize(screen);
+    nodes.push({
       id: screen.id,
       type: "screen",
-      // dagre centers nodes; React Flow positions by top-left corner.
-      position: { x: x - width / 2, y: y - height / 2 },
+      position: { x: p.x - width / 2, y: p.y - height / 2 },
       data: { screen },
-    };
-  });
+    });
+  }
 
-  const edges: Edge[] = map.edges.map((edge, i) => ({
-    id: `e${i}-${edge.from}-${edge.to}`,
-    source: edge.from,
-    target: edge.to,
-    label: edge.trigger,
-    animated: false,
-    style: { stroke: "#8a8a8a", strokeWidth: 1.5 },
-    labelStyle: { fill: "#555", fontSize: 11, fontFamily: "var(--ss-sketch-font)" },
-    labelBgStyle: { fill: "#fdfdfb", fillOpacity: 0.9 },
-  }));
+  // --- 5. Hierarchy edges (solid, structural) + nav edges (faint, dashed) ---
+  const edges: Edge[] = [];
+  treeEdges.forEach(({ from, to }, i) => {
+    edges.push({
+      id: `tree-${i}-${from}-${to}`,
+      source: from,
+      target: to,
+      type: "smoothstep",
+      style: { stroke: "#b9b6ac", strokeWidth: 1.4 },
+      selectable: false,
+    });
+  });
+  map.edges.forEach((edge, i) => {
+    edges.push({
+      id: `flow-${i}-${edge.from}-${edge.to}`,
+      source: edge.from,
+      target: edge.to,
+      label: edge.trigger,
+      type: "bezier",
+      animated: false,
+      style: { stroke: "#cfc4e6", strokeWidth: 1, strokeDasharray: "4 4" },
+      labelStyle: { fill: "#8a7fb0", fontSize: 10, fontFamily: "var(--ss-sketch-font)" },
+      labelBgStyle: { fill: "#fdfdfb", fillOpacity: 0.85 },
+    });
+  });
 
   return { nodes, edges };
 }

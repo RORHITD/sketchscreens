@@ -22,12 +22,13 @@ import "wired-elements/lib/wired-divider.js";
 // rough.js method that throws in this RC. We use RoughToggle instead.
 
 import type { ProjectMapT } from "@sketchscreens/core-schema";
-import { buildGraph, type ScreenNode as ScreenNodeType } from "./layout";
+import { buildGraph, type AnyNode } from "./layout";
 import { ScreenNode } from "./ScreenNode";
+import { GroupNode } from "./GroupNode";
 import { loadProjectMap } from "./loadMap";
 import { DetailPanel } from "./DetailPanel";
 
-const nodeTypes = { screen: ScreenNode };
+const nodeTypes = { screen: ScreenNode, group: GroupNode };
 
 export function App() {
   const [map, setMap] = useState<ProjectMapT | null>(null);
@@ -76,7 +77,7 @@ export function App() {
       </header>
 
       <div className="ss-canvas">
-        <ReactFlow<ScreenNodeType>
+        <ReactFlow<AnyNode>
           nodes={graph.nodes}
           edges={graph.edges}
           nodeTypes={nodeTypes}
@@ -88,7 +89,12 @@ export function App() {
         >
           <Background variant={BackgroundVariant.Dots} gap={20} size={1} color="#e2e0d8" />
           <Controls showInteractive={false} />
-          <MiniMap pannable zoomable nodeColor="#d9d6cc" maskColor="rgba(253,253,251,0.7)" />
+          <MiniMap
+            pannable
+            zoomable
+            nodeColor={(n) => (n.type === "group" ? "#c9bfe4" : "#d9d6cc")}
+            maskColor="rgba(253,253,251,0.7)"
+          />
         </ReactFlow>
 
         {selectedScreen && (

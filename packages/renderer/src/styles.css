@@ -252,10 +252,65 @@ body,
 }
 
 .ss-handle {
-  width: 8px;
-  height: 8px;
-  background: var(--ss-accent);
+  width: 7px;
+  height: 7px;
+  background: var(--ss-line);
   border: none;
+}
+.ss-handle-hidden {
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+  border: none;
+  background: transparent;
+  pointer-events: none;
+}
+
+/* --- group (section-header) nodes in the hierarchy tree --- */
+.ss-group {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 200px;
+  height: 46px;
+  border-radius: 8px;
+  font-family: var(--ss-sketch-font);
+  font-weight: 700;
+  text-align: center;
+  border: 2px solid var(--ss-accent);
+  background: var(--ss-accent-soft);
+  color: var(--ss-accent);
+  box-shadow: 2px 2px 0 rgba(47, 111, 143, 0.12);
+}
+.ss-group-label {
+  font-size: 16px;
+  line-height: 1.05;
+  padding: 0 8px;
+}
+/* depth tint: darker/bolder near the root, lighter as it nests */
+.ss-group-d0 {
+  background: #2f6f8f;
+  color: #fdfdfb;
+  border-color: #24576f;
+  font-size: 17px;
+}
+.ss-group-d0 .ss-group-label {
+  font-size: 17px;
+}
+.ss-group-d1 {
+  background: #bcdcea;
+  border-color: #2f6f8f;
+  color: #1f4a5f;
+}
+.ss-group-d2 {
+  background: #ddeaf1;
+  border-color: #6ba3bd;
+  color: #2f6f8f;
+}
+.ss-group-d3 {
+  background: #eef4f7;
+  border-color: #9cc2d4;
+  color: #4c7f97;
 }
 
 /* --- detail panel --- */

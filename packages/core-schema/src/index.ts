@@ -15,6 +15,7 @@ export {
   Surface,
   ProjectMapMeta,
   ProjectMap,
+  groupSegments,
 } from "./schema.js";
 
 export type {

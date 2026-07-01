@@ -19,6 +19,7 @@ Produce a single JSON object matching this shape (validated by `@sketchscreens/c
       "route": "/auth",                    // URL path, widget class, or API group
       "sourceFile": "src/components/auth/LoginForm.tsx",  // repo-relative
       "description": "Optional one-line purpose",
+      "group": "Auth",                     // hierarchy path (see "Hierarchy" below)
       "elements": [                        // ORDERED top-to-bottom = the vertical stack
         { "type": "heading",  "label": "Create your account" },
         { "type": "input",    "label": "Phone number", "required": true },
@@ -38,7 +39,18 @@ Produce a single JSON object matching this shape (validated by `@sketchscreens/c
 - `label` = the visible text (button caption, field label, heading text).
 - `variant` (buttons): `primary | secondary | destructive | ghost | link`.
 - `secure: true` for password fields; `required: true` if the source marks it required.
-- `group` = an optional key; elements sharing a group render inside one card/section.
+- element `group` = an optional key; elements sharing it render inside one card/section (distinct from the screen-level `group` below).
+
+## Hierarchy — the screen `group`
+
+The renderer draws a **top-down tree** (org chart) from each screen's `group`: a `" › "`-delimited path, most-general first. `"Settings › AI Settings"` places the screen under an *AI Settings* node that itself sits under *Settings*. Screens with no `group` sit at the root.
+
+Set it so the map reads as a sensible hierarchy — usually derived from the route:
+
+- Group by the **top route segment**, humanized: `/calls`, `/calls/:id`, `/voicemails` → `"Calls"`; `/contacts`, `/contacts/pipeline` → `"Contacts"`; `/billing/*`, `/phone-numbers` → `"Billing"`.
+- **Nest** where the app nests: `/settings/*` → `"Settings"`; `/ai-settings/*` → `"Settings › AI Settings"` (AI settings live under Settings). `/auth`, `/verify`, `/select-account` → `"Auth"`.
+- Keep the tree shallow (1–2 levels is plenty). Put a section's hub/landing screen in the same group as its children.
+- If unsure, group by the top segment. A screen with a truly standalone route can be left ungrouped.
 
 ## Method (agent-first)
 
@@ -47,7 +59,8 @@ Produce a single JSON object matching this shape (validated by `@sketchscreens/c
 3. **For each screen, read its component to list elements.** Screens are often *thin* — a route file that just renders `<LoginForm />`. **Follow the import to the real component** and read *that* file's fields/buttons/headings. Resolve string constants (e.g. `AppString.continueWithPhone`) to their values when cheap.
 4. **List elements top-to-bottom in source order.** A form with 3 fields + a submit button → 3 `input` + 1 `button`. Don't invent elements that aren't there; don't omit obvious ones.
 5. **Infer edges** from navigation calls (see profile). The `trigger` is usually the button/link label that causes the transition.
-6. **Keep it honest.** If a screen's elements are genuinely dynamic/unknowable, emit the ones you can see and add a `note`. A smaller true map beats a padded guessed one.
+6. **Set each screen's `group`** (the hierarchy path) per the *Hierarchy* section — so the tree reads as Settings → AI Settings → Voice, etc.
+7. **Keep it honest.** If a screen's elements are genuinely dynamic/unknowable, emit the ones you can see and add a `note`. A smaller true map beats a padded guessed one.
 
 ## Stack profiles (parse signals)
 

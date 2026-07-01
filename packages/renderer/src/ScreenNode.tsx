@@ -14,15 +14,17 @@ function seedFor(id: string): number {
 /**
  * A React Flow custom node: one screen drawn as a hand-sketched wireframe.
  *
- * The node IS the wireframe — a titled frame (wired-card) containing the
- * screen's elements stacked top-to-bottom in source order. Left/right handles
- * let flow edges connect screen-to-screen.
+ * The node IS the wireframe — a titled frame containing the screen's elements
+ * stacked top-to-bottom in source order. In the hierarchy layout a Top handle
+ * receives the tree line from its group; a Bottom handle emits nav-flow edges.
+ * Left/Right handles catch nav edges arriving from the sides.
  */
 export function ScreenNode({ data, selected }: NodeProps<ScreenNodeType>) {
   const { screen } = data;
   return (
     <div className={`ss-screen${selected ? " ss-screen-selected" : ""}`}>
-      <Handle type="target" position={Position.Left} className="ss-handle" />
+      <Handle type="target" position={Position.Top} className="ss-handle" />
+      <Handle type="target" position={Position.Left} className="ss-handle-hidden" />
 
       <RoughFrame className="ss-screen-card" seed={seedFor(screen.id)}>
         <div className="ss-screen-titlebar">
@@ -43,7 +45,8 @@ export function ScreenNode({ data, selected }: NodeProps<ScreenNodeType>) {
         </div>
       </RoughFrame>
 
-      <Handle type="source" position={Position.Right} className="ss-handle" />
+      <Handle type="source" position={Position.Bottom} className="ss-handle-hidden" />
+      <Handle type="source" position={Position.Right} className="ss-handle-hidden" />
     </div>
   );
 }

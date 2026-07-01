@@ -38,7 +38,8 @@
           "label": "Detail panel (recording / AI summary / thread)"
         }
       ],
-      "description": "Every call, text, voicemail, and chat in one place."
+      "description": "Every call, text, voicemail, and chat in one place.",
+      "group": "Dashboard"
     },
     {
       "id": "overview",
@@ -83,7 +84,8 @@
           "label": "Upcoming Appointments"
         }
       ],
-      "description": "Gated analytics view."
+      "description": "Gated analytics view.",
+      "group": "Dashboard"
     },
     {
       "id": "calls",
@@ -122,7 +124,8 @@
           "label": "Calls table (Time · Contact · Direction · Duration)"
         }
       ],
-      "description": "Call history list."
+      "description": "Call history list.",
+      "group": "Calls"
     },
     {
       "id": "call-detail",
@@ -170,7 +173,8 @@
           "label": "AI summary + action items"
         }
       ],
-      "description": "One call: summary, recording, transcript, feedback."
+      "description": "One call: summary, recording, transcript, feedback.",
+      "group": "Calls"
     },
     {
       "id": "keypad",
@@ -207,7 +211,8 @@
           "variant": "secondary"
         }
       ],
-      "description": "The dialer."
+      "description": "The dialer.",
+      "group": "Calls"
     },
     {
       "id": "voicemails",
@@ -238,7 +243,8 @@
           "variant": "secondary"
         }
       ],
-      "description": "Voicemail list."
+      "description": "Voicemail list.",
+      "group": "Calls"
     },
     {
       "id": "recordings",
@@ -269,7 +275,8 @@
           "label": "Recording card (title · contact · summary)"
         }
       ],
-      "description": "Recordings list."
+      "description": "Recordings list.",
+      "group": "Calls"
     },
     {
       "id": "contacts-list",
@@ -308,7 +315,8 @@
           "label": "Contacts list (avatar · name · phone · identity)"
         }
       ],
-      "description": "Contacts list."
+      "description": "Contacts list.",
+      "group": "Contacts"
     },
     {
       "id": "contact-detail",
@@ -355,7 +363,8 @@
           "label": "Internal Notes"
         }
       ],
-      "description": "One contact: stats, AI summary, log, notes."
+      "description": "One contact: stats, AI summary, log, notes.",
+      "group": "Contacts"
     },
     {
       "id": "contacts-pipeline",
@@ -388,7 +397,8 @@
           "label": "Contact card (name · value · calls)"
         }
       ],
-      "description": "Kanban sales pipeline."
+      "description": "Kanban sales pipeline.",
+      "group": "Contacts"
     },
     {
       "id": "contacts-fields",
@@ -423,7 +433,8 @@
           "label": "Active (per row)"
         }
       ],
-      "description": "Field definitions (table + dialog). Shares data with /settings/ai-fields but different component."
+      "description": "Field definitions (table + dialog). Shares data with /settings/ai-fields but different component.",
+      "group": "Contacts"
     },
     {
       "id": "chats-list",
@@ -454,7 +465,8 @@
           "variant": "primary"
         }
       ],
-      "description": "Live chat + SMS conversations."
+      "description": "Live chat + SMS conversations.",
+      "group": "Chats"
     },
     {
       "id": "chat-conversation",
@@ -495,7 +507,8 @@
           "variant": "primary"
         }
       ],
-      "description": "One conversation thread."
+      "description": "One conversation thread.",
+      "group": "Chats"
     },
     {
       "id": "knowledge-base",
@@ -535,7 +548,8 @@
           "label": "Uploaded documents (name · status)"
         }
       ],
-      "description": "Info the AI uses to answer."
+      "description": "Info the AI uses to answer.",
+      "group": "Knowledge"
     },
     {
       "id": "team",
@@ -565,7 +579,8 @@
           "label": "Member list (avatar · name · role · Edit/Remove)"
         }
       ],
-      "description": "Team members + invitations."
+      "description": "Team members + invitations.",
+      "group": "Team"
     },
     {
       "id": "ai-settings",
@@ -603,7 +618,8 @@
           "label": "Your AI Should NOT (rules)"
         }
       ],
-      "description": "The AI Rules tab doubles as the hub."
+      "description": "The AI Rules tab doubles as the hub.",
+      "group": "Settings › AI Settings"
     },
     {
       "id": "ai-settings-voice",
@@ -645,7 +661,8 @@
           "variant": "primary"
         }
       ],
-      "description": "Standard vs Realtime voice."
+      "description": "Standard vs Realtime voice.",
+      "group": "Settings › AI Settings"
     },
     {
       "id": "ai-settings-call-routing",
@@ -687,7 +704,8 @@
           "variant": "primary"
         }
       ],
-      "description": "Who answers + topic routing."
+      "description": "Who answers + topic routing.",
+      "group": "Settings › AI Settings"
     },
     {
       "id": "ai-settings-agents",
@@ -717,7 +735,8 @@
           "label": "Agents list (name · Greeter · routes on)"
         }
       ],
-      "description": "Specialist AI agents + in-call handoff."
+      "description": "Specialist AI agents + in-call handoff.",
+      "group": "Settings › AI Settings"
     },
     {
       "id": "ai-settings-scheduling",
@@ -751,7 +770,8 @@
           "variant": "primary"
         }
       ],
-      "description": "Booking config."
+      "description": "Booking config.",
+      "group": "Settings › AI Settings"
     },
     {
       "id": "ai-settings-on-hold",
@@ -785,7 +805,8 @@
           "variant": "secondary"
         }
       ],
-      "description": "On-hold messages."
+      "description": "On-hold messages.",
+      "group": "Settings › AI Settings"
     },
     {
       "id": "ai-settings-improvements",
@@ -815,7 +836,8 @@
           "label": "Suggestions (Apply / Dismiss)"
         }
       ],
-      "description": "AI-suggested config improvements."
+      "description": "AI-suggested config improvements.",
+      "group": "Settings › AI Settings"
     },
     {
       "id": "settings-ai-fields",
@@ -849,7 +871,8 @@
           "label": "Inactive fields"
         }
       ],
-      "description": "What the AI collects from callers (card layout)."
+      "description": "What the AI collects from callers (card layout).",
+      "group": "Settings"
     },
     {
       "id": "settings-account",
@@ -886,7 +909,8 @@
           "variant": "destructive"
         }
       ],
-      "description": "Profile / email / phone (OTP-verified) + danger zone."
+      "description": "Profile / email / phone (OTP-verified) + danger zone.",
+      "group": "Settings"
     },
     {
       "id": "settings-business",
@@ -924,7 +948,8 @@
           "variant": "primary"
         }
       ],
-      "description": "Organization Info only (name/email/website)."
+      "description": "Organization Info only (name/email/website).",
+      "group": "Settings"
     },
     {
       "id": "settings-notifications",
@@ -962,7 +987,8 @@
           "variant": "primary"
         }
       ],
-      "description": "Caller-verify + operator SMS."
+      "description": "Caller-verify + operator SMS.",
+      "group": "Settings"
     },
     {
       "id": "settings-security",
@@ -997,7 +1023,8 @@
           "label": "Activity log"
         }
       ],
-      "description": "Audit log (NOT password/2FA)."
+      "description": "Audit log (NOT password/2FA).",
+      "group": "Settings"
     },
     {
       "id": "settings-spam-protection",
@@ -1031,7 +1058,8 @@
           "label": "Blocked numbers"
         }
       ],
-      "description": "Spam + DNC."
+      "description": "Spam + DNC.",
+      "group": "Settings"
     },
     {
       "id": "phone-numbers",
@@ -1063,7 +1091,8 @@
           "variant": "destructive"
         }
       ],
-      "description": "Manage AI phone numbers."
+      "description": "Manage AI phone numbers.",
+      "group": "Billing"
     },
     {
       "id": "billing-hub",
@@ -1098,7 +1127,8 @@
           "label": "Plan grid"
         }
       ],
-      "description": "Subscription + credits."
+      "description": "Subscription + credits.",
+      "group": "Billing"
     },
     {
       "id": "billing-subscription",
@@ -1134,7 +1164,8 @@
           "variant": "destructive"
         }
       ],
-      "description": "Choose/change plan."
+      "description": "Choose/change plan.",
+      "group": "Billing"
     },
     {
       "id": "billing-credits",
@@ -1169,7 +1200,8 @@
           "label": "Usage History · Transactions"
         }
       ],
-      "description": "Buy credits + history. (AutoRechargeCard is orphaned — not rendered here.)"
+      "description": "Buy credits + history. (AutoRechargeCard is orphaned — not rendered here.)",
+      "group": "Billing"
     },
     {
       "id": "integrations",
@@ -1207,7 +1239,8 @@
           "label": "Request an integration"
         }
       ],
-      "description": "Connect tools (Composio)."
+      "description": "Connect tools (Composio).",
+      "group": "Integrations"
     }
   ],
   "edges": [
