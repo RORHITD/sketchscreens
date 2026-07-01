@@ -41,16 +41,22 @@ Produce a single JSON object matching this shape (validated by `@sketchscreens/c
 - `secure: true` for password fields; `required: true` if the source marks it required.
 - element `group` = an optional key; elements sharing it render inside one card/section (distinct from the screen-level `group` below).
 
-## Hierarchy — the screen `group`
+## The journey — `parent`, `isEntry`, and `group`
 
-The renderer draws a **top-down tree** (org chart) from each screen's `group`: a `" › "`-delimited path, most-general first. `"Settings › AI Settings"` places the screen under an *AI Settings* node that itself sits under *Settings*. Screens with no `group` sit at the root.
+The renderer draws a **single top-down journey tree**, rooted at what the user sees FIRST, flowing the way people actually navigate. Model that, don't just bucket by feature:
 
-Set it so the map reads as a sensible hierarchy — usually derived from the route:
+**`isEntry`** — mark exactly ONE screen as the entry point (`isEntry: true`): the first thing a user hits — a splash/launch screen, or the auth screen if there's no splash. The tree roots here.
 
-- Group by the **top route segment**, humanized: `/calls`, `/calls/:id`, `/voicemails` → `"Calls"`; `/contacts`, `/contacts/pipeline` → `"Contacts"`; `/billing/*`, `/phone-numbers` → `"Billing"`.
-- **Nest** where the app nests: `/settings/*` → `"Settings"`; `/ai-settings/*` → `"Settings › AI Settings"` (AI settings live under Settings). `/auth`, `/verify`, `/select-account` → `"Auth"`.
-- Keep the tree shallow (1–2 levels is plenty). Put a section's hub/landing screen in the same group as its children.
-- If unsure, group by the top segment. A screen with a truly standalone route can be left ungrouped.
+**`parent`** — set each screen's `parent` to the id of the screen a user reaches it FROM. This is the backbone:
+- The **entry** screen has no parent.
+- **Auth** screens hang off the entry. If sign-up and login are distinct journeys, model them as separate branches (a "Sign Up" screen and a "Login" screen, each → its own Verify), even if they reuse a component — set their `name`/`id` to reflect the path.
+- The **main screen** (dashboard/home) is the hub the app opens into; its parent is the last auth/onboarding step.
+- Each **feature section's hub** (Calls, Contacts, Settings, Billing…) has `parent: <dashboard id>`. Each **sub-screen** has `parent: <its section hub id>` (e.g. Call Detail → Calls; AI Settings Voice → AI Settings; AI Settings → Settings).
+- A screen you can't place still renders — parentless non-root screens attach to the root automatically.
+
+Keep the backbone to the *primary* way in. Secondary/cross links (e.g. a call row → a contact) are captured as `edges` (drawn faint), not as `parent`.
+
+**`group`** — a `" › "` label path for the section a screen belongs to (`"Settings › AI Settings"`), usually derived from the route (`/calls*` → "Calls"; `/ai-settings/*` → "Settings › AI Settings"). Shown as a small section badge on the screen. Complements `parent` (which gives the shape); `group` gives the label.
 
 ## Method (agent-first)
 
@@ -59,7 +65,7 @@ Set it so the map reads as a sensible hierarchy — usually derived from the rou
 3. **For each screen, read its component to list elements.** Screens are often *thin* — a route file that just renders `<LoginForm />`. **Follow the import to the real component** and read *that* file's fields/buttons/headings. Resolve string constants (e.g. `AppString.continueWithPhone`) to their values when cheap.
 4. **List elements top-to-bottom in source order.** A form with 3 fields + a submit button → 3 `input` + 1 `button`. Don't invent elements that aren't there; don't omit obvious ones.
 5. **Infer edges** from navigation calls (see profile). The `trigger` is usually the button/link label that causes the transition.
-6. **Set each screen's `group`** (the hierarchy path) per the *Hierarchy* section — so the tree reads as Settings → AI Settings → Voice, etc.
+6. **Build the journey** per *The journey* section — mark the `isEntry` screen, set each screen's `parent` to what it's reached from (entry → auth → dashboard → sections), and set `group` labels. The result should read as: first screen → sign-up/login → main screen → feature areas.
 7. **Keep it honest.** If a screen's elements are genuinely dynamic/unknowable, emit the ones you can see and add a `note`. A smaller true map beats a padded guessed one.
 
 ## Stack profiles (parse signals)

@@ -81,3 +81,42 @@ test("rejects a self-referential edge", () => {
   assert.equal(result.ok, false);
   assert.ok(result.issues.some((i) => i.code === "self_edge"));
 });
+
+test("accepts a valid journey with parent + isEntry", () => {
+  const result = validateProjectMap({
+    name: "Journey",
+    surface: "web",
+    screens: [
+      { id: "launch", name: "Launch", isEntry: true, elements: [] },
+      { id: "auth", name: "Auth", parent: "launch", elements: [] },
+      { id: "home", name: "Home", parent: "auth", elements: [] },
+    ],
+    edges: [],
+  });
+  assert.equal(result.ok, true, JSON.stringify(result.issues));
+});
+
+test("rejects a parent that doesn't exist", () => {
+  const result = validateProjectMap({
+    name: "BadParent",
+    surface: "web",
+    screens: [{ id: "a", name: "A", parent: "ghost", elements: [] }],
+    edges: [],
+  });
+  assert.equal(result.ok, false);
+  assert.ok(result.issues.some((i) => i.code === "parent_unknown"));
+});
+
+test("rejects a parent cycle", () => {
+  const result = validateProjectMap({
+    name: "Cycle",
+    surface: "web",
+    screens: [
+      { id: "a", name: "A", parent: "b", elements: [] },
+      { id: "b", name: "B", parent: "a", elements: [] },
+    ],
+    edges: [],
+  });
+  assert.equal(result.ok, false);
+  assert.ok(result.issues.some((i) => i.code === "parent_cycle"));
+});

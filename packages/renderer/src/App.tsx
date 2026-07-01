@@ -24,11 +24,10 @@ import "wired-elements/lib/wired-divider.js";
 import type { ProjectMapT } from "@sketchscreens/core-schema";
 import { buildGraph, type AnyNode } from "./layout";
 import { ScreenNode } from "./ScreenNode";
-import { GroupNode } from "./GroupNode";
 import { loadProjectMap } from "./loadMap";
 import { DetailPanel } from "./DetailPanel";
 
-const nodeTypes = { screen: ScreenNode, group: GroupNode };
+const nodeTypes = { screen: ScreenNode };
 
 export function App() {
   const [map, setMap] = useState<ProjectMapT | null>(null);
@@ -92,7 +91,7 @@ export function App() {
           <MiniMap
             pannable
             zoomable
-            nodeColor={(n) => (n.type === "group" ? "#c9bfe4" : "#d9d6cc")}
+            nodeColor={(n) => (n.data?.isRoot ? "#2f6f8f" : "#d9d6cc")}
             maskColor="rgba(253,253,251,0.7)"
           />
         </ReactFlow>

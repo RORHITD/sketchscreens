@@ -1,6 +1,6 @@
 import { validateProjectMap, type ProjectMapT } from "@sketchscreens/core-schema";
 // Dev fallback, bundled at build time so `pnpm dev` always has something to show.
-import sampleMap from "../../../examples/aiphone-web.map.json";
+import sampleMap from "../../../examples/aiphone-web-journey.map.json";
 
 declare global {
   interface Window {

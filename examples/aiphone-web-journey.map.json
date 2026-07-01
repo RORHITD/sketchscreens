@@ -1,0 +1,1701 @@
+{
+  "version": 1,
+  "name": "AI Phone 360 — User Journey (live-extracted)",
+  "surface": "web",
+  "screens": [
+    {
+      "id": "dashboard-front-desk",
+      "name": "Front Desk (Dashboard)",
+      "route": "/dashboard",
+      "sourceFile": "src/components/dashboard/UnifiedInbox.tsx",
+      "elements": [
+        {
+          "type": "nav",
+          "label": "Front Desk · Calls · Contacts · AI Settings · Billing"
+        },
+        {
+          "type": "heading",
+          "label": "Front Desk"
+        },
+        {
+          "type": "text",
+          "label": "Every call, text, voicemail, and chat in one place"
+        },
+        {
+          "type": "input",
+          "label": "Search interactions (press /)"
+        },
+        {
+          "type": "tabs",
+          "label": "All · Calls · Voicemails · Texts · Live Chats"
+        },
+        {
+          "type": "list",
+          "label": "Interactions list (caller · summary · type)"
+        },
+        {
+          "type": "card",
+          "label": "Detail panel (recording / AI summary / thread)"
+        }
+      ],
+      "description": "Every call, text, voicemail, and chat in one place.",
+      "group": "Dashboard",
+      "parent": "verify-login"
+    },
+    {
+      "id": "overview",
+      "name": "Overview (Analytics)",
+      "route": "/overview",
+      "sourceFile": "src/app/(protected)/overview/page.tsx",
+      "elements": [
+        {
+          "type": "heading",
+          "label": "Overview"
+        },
+        {
+          "type": "select",
+          "label": "Period (This Quarter)"
+        },
+        {
+          "type": "card",
+          "label": "Total Calls",
+          "group": "stats"
+        },
+        {
+          "type": "card",
+          "label": "New Leads",
+          "group": "stats"
+        },
+        {
+          "type": "card",
+          "label": "Spam Blocked",
+          "group": "stats"
+        },
+        {
+          "type": "card",
+          "label": "Usage Credits ($)",
+          "group": "stats"
+        },
+        {
+          "type": "card",
+          "label": "Communications chart (calls/day)"
+        },
+        {
+          "type": "card",
+          "label": "Upcoming Appointments"
+        }
+      ],
+      "description": "Gated analytics view.",
+      "group": "Dashboard",
+      "parent": "dashboard-front-desk"
+    },
+    {
+      "id": "calls",
+      "name": "Calls",
+      "route": "/calls",
+      "sourceFile": "src/app/(protected)/calls/page.tsx",
+      "elements": [
+        {
+          "type": "heading",
+          "label": "Calls"
+        },
+        {
+          "type": "tabs",
+          "label": "Phone · Inbox"
+        },
+        {
+          "type": "input",
+          "label": "Search calls"
+        },
+        {
+          "type": "select",
+          "label": "All Types · Inbound · Outbound"
+        },
+        {
+          "type": "button",
+          "label": "Refresh",
+          "variant": "secondary"
+        },
+        {
+          "type": "button",
+          "label": "Export",
+          "variant": "secondary"
+        },
+        {
+          "type": "list",
+          "label": "Calls table (Time · Contact · Direction · Duration)"
+        }
+      ],
+      "description": "Call history list.",
+      "group": "Calls",
+      "parent": "dashboard-front-desk"
+    },
+    {
+      "id": "call-detail",
+      "name": "Call Detail",
+      "route": "/calls/:id",
+      "sourceFile": "src/app/(protected)/calls/[callSessionId]/page.tsx",
+      "elements": [
+        {
+          "type": "button",
+          "label": "Back to Calls",
+          "variant": "link"
+        },
+        {
+          "type": "button",
+          "label": "Ask AI",
+          "variant": "primary"
+        },
+        {
+          "type": "heading",
+          "label": "Caller name"
+        },
+        {
+          "type": "select",
+          "label": "Caller identity (Lead/Customer/Spam)"
+        },
+        {
+          "type": "text",
+          "label": "phone · date · duration · handled by"
+        },
+        {
+          "type": "button",
+          "label": "Call Back",
+          "variant": "secondary"
+        },
+        {
+          "type": "card",
+          "label": "Recording player"
+        },
+        {
+          "type": "list",
+          "label": "Transcript"
+        },
+        {
+          "type": "card",
+          "label": "AI summary + action items"
+        }
+      ],
+      "description": "One call: summary, recording, transcript, feedback.",
+      "group": "Calls",
+      "parent": "calls"
+    },
+    {
+      "id": "keypad",
+      "name": "Keypad (Dialer)",
+      "route": "/keypad",
+      "sourceFile": "src/app/(protected)/keypad/page.tsx",
+      "elements": [
+        {
+          "type": "button",
+          "label": "Search by name, phone, or email",
+          "variant": "secondary"
+        },
+        {
+          "type": "heading",
+          "label": "Enter Number"
+        },
+        {
+          "type": "list",
+          "label": "Dial pad (1-9, *, 0, #)"
+        },
+        {
+          "type": "button",
+          "label": "Backspace",
+          "variant": "secondary"
+        },
+        {
+          "type": "button",
+          "label": "Call",
+          "variant": "primary"
+        },
+        {
+          "type": "button",
+          "label": "Voice input (mic)",
+          "variant": "secondary"
+        }
+      ],
+      "description": "The dialer.",
+      "group": "Calls",
+      "parent": "calls"
+    },
+    {
+      "id": "voicemails",
+      "name": "Voicemails",
+      "route": "/voicemails",
+      "sourceFile": "src/app/(protected)/voicemails/page.tsx",
+      "elements": [
+        {
+          "type": "heading",
+          "label": "Voicemails"
+        },
+        {
+          "type": "list",
+          "label": "Voicemail cards (play · caller · NEW)"
+        },
+        {
+          "type": "text",
+          "label": "AI summary"
+        },
+        {
+          "type": "button",
+          "label": "Show more",
+          "variant": "link"
+        },
+        {
+          "type": "button",
+          "label": "Mark read · Archive",
+          "variant": "secondary"
+        }
+      ],
+      "description": "Voicemail list.",
+      "group": "Calls",
+      "parent": "calls"
+    },
+    {
+      "id": "recordings",
+      "name": "Recordings",
+      "route": "/recordings",
+      "sourceFile": "src/app/(protected)/recordings/page.tsx",
+      "elements": [
+        {
+          "type": "heading",
+          "label": "Recordings"
+        },
+        {
+          "type": "button",
+          "label": "Record",
+          "variant": "primary"
+        },
+        {
+          "type": "button",
+          "label": "Import",
+          "variant": "primary"
+        },
+        {
+          "type": "list",
+          "label": "Recordings list"
+        },
+        {
+          "type": "card",
+          "label": "Recording card (title · contact · summary)"
+        }
+      ],
+      "description": "Recordings list.",
+      "group": "Calls",
+      "parent": "calls"
+    },
+    {
+      "id": "contacts-list",
+      "name": "Contacts",
+      "route": "/contacts",
+      "sourceFile": "src/app/(protected)/contacts/page.tsx",
+      "elements": [
+        {
+          "type": "heading",
+          "label": "Contacts"
+        },
+        {
+          "type": "tabs",
+          "label": "List · Pipeline"
+        },
+        {
+          "type": "input",
+          "label": "Search name, phone, email, company"
+        },
+        {
+          "type": "button",
+          "label": "Add Contact",
+          "variant": "primary"
+        },
+        {
+          "type": "list",
+          "label": "Filter chips (Leads/Customers/Spam)"
+        },
+        {
+          "type": "card",
+          "label": "Total Contacts",
+          "group": "stats"
+        },
+        {
+          "type": "list",
+          "label": "Contacts list (avatar · name · phone · identity)"
+        }
+      ],
+      "description": "Contacts list.",
+      "group": "Contacts",
+      "parent": "dashboard-front-desk"
+    },
+    {
+      "id": "contact-detail",
+      "name": "Contact Detail",
+      "route": "/contacts/:id",
+      "sourceFile": "src/app/(protected)/contacts/[customerId]/page.tsx",
+      "elements": [
+        {
+          "type": "button",
+          "label": "Back to Contacts",
+          "variant": "link"
+        },
+        {
+          "type": "heading",
+          "label": "Contact name (editable)"
+        },
+        {
+          "type": "list",
+          "label": "Chips: phone · email · address · identity"
+        },
+        {
+          "type": "button",
+          "label": "Call Back",
+          "variant": "primary"
+        },
+        {
+          "type": "card",
+          "label": "Quick Stats (calls · last call · sentiment)"
+        },
+        {
+          "type": "card",
+          "label": "AI Contact Summary"
+        },
+        {
+          "type": "card",
+          "label": "Communication Log"
+        },
+        {
+          "type": "select",
+          "label": "Caller Identity"
+        },
+        {
+          "type": "textarea",
+          "label": "Internal Notes"
+        }
+      ],
+      "description": "One contact: stats, AI summary, log, notes.",
+      "group": "Contacts",
+      "parent": "contacts-list"
+    },
+    {
+      "id": "contacts-pipeline",
+      "name": "Pipeline",
+      "route": "/contacts/pipeline",
+      "sourceFile": "src/components/pipeline/PipelineBoard.tsx",
+      "elements": [
+        {
+          "type": "heading",
+          "label": "Pipeline"
+        },
+        {
+          "type": "text",
+          "label": "Track contacts through your sales process"
+        },
+        {
+          "type": "tabs",
+          "label": "List · Pipeline"
+        },
+        {
+          "type": "card",
+          "label": "Analytics (Total · Value · Conversion · Won/Lost)"
+        },
+        {
+          "type": "list",
+          "label": "Kanban columns (per stage)"
+        },
+        {
+          "type": "card",
+          "label": "Contact card (name · value · calls)"
+        }
+      ],
+      "description": "Kanban sales pipeline.",
+      "group": "Contacts",
+      "parent": "contacts-list"
+    },
+    {
+      "id": "contacts-fields",
+      "name": "Custom Fields",
+      "route": "/contacts/fields",
+      "sourceFile": "src/components/contacts/CustomFieldsManager.tsx",
+      "elements": [
+        {
+          "type": "button",
+          "label": "Back to Contacts",
+          "variant": "link"
+        },
+        {
+          "type": "heading",
+          "label": "Custom Fields"
+        },
+        {
+          "type": "button",
+          "label": "Add Field",
+          "variant": "primary"
+        },
+        {
+          "type": "list",
+          "label": "Fields table (Name · Type · Required · Active)"
+        },
+        {
+          "type": "toggle",
+          "label": "Required (per row)"
+        },
+        {
+          "type": "toggle",
+          "label": "Active (per row)"
+        }
+      ],
+      "description": "Field definitions (table + dialog). Shares data with /settings/ai-fields but different component.",
+      "group": "Contacts",
+      "parent": "contacts-list"
+    },
+    {
+      "id": "chats-list",
+      "name": "Chats",
+      "route": "/chats",
+      "sourceFile": "src/app/(protected)/chats/page.tsx",
+      "elements": [
+        {
+          "type": "heading",
+          "label": "Chats"
+        },
+        {
+          "type": "button",
+          "label": "Analytics",
+          "variant": "link"
+        },
+        {
+          "type": "tabs",
+          "label": "All · SMS · Live Chat"
+        },
+        {
+          "type": "list",
+          "label": "Conversation list (avatar · name · mode · unread)"
+        },
+        {
+          "type": "button",
+          "label": "New Chat",
+          "variant": "primary"
+        }
+      ],
+      "description": "Live chat + SMS conversations.",
+      "group": "Chats",
+      "parent": "dashboard-front-desk"
+    },
+    {
+      "id": "chat-conversation",
+      "name": "Conversation",
+      "route": "/chats/:id",
+      "sourceFile": "src/app/(protected)/chats/[conversationId]/page.tsx",
+      "elements": [
+        {
+          "type": "button",
+          "label": "Back",
+          "variant": "secondary"
+        },
+        {
+          "type": "heading",
+          "label": "Contact name"
+        },
+        {
+          "type": "button",
+          "label": "Take Over",
+          "variant": "primary"
+        },
+        {
+          "type": "button",
+          "label": "Hand to AI",
+          "variant": "secondary"
+        },
+        {
+          "type": "list",
+          "label": "Message thread"
+        },
+        {
+          "type": "textarea",
+          "label": "Reply to visitor"
+        },
+        {
+          "type": "button",
+          "label": "Send",
+          "variant": "primary"
+        }
+      ],
+      "description": "One conversation thread.",
+      "group": "Chats",
+      "parent": "chats-list"
+    },
+    {
+      "id": "knowledge-base",
+      "name": "Knowledge Base",
+      "route": "/knowledge",
+      "sourceFile": "src/app/(protected)/knowledge/page.tsx",
+      "elements": [
+        {
+          "type": "heading",
+          "label": "Knowledge Base"
+        },
+        {
+          "type": "button",
+          "label": "Auto-fill from website",
+          "variant": "secondary"
+        },
+        {
+          "type": "button",
+          "label": "Help Center Articles",
+          "variant": "primary"
+        },
+        {
+          "type": "textarea",
+          "label": "Text knowledge editor"
+        },
+        {
+          "type": "heading",
+          "label": "Documents"
+        },
+        {
+          "type": "button",
+          "label": "Upload document (PDF/DOCX)",
+          "variant": "secondary"
+        },
+        {
+          "type": "list",
+          "label": "Uploaded documents (name · status)"
+        }
+      ],
+      "description": "Info the AI uses to answer.",
+      "group": "Knowledge",
+      "parent": "dashboard-front-desk"
+    },
+    {
+      "id": "team",
+      "name": "Team",
+      "route": "/team",
+      "sourceFile": "src/app/(protected)/team/page.tsx",
+      "elements": [
+        {
+          "type": "heading",
+          "label": "Team"
+        },
+        {
+          "type": "text",
+          "label": "Manage your team members and invitations"
+        },
+        {
+          "type": "button",
+          "label": "Invite Member",
+          "variant": "primary"
+        },
+        {
+          "type": "tabs",
+          "label": "Members · Invitations"
+        },
+        {
+          "type": "list",
+          "label": "Member list (avatar · name · role · Edit/Remove)"
+        }
+      ],
+      "description": "Team members + invitations.",
+      "group": "Team",
+      "parent": "dashboard-front-desk"
+    },
+    {
+      "id": "ai-settings",
+      "name": "AI Settings — AI Rules",
+      "route": "/ai-settings",
+      "sourceFile": "src/app/(protected)/ai-settings/page.tsx",
+      "elements": [
+        {
+          "type": "heading",
+          "label": "AI Settings"
+        },
+        {
+          "type": "tabs",
+          "label": "AI Rules · Voice · Call Routing · AI Agents · On-Hold · Scheduling · Improvements"
+        },
+        {
+          "type": "card",
+          "label": "Test Your AI Agent"
+        },
+        {
+          "type": "heading",
+          "label": "AI Behavior Rules"
+        },
+        {
+          "type": "list",
+          "label": "Your AI Should (rules)"
+        },
+        {
+          "type": "button",
+          "label": "Add rule",
+          "variant": "secondary"
+        },
+        {
+          "type": "list",
+          "label": "Your AI Should NOT (rules)"
+        }
+      ],
+      "description": "The AI Rules tab doubles as the hub.",
+      "group": "Settings › AI Settings",
+      "parent": "settings-account"
+    },
+    {
+      "id": "ai-settings-voice",
+      "name": "AI Settings — Voice",
+      "route": "/ai-settings/voice",
+      "sourceFile": "src/app/(protected)/ai-settings/voice/page.tsx",
+      "elements": [
+        {
+          "type": "tabs",
+          "label": "AI Settings sub-nav (Voice)"
+        },
+        {
+          "type": "card",
+          "label": "Test Your AI Agent"
+        },
+        {
+          "type": "select",
+          "label": "AI Language"
+        },
+        {
+          "type": "heading",
+          "label": "Voice Processing Mode"
+        },
+        {
+          "type": "radio",
+          "label": "Standard Voice"
+        },
+        {
+          "type": "radio",
+          "label": "Realtime Voice"
+        },
+        {
+          "type": "card",
+          "label": "Current Voice"
+        },
+        {
+          "type": "button",
+          "label": "Change Voice",
+          "variant": "primary"
+        }
+      ],
+      "description": "Standard vs Realtime voice.",
+      "group": "Settings › AI Settings",
+      "parent": "ai-settings"
+    },
+    {
+      "id": "ai-settings-call-routing",
+      "name": "AI Settings — Call Routing",
+      "route": "/ai-settings/call-routing",
+      "sourceFile": "src/app/(protected)/ai-settings/call-routing/page.tsx",
+      "elements": [
+        {
+          "type": "tabs",
+          "label": "AI Settings sub-nav (Call Routing)"
+        },
+        {
+          "type": "textarea",
+          "label": "AI Agent Greeting"
+        },
+        {
+          "type": "heading",
+          "label": "Call Handling Mode"
+        },
+        {
+          "type": "radio",
+          "label": "AI Only / AI+Human / Ring Team / Voicemail"
+        },
+        {
+          "type": "toggle",
+          "label": "Department Routing (enable)"
+        },
+        {
+          "type": "input",
+          "label": "Topic name (e.g. Billing)"
+        },
+        {
+          "type": "select",
+          "label": "Send to (phone / team member)"
+        },
+        {
+          "type": "button",
+          "label": "Save routing",
+          "variant": "primary"
+        }
+      ],
+      "description": "Who answers + topic routing.",
+      "group": "Settings › AI Settings",
+      "parent": "ai-settings"
+    },
+    {
+      "id": "ai-settings-agents",
+      "name": "AI Settings — AI Agents",
+      "route": "/ai-settings/agents",
+      "sourceFile": "src/components/settings/AgentsManager.tsx",
+      "elements": [
+        {
+          "type": "tabs",
+          "label": "AI Settings sub-nav (AI Agents)"
+        },
+        {
+          "type": "heading",
+          "label": "AI Agents"
+        },
+        {
+          "type": "text",
+          "label": "Create specialist AI agents; a greeter hands off in-call"
+        },
+        {
+          "type": "button",
+          "label": "New Agent",
+          "variant": "primary"
+        },
+        {
+          "type": "list",
+          "label": "Agents list (name · Greeter · routes on)"
+        }
+      ],
+      "description": "Specialist AI agents + in-call handoff.",
+      "group": "Settings › AI Settings",
+      "parent": "ai-settings"
+    },
+    {
+      "id": "ai-settings-scheduling",
+      "name": "AI Settings — Scheduling",
+      "route": "/ai-settings/scheduling",
+      "sourceFile": "src/app/(protected)/ai-settings/scheduling/page.tsx",
+      "elements": [
+        {
+          "type": "tabs",
+          "label": "AI Settings sub-nav (Scheduling)"
+        },
+        {
+          "type": "toggle",
+          "label": "Allow AI to book appointments"
+        },
+        {
+          "type": "toggle",
+          "label": "SMS confirmation to caller"
+        },
+        {
+          "type": "checkbox",
+          "label": "Appointment types (Appointment/Callback/Quote)"
+        },
+        {
+          "type": "radio",
+          "label": "Assignment (First available / Round robin)"
+        },
+        {
+          "type": "button",
+          "label": "Save Changes",
+          "variant": "primary"
+        }
+      ],
+      "description": "Booking config.",
+      "group": "Settings › AI Settings",
+      "parent": "ai-settings"
+    },
+    {
+      "id": "ai-settings-on-hold",
+      "name": "AI Settings — On-Hold",
+      "route": "/ai-settings/on-hold",
+      "sourceFile": "src/app/(protected)/ai-settings/on-hold/page.tsx",
+      "elements": [
+        {
+          "type": "tabs",
+          "label": "AI Settings sub-nav (On-Hold)"
+        },
+        {
+          "type": "heading",
+          "label": "On-Hold Messages"
+        },
+        {
+          "type": "toggle",
+          "label": "On-hold (enable)"
+        },
+        {
+          "type": "input",
+          "label": "Interval between messages"
+        },
+        {
+          "type": "list",
+          "label": "Messages list"
+        },
+        {
+          "type": "button",
+          "label": "Add Text Message",
+          "variant": "secondary"
+        }
+      ],
+      "description": "On-hold messages.",
+      "group": "Settings › AI Settings",
+      "parent": "ai-settings"
+    },
+    {
+      "id": "ai-settings-improvements",
+      "name": "AI Settings — Improvements",
+      "route": "/ai-settings/improvements",
+      "sourceFile": "src/app/(protected)/ai-settings/improvements/page.tsx",
+      "elements": [
+        {
+          "type": "tabs",
+          "label": "AI Settings sub-nav (Improvements)"
+        },
+        {
+          "type": "heading",
+          "label": "AI Improvements"
+        },
+        {
+          "type": "text",
+          "label": "Our AI reviews your site and calls, then suggests improvements"
+        },
+        {
+          "type": "button",
+          "label": "Scan for improvements",
+          "variant": "primary"
+        },
+        {
+          "type": "list",
+          "label": "Suggestions (Apply / Dismiss)"
+        }
+      ],
+      "description": "AI-suggested config improvements.",
+      "group": "Settings › AI Settings",
+      "parent": "ai-settings"
+    },
+    {
+      "id": "settings-ai-fields",
+      "name": "AI Data Collection Fields",
+      "route": "/settings/ai-fields",
+      "sourceFile": "src/app/(protected)/settings/ai-fields/page.tsx",
+      "elements": [
+        {
+          "type": "heading",
+          "label": "AI Data Collection"
+        },
+        {
+          "type": "button",
+          "label": "Add Field",
+          "variant": "primary"
+        },
+        {
+          "type": "text",
+          "label": "Active (N)"
+        },
+        {
+          "type": "list",
+          "label": "Active fields (name · type · channels)"
+        },
+        {
+          "type": "text",
+          "label": "Disabled (N)"
+        },
+        {
+          "type": "list",
+          "label": "Inactive fields"
+        }
+      ],
+      "description": "What the AI collects from callers (card layout).",
+      "group": "Settings",
+      "parent": "ai-settings"
+    },
+    {
+      "id": "settings-account",
+      "name": "Account Settings",
+      "route": "/settings/account",
+      "sourceFile": "src/app/(protected)/settings/account/page.tsx",
+      "elements": [
+        {
+          "type": "card",
+          "label": "Profile"
+        },
+        {
+          "type": "text",
+          "label": "Full name · email (Verified) · phone · signed-in-with"
+        },
+        {
+          "type": "button",
+          "label": "Edit",
+          "variant": "secondary"
+        },
+        {
+          "type": "button",
+          "label": "Change email",
+          "variant": "secondary"
+        },
+        {
+          "type": "button",
+          "label": "Change phone",
+          "variant": "secondary"
+        },
+        {
+          "type": "button",
+          "label": "Delete My Account",
+          "variant": "destructive"
+        }
+      ],
+      "description": "Profile / email / phone (OTP-verified) + danger zone.",
+      "group": "Settings",
+      "parent": "dashboard-front-desk"
+    },
+    {
+      "id": "settings-business",
+      "name": "Business Profile",
+      "route": "/settings/business",
+      "sourceFile": "src/components/settings/BusinessInfoCard.tsx",
+      "elements": [
+        {
+          "type": "heading",
+          "label": "Organization Info"
+        },
+        {
+          "type": "button",
+          "label": "Edit",
+          "variant": "link"
+        },
+        {
+          "type": "input",
+          "label": "Organization Name",
+          "placeholder": "Acme Corporation"
+        },
+        {
+          "type": "input",
+          "label": "Contact Email",
+          "placeholder": "hello@acme.com"
+        },
+        {
+          "type": "input",
+          "label": "Website",
+          "placeholder": "https://acme.com"
+        },
+        {
+          "type": "button",
+          "label": "Save Changes",
+          "variant": "primary"
+        }
+      ],
+      "description": "Organization Info only (name/email/website).",
+      "group": "Settings",
+      "parent": "settings-account"
+    },
+    {
+      "id": "settings-notifications",
+      "name": "Notifications",
+      "route": "/settings/notifications",
+      "sourceFile": "src/app/(protected)/settings/notifications/page.tsx",
+      "elements": [
+        {
+          "type": "heading",
+          "label": "Notifications"
+        },
+        {
+          "type": "card",
+          "label": "Verify caller info via SMS"
+        },
+        {
+          "type": "toggle",
+          "label": "Verify caller info via SMS"
+        },
+        {
+          "type": "card",
+          "label": "Notify team after each call"
+        },
+        {
+          "type": "toggle",
+          "label": "Notify team after each call"
+        },
+        {
+          "type": "input",
+          "label": "Per-member notification phone"
+        },
+        {
+          "type": "button",
+          "label": "Save settings",
+          "variant": "primary"
+        }
+      ],
+      "description": "Caller-verify + operator SMS.",
+      "group": "Settings",
+      "parent": "settings-account"
+    },
+    {
+      "id": "settings-security",
+      "name": "Security & Activity",
+      "route": "/settings/security",
+      "sourceFile": "src/app/(protected)/settings/security/page.tsx",
+      "elements": [
+        {
+          "type": "heading",
+          "label": "Security & Activity"
+        },
+        {
+          "type": "card",
+          "label": "Total Events",
+          "group": "stats"
+        },
+        {
+          "type": "card",
+          "label": "Logins",
+          "group": "stats"
+        },
+        {
+          "type": "tabs",
+          "label": "All · Updates · Created · Deleted · Logins"
+        },
+        {
+          "type": "input",
+          "label": "Search by name"
+        },
+        {
+          "type": "list",
+          "label": "Activity log"
+        }
+      ],
+      "description": "Audit log (NOT password/2FA).",
+      "group": "Settings",
+      "parent": "settings-account"
+    },
+    {
+      "id": "settings-spam-protection",
+      "name": "Spam Protection",
+      "route": "/settings/spam-protection",
+      "sourceFile": "src/app/(protected)/settings/spam-protection/page.tsx",
+      "elements": [
+        {
+          "type": "tabs",
+          "label": "Settings · Blocked Numbers · DNC List · Review"
+        },
+        {
+          "type": "toggle",
+          "label": "Spam Protection (master)"
+        },
+        {
+          "type": "radio",
+          "label": "Sensitivity (High/Medium/Low)"
+        },
+        {
+          "type": "input",
+          "label": "Blocklist add (+1 555 000-0000)"
+        },
+        {
+          "type": "button",
+          "label": "Block",
+          "variant": "primary"
+        },
+        {
+          "type": "list",
+          "label": "Blocked numbers"
+        }
+      ],
+      "description": "Spam + DNC.",
+      "group": "Settings",
+      "parent": "settings-account"
+    },
+    {
+      "id": "phone-numbers",
+      "name": "Phone Numbers",
+      "route": "/phone-numbers",
+      "sourceFile": "src/components/billing/PhoneNumberCard.tsx",
+      "elements": [
+        {
+          "type": "heading",
+          "label": "Phone Numbers"
+        },
+        {
+          "type": "button",
+          "label": "Get New Number",
+          "variant": "primary"
+        },
+        {
+          "type": "card",
+          "label": "PhoneNumberCard (number · Primary · caps)"
+        },
+        {
+          "type": "button",
+          "label": "Set as Primary",
+          "variant": "secondary"
+        },
+        {
+          "type": "button",
+          "label": "Release Number",
+          "variant": "destructive"
+        }
+      ],
+      "description": "Manage AI phone numbers.",
+      "group": "Billing",
+      "parent": "billing-hub"
+    },
+    {
+      "id": "billing-hub",
+      "name": "Billing",
+      "route": "/billing",
+      "sourceFile": "src/app/(protected)/billing/page.tsx",
+      "elements": [
+        {
+          "type": "heading",
+          "label": "Billing"
+        },
+        {
+          "type": "card",
+          "label": "Usage Credits balance"
+        },
+        {
+          "type": "button",
+          "label": "$10 · $25 · $50 top-up",
+          "variant": "secondary"
+        },
+        {
+          "type": "card",
+          "label": "Current Plan"
+        },
+        {
+          "type": "button",
+          "label": "Change Plan",
+          "variant": "primary"
+        },
+        {
+          "type": "list",
+          "label": "Plan grid"
+        }
+      ],
+      "description": "Subscription + credits.",
+      "group": "Billing",
+      "parent": "dashboard-front-desk"
+    },
+    {
+      "id": "billing-subscription",
+      "name": "Subscription / Plans",
+      "route": "/billing/subscription",
+      "sourceFile": "src/app/(protected)/billing/subscription/page.tsx",
+      "elements": [
+        {
+          "type": "button",
+          "label": "Back to Billing",
+          "variant": "ghost"
+        },
+        {
+          "type": "heading",
+          "label": "Change Your Plan"
+        },
+        {
+          "type": "card",
+          "label": "Current Plan"
+        },
+        {
+          "type": "list",
+          "label": "Plans grid (PlanCard)"
+        },
+        {
+          "type": "button",
+          "label": "Select Plan",
+          "variant": "primary"
+        },
+        {
+          "type": "button",
+          "label": "Cancel Subscription",
+          "variant": "destructive"
+        }
+      ],
+      "description": "Choose/change plan.",
+      "group": "Billing",
+      "parent": "billing-hub"
+    },
+    {
+      "id": "billing-credits",
+      "name": "Usage Credits",
+      "route": "/billing/credits",
+      "sourceFile": "src/app/(protected)/billing/credits/page.tsx",
+      "elements": [
+        {
+          "type": "nav",
+          "label": "Billing › Usage Credits"
+        },
+        {
+          "type": "heading",
+          "label": "Usage Credits"
+        },
+        {
+          "type": "card",
+          "label": "Credit balance"
+        },
+        {
+          "type": "button",
+          "label": "$10 · $25 · $50 · $100",
+          "variant": "secondary"
+        },
+        {
+          "type": "button",
+          "label": "Make A Purchase",
+          "variant": "primary"
+        },
+        {
+          "type": "tabs",
+          "label": "Usage History · Transactions"
+        }
+      ],
+      "description": "Buy credits + history. (AutoRechargeCard is orphaned — not rendered here.)",
+      "group": "Billing",
+      "parent": "billing-hub"
+    },
+    {
+      "id": "integrations",
+      "name": "Integrations",
+      "route": "/integrations",
+      "sourceFile": "src/app/(protected)/integrations/page.tsx",
+      "elements": [
+        {
+          "type": "heading",
+          "label": "Integrations"
+        },
+        {
+          "type": "card",
+          "label": "Your Connections"
+        },
+        {
+          "type": "input",
+          "label": "Search integrations"
+        },
+        {
+          "type": "tabs",
+          "label": "Category tabs"
+        },
+        {
+          "type": "list",
+          "label": "Integrations grid"
+        },
+        {
+          "type": "button",
+          "label": "Connect",
+          "variant": "secondary"
+        },
+        {
+          "type": "card",
+          "label": "Request an integration"
+        }
+      ],
+      "description": "Connect tools (Composio).",
+      "group": "Integrations",
+      "parent": "dashboard-front-desk"
+    },
+    {
+      "id": "app-launch",
+      "name": "App Launch",
+      "route": "/",
+      "sourceFile": "src/app/(protected)/layout.tsx",
+      "elements": [
+        {
+          "type": "image",
+          "label": "AI Phone 360 logo"
+        },
+        {
+          "type": "text",
+          "label": "Loading…"
+        }
+      ],
+      "description": "First load: routes you to auth if signed out, or to the dashboard if signed in.",
+      "group": "Getting In",
+      "isEntry": true
+    },
+    {
+      "id": "signup",
+      "name": "Sign Up (new user)",
+      "route": "/auth?source=signup",
+      "sourceFile": "src/components/auth/LoginForm.tsx",
+      "elements": [
+        {
+          "type": "heading",
+          "label": "Create your account"
+        },
+        {
+          "type": "text",
+          "label": "Get an AI phone number in under two minutes."
+        },
+        {
+          "type": "input",
+          "label": "Phone number",
+          "required": true
+        },
+        {
+          "type": "button",
+          "label": "Continue",
+          "variant": "primary"
+        },
+        {
+          "type": "divider",
+          "label": "or"
+        },
+        {
+          "type": "button",
+          "label": "Continue with Google",
+          "variant": "secondary"
+        },
+        {
+          "type": "button",
+          "label": "Continue with Apple",
+          "variant": "secondary"
+        }
+      ],
+      "description": "New-user path: phone-first sign up.",
+      "group": "Getting In › Sign Up",
+      "parent": "app-launch"
+    },
+    {
+      "id": "login",
+      "name": "Login (returning)",
+      "route": "/auth",
+      "sourceFile": "src/components/auth/LoginForm.tsx",
+      "elements": [
+        {
+          "type": "heading",
+          "label": "Welcome back"
+        },
+        {
+          "type": "input",
+          "label": "Phone number",
+          "required": true
+        },
+        {
+          "type": "button",
+          "label": "Continue",
+          "variant": "primary"
+        },
+        {
+          "type": "button",
+          "label": "Continue with Google",
+          "variant": "secondary"
+        }
+      ],
+      "description": "Returning-user path: phone login.",
+      "group": "Getting In › Login",
+      "parent": "app-launch"
+    },
+    {
+      "id": "verify-signup",
+      "name": "Verify code",
+      "route": "/verify",
+      "sourceFile": "src/app/(auth)/verify/page.tsx",
+      "elements": [
+        {
+          "type": "heading",
+          "label": "Verify your number"
+        },
+        {
+          "type": "text",
+          "label": "We sent a code to your phone"
+        },
+        {
+          "type": "input",
+          "label": "6-digit code",
+          "required": true
+        },
+        {
+          "type": "button",
+          "label": "Verify",
+          "variant": "primary"
+        }
+      ],
+      "description": "OTP after sign up.",
+      "group": "Getting In › Sign Up",
+      "parent": "signup"
+    },
+    {
+      "id": "verify-login",
+      "name": "Verify code",
+      "route": "/verify",
+      "sourceFile": "src/app/(auth)/verify/page.tsx",
+      "elements": [
+        {
+          "type": "heading",
+          "label": "Verify your number"
+        },
+        {
+          "type": "input",
+          "label": "6-digit code",
+          "required": true
+        },
+        {
+          "type": "button",
+          "label": "Verify",
+          "variant": "primary"
+        }
+      ],
+      "description": "OTP after login.",
+      "group": "Getting In › Login",
+      "parent": "login"
+    },
+    {
+      "id": "onboarding",
+      "name": "Onboarding wizard",
+      "route": "/onboarding",
+      "sourceFile": "src/components/onboarding/OnboardingWizard.tsx",
+      "elements": [
+        {
+          "type": "heading",
+          "label": "Set up your AI phone"
+        },
+        {
+          "type": "input",
+          "label": "Business name",
+          "required": true
+        },
+        {
+          "type": "textarea",
+          "label": "What your business does"
+        },
+        {
+          "type": "button",
+          "label": "Choose a plan",
+          "variant": "primary"
+        }
+      ],
+      "description": "New users set up their business + AI before reaching the app.",
+      "group": "Getting In › Sign Up",
+      "parent": "verify-signup"
+    }
+  ],
+  "edges": [
+    {
+      "from": "dashboard-front-desk",
+      "to": "overview",
+      "trigger": "Overview"
+    },
+    {
+      "from": "dashboard-front-desk",
+      "to": "keypad",
+      "trigger": "Make a Test Call"
+    },
+    {
+      "from": "dashboard-front-desk",
+      "to": "contact-detail",
+      "trigger": "Caller name"
+    },
+    {
+      "from": "overview",
+      "to": "calls",
+      "trigger": "Total Calls"
+    },
+    {
+      "from": "overview",
+      "to": "settings-spam-protection",
+      "trigger": "Spam Blocked"
+    },
+    {
+      "from": "overview",
+      "to": "billing-credits",
+      "trigger": "Usage Credits"
+    },
+    {
+      "from": "calls",
+      "to": "call-detail",
+      "trigger": "Call row"
+    },
+    {
+      "from": "calls",
+      "to": "contact-detail",
+      "trigger": "View contact"
+    },
+    {
+      "from": "call-detail",
+      "to": "calls",
+      "trigger": "Back to Calls"
+    },
+    {
+      "from": "call-detail",
+      "to": "keypad",
+      "trigger": "Call Back"
+    },
+    {
+      "from": "call-detail",
+      "to": "contact-detail",
+      "trigger": "View full profile"
+    },
+    {
+      "from": "voicemails",
+      "to": "contact-detail",
+      "trigger": "Caller name"
+    },
+    {
+      "from": "contacts-list",
+      "to": "contact-detail",
+      "trigger": "Contact row"
+    },
+    {
+      "from": "contacts-list",
+      "to": "contacts-pipeline",
+      "trigger": "Pipeline tab"
+    },
+    {
+      "from": "contacts-list",
+      "to": "contacts-fields",
+      "trigger": "Custom Fields"
+    },
+    {
+      "from": "contact-detail",
+      "to": "contacts-list",
+      "trigger": "Back to Contacts"
+    },
+    {
+      "from": "contacts-pipeline",
+      "to": "contacts-list",
+      "trigger": "List tab"
+    },
+    {
+      "from": "contacts-pipeline",
+      "to": "contact-detail",
+      "trigger": "Card click"
+    },
+    {
+      "from": "contacts-fields",
+      "to": "contacts-list",
+      "trigger": "Back to Contacts"
+    },
+    {
+      "from": "chats-list",
+      "to": "chat-conversation",
+      "trigger": "Conversation row"
+    },
+    {
+      "from": "chats-list",
+      "to": "contact-detail",
+      "trigger": "Profile icon"
+    },
+    {
+      "from": "chat-conversation",
+      "to": "chats-list",
+      "trigger": "Back"
+    },
+    {
+      "from": "chat-conversation",
+      "to": "contact-detail",
+      "trigger": "Profile link"
+    },
+    {
+      "from": "ai-settings",
+      "to": "ai-settings-voice",
+      "trigger": "Voice"
+    },
+    {
+      "from": "ai-settings",
+      "to": "ai-settings-call-routing",
+      "trigger": "Call Routing"
+    },
+    {
+      "from": "ai-settings",
+      "to": "ai-settings-agents",
+      "trigger": "AI Agents"
+    },
+    {
+      "from": "ai-settings",
+      "to": "ai-settings-on-hold",
+      "trigger": "On-Hold"
+    },
+    {
+      "from": "ai-settings",
+      "to": "ai-settings-scheduling",
+      "trigger": "Scheduling"
+    },
+    {
+      "from": "ai-settings",
+      "to": "ai-settings-improvements",
+      "trigger": "Improvements"
+    },
+    {
+      "from": "ai-settings-voice",
+      "to": "ai-settings",
+      "trigger": "AI Rules"
+    },
+    {
+      "from": "ai-settings-call-routing",
+      "to": "ai-settings",
+      "trigger": "AI Rules"
+    },
+    {
+      "from": "ai-settings-agents",
+      "to": "ai-settings",
+      "trigger": "AI Rules"
+    },
+    {
+      "from": "ai-settings-on-hold",
+      "to": "ai-settings",
+      "trigger": "AI Rules"
+    },
+    {
+      "from": "ai-settings-scheduling",
+      "to": "ai-settings",
+      "trigger": "AI Rules"
+    },
+    {
+      "from": "ai-settings-improvements",
+      "to": "ai-settings",
+      "trigger": "AI Rules"
+    },
+    {
+      "from": "ai-settings-scheduling",
+      "to": "integrations",
+      "trigger": "Go to Integrations"
+    },
+    {
+      "from": "settings-account",
+      "to": "team",
+      "trigger": "-"
+    },
+    {
+      "from": "settings-security",
+      "to": "team",
+      "trigger": "Manage team"
+    },
+    {
+      "from": "billing-hub",
+      "to": "billing-credits",
+      "trigger": "$ top-up"
+    },
+    {
+      "from": "billing-hub",
+      "to": "billing-subscription",
+      "trigger": "Change Plan"
+    },
+    {
+      "from": "billing-subscription",
+      "to": "billing-hub",
+      "trigger": "Back to Billing"
+    },
+    {
+      "from": "billing-credits",
+      "to": "billing-hub",
+      "trigger": "Billing Overview"
+    },
+    {
+      "from": "billing-credits",
+      "to": "billing-subscription",
+      "trigger": "Manage Subscription"
+    },
+    {
+      "from": "signup",
+      "to": "verify-signup",
+      "trigger": "Continue"
+    },
+    {
+      "from": "login",
+      "to": "verify-login",
+      "trigger": "Continue"
+    },
+    {
+      "from": "verify-signup",
+      "to": "onboarding",
+      "trigger": "Verify"
+    },
+    {
+      "from": "onboarding",
+      "to": "dashboard-front-desk",
+      "trigger": "Finish setup"
+    },
+    {
+      "from": "verify-login",
+      "to": "dashboard-front-desk",
+      "trigger": "Verify"
+    }
+  ],
+  "meta": {
+    "generator": "sketchscreens-agent",
+    "repoRoot": "/Users/richyorozco/C/aiphone360-web-app",
+    "extraction": "agent"
+  }
+}

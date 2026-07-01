@@ -98,13 +98,27 @@ export const ScreenSpec = z.object({
   /** Optional short description / purpose of the screen. */
   description: z.string().optional(),
   /**
-   * Optional hierarchy path this screen belongs under, most-general first,
-   * using " › " as the separator — e.g. "Settings › AI Settings". The renderer
-   * builds a top-down tree from these paths (a screen with no group sits at the
-   * root). Deriveable from the route (e.g. /ai-settings/voice → the AI Settings
-   * group), but the extractor may set it explicitly for a cleaner tree.
+   * Optional label-path for this screen's section, most-general first, using
+   * " › " as the separator — e.g. "Settings › AI Settings". Groups cluster and
+   * label screens; the renderer nests group labels. Deriveable from the route.
+   * (For the overall journey SHAPE, prefer `parent` below.)
    */
   group: z.string().optional(),
+  /**
+   * Optional id of the screen this one hangs beneath in the JOURNEY tree — the
+   * screen a user reaches this one *from*. This is what roots the map as a real
+   * flow: an entry screen has no parent; the auth screen's parent is the entry;
+   * each feature-section hub's parent is the dashboard; etc. When set, it
+   * overrides route-derived nesting so the tree matches how users actually
+   * navigate. Must reference another screen's `id`.
+   */
+  parent: z.string().optional(),
+  /**
+   * Optional hint that this screen is the app's entry point / root of the
+   * journey (what the user sees first). At most one screen should set this; the
+   * renderer roots the tree here. If none is set, the renderer infers a root.
+   */
+  isEntry: z.boolean().optional(),
 });
 export type ScreenSpec = z.infer<typeof ScreenSpec>;
 

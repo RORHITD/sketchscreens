@@ -20,15 +20,23 @@ function seedFor(id: string): number {
  * Left/Right handles catch nav edges arriving from the sides.
  */
 export function ScreenNode({ data, selected }: NodeProps<ScreenNodeType>) {
-  const { screen } = data;
+  const { screen, isRoot } = data;
+  // The deepest segment of the group path is the section label badge.
+  const section = screen.group?.split("›").map((s) => s.trim()).filter(Boolean).pop();
   return (
-    <div className={`ss-screen${selected ? " ss-screen-selected" : ""}`}>
+    <div
+      className={`ss-screen${selected ? " ss-screen-selected" : ""}${isRoot ? " ss-screen-root" : ""}`}
+    >
       <Handle type="target" position={Position.Top} className="ss-handle" />
       <Handle type="target" position={Position.Left} className="ss-handle-hidden" />
 
       <RoughFrame className="ss-screen-card" seed={seedFor(screen.id)}>
         <div className="ss-screen-titlebar">
-          <span className="ss-screen-name">{screen.name}</span>
+          <div className="ss-screen-titlerow">
+            <span className="ss-screen-name">{screen.name}</span>
+            {isRoot && <span className="ss-root-badge">START</span>}
+            {!isRoot && section && <span className="ss-section-badge">{section}</span>}
+          </div>
           {screen.route && <span className="ss-screen-route">{screen.route}</span>}
         </div>
 
