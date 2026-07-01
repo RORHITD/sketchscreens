@@ -120,3 +120,54 @@ test("rejects a parent cycle", () => {
   assert.equal(result.ok, false);
   assert.ok(result.issues.some((i) => i.code === "parent_cycle"));
 });
+
+test("every issue carries a severity; errors fail the gate, warnings don't", () => {
+  const bad = validateProjectMap({
+    name: "X",
+    surface: "web",
+    screens: [{ id: "a", name: "A", elements: [] }],
+    edges: [{ from: "a", to: "ghost" }],
+  });
+  assert.equal(bad.ok, false);
+  assert.ok(bad.issues.every((i) => i.severity === "error" || i.severity === "warning"));
+  assert.ok(bad.issues.some((i) => i.severity === "error"));
+});
+
+test("an empty map is a WARNING, not an error (still ok)", () => {
+  const result = validateProjectMap({ name: "Empty", surface: "web", screens: [], edges: [] });
+  assert.equal(result.ok, true);
+  const w = result.issues.find((i) => i.code === "no_screens");
+  assert.ok(w && w.severity === "warning");
+});
+
+test("more than one isEntry is a warning, not an error", () => {
+  const result = validateProjectMap({
+    name: "TwoEntries",
+    surface: "web",
+    screens: [
+      { id: "a", name: "A", isEntry: true, elements: [] },
+      { id: "b", name: "B", isEntry: true, elements: [] },
+    ],
+    edges: [],
+  });
+  assert.equal(result.ok, true);
+  const w = result.issues.find((i) => i.code === "entry_count");
+  assert.ok(w && w.severity === "warning");
+});
+
+test("a duplicate edge is a warning", () => {
+  const result = validateProjectMap({
+    name: "DupEdge",
+    surface: "web",
+    screens: [
+      { id: "a", name: "A", elements: [] },
+      { id: "b", name: "B", elements: [] },
+    ],
+    edges: [
+      { from: "a", to: "b" },
+      { from: "a", to: "b" },
+    ],
+  });
+  assert.equal(result.ok, true);
+  assert.ok(result.issues.some((i) => i.code === "duplicate_edge" && i.severity === "warning"));
+});

@@ -98,6 +98,13 @@ export const ScreenElement = z.object({
    * full-width, text left). Set "center" for a centered hero button/card.
    */
   align: ElementAlign.optional(),
+  /**
+   * Whether `label` is the app's verbatim text or the extractor's SHAPE
+   * description of a dynamic region (a list/table it couldn't read literally).
+   * Defaults to "verbatim". The renderer styles "descriptive" labels distinctly
+   * so a reviewer sees "this is the tool's summary, not the app's words."
+   */
+  labelKind: z.enum(["verbatim", "descriptive"]).optional(),
   /** Free-form note the extractor wants to surface (e.g. "conditionally shown"). */
   note: z.string().optional(),
 });
@@ -147,6 +154,18 @@ export const ScreenSpec = z.object({
    * renderer roots the tree here. If none is set, the renderer infers a root.
    */
   isEntry: z.boolean().optional(),
+  /**
+   * How this screen is presented. "screen" (default) is a full page/route; the
+   * others are overlays. The renderer draws non-"screen" presentations with a
+   * distinct overlay frame and attaches them to their opener via an edge rather
+   * than the journey backbone.
+   */
+  presentation: z.enum(["screen", "modal", "drawer", "sheet"]).optional(),
+  /**
+   * Optional state variant this screen represents (an empty/error/loading view
+   * of another screen). The renderer can cluster it beside its base screen.
+   */
+  state: z.enum(["default", "empty", "error", "loading"]).optional(),
 });
 export type ScreenSpec = z.infer<typeof ScreenSpec>;
 

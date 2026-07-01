@@ -43,3 +43,12 @@ export async function writeMapIfValid(
 
 export type { ProjectMapT };
 export { validateProjectMap };
+export { auditSourceFiles, type AuditResult } from "@sketchscreens/core-schema/audit";
+export {
+  enumerateScreens,
+  detectStack,
+  coverage,
+  type DiscoveredScreen,
+  type CoverageReport,
+  type Stack,
+} from "./enumerate.js";

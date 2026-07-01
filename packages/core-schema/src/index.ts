@@ -38,4 +38,10 @@ export {
   parseProjectMap,
   type ValidationIssue,
   type ValidationResult,
+  type IssueSeverity,
 } from "./validate.js";
+
+// NOTE: the filesystem audit (auditSourceFiles) lives in ./audit.js and is
+// intentionally NOT re-exported here — it imports node:fs and would pollute the
+// browser bundle. CLIs import it via the "@sketchscreens/core-schema/audit"
+// subpath export (see package.json).

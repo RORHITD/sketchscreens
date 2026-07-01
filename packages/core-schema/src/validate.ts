@@ -1,9 +1,13 @@
 import { ProjectMap } from "./schema.js";
 
+/** How serious a validation issue is. Errors fail the gate; warnings don't. */
+export type IssueSeverity = "error" | "warning";
+
 /** A validation problem found in a ProjectMap. */
 export interface ValidationIssue {
   /** Machine-readable code. */
   code:
+    // errors — the map is malformed and must not render
     | "schema"
     | "duplicate_screen_id"
     | "edge_unknown_from"
@@ -11,7 +15,14 @@ export interface ValidationIssue {
     | "self_edge"
     | "parent_unknown"
     | "parent_self"
-    | "parent_cycle";
+    | "parent_cycle"
+    // warnings — the map renders but something's off
+    | "no_screens"
+    | "entry_count"
+    | "duplicate_edge"
+    | "sourcefile_missing";
+  /** Error (fails the gate) or warning (renders anyway). Defaults to error. */
+  severity: IssueSeverity;
   /** Human-readable message. */
   message: string;
   /** JSON-ish path to the offending value, when known. */
@@ -19,8 +30,9 @@ export interface ValidationIssue {
 }
 
 export interface ValidationResult {
+  /** True when there are no ERROR-severity issues (warnings don't fail it). */
   ok: boolean;
-  /** The parsed map when `ok` is true (defaults applied), else undefined. */
+  /** The parsed map when the shape is valid (defaults applied), else undefined. */
   map?: ProjectMap;
   issues: ValidationIssue[];
 }
@@ -38,6 +50,7 @@ export function validateProjectMap(input: unknown): ValidationResult {
   if (!parsed.success) {
     const issues: ValidationIssue[] = parsed.error.issues.map((i) => ({
       code: "schema",
+      severity: "error",
       message: i.message,
       path: i.path.join("."),
     }));
@@ -46,43 +59,51 @@ export function validateProjectMap(input: unknown): ValidationResult {
 
   const map = parsed.data;
   const issues: ValidationIssue[] = [];
+  const err = (code: ValidationIssue["code"], message: string, path?: string) =>
+    issues.push({ code, severity: "error", message, path });
+  const warn = (code: ValidationIssue["code"], message: string, path?: string) =>
+    issues.push({ code, severity: "warning", message, path });
+
+  // A map with no screens renders as a blank canvas — warn rather than crash.
+  if (map.screens.length === 0) {
+    warn("no_screens", "The map has no screens.");
+  }
 
   // Unique screen ids.
   const seen = new Set<string>();
   for (const screen of map.screens) {
     if (seen.has(screen.id)) {
-      issues.push({
-        code: "duplicate_screen_id",
-        message: `Duplicate screen id "${screen.id}".`,
-        path: `screens[id=${screen.id}]`,
-      });
+      err("duplicate_screen_id", `Duplicate screen id "${screen.id}".`, `screens[id=${screen.id}]`);
     }
     seen.add(screen.id);
   }
 
+  // At most one entry screen; ideally exactly one (the renderer infers if 0).
+  const entryCount = map.screens.filter((s) => s.isEntry).length;
+  if (entryCount > 1) {
+    warn(
+      "entry_count",
+      `${entryCount} screens are marked isEntry; there should be exactly one (the app's first screen).`,
+    );
+  }
+
   // Edges must reference existing screens, and not point a screen at itself.
+  const edgeKeys = new Set<string>();
   map.edges.forEach((edge, idx) => {
     if (!seen.has(edge.from)) {
-      issues.push({
-        code: "edge_unknown_from",
-        message: `Edge #${idx} references unknown source screen "${edge.from}".`,
-        path: `edges[${idx}].from`,
-      });
+      err("edge_unknown_from", `Edge #${idx} references unknown source screen "${edge.from}".`, `edges[${idx}].from`);
     }
     if (!seen.has(edge.to)) {
-      issues.push({
-        code: "edge_unknown_to",
-        message: `Edge #${idx} references unknown target screen "${edge.to}".`,
-        path: `edges[${idx}].to`,
-      });
+      err("edge_unknown_to", `Edge #${idx} references unknown target screen "${edge.to}".`, `edges[${idx}].to`);
     }
     if (edge.from === edge.to) {
-      issues.push({
-        code: "self_edge",
-        message: `Edge #${idx} points screen "${edge.from}" at itself.`,
-        path: `edges[${idx}]`,
-      });
+      err("self_edge", `Edge #${idx} points screen "${edge.from}" at itself.`, `edges[${idx}]`);
     }
+    const key = `${edge.from}->${edge.to}`;
+    if (edgeKeys.has(key)) {
+      warn("duplicate_edge", `Edge #${idx} duplicates ${key}.`, `edges[${idx}]`);
+    }
+    edgeKeys.add(key);
   });
 
   // Journey `parent` links: must reference an existing screen, not self, and
@@ -91,19 +112,11 @@ export function validateProjectMap(input: unknown): ValidationResult {
   for (const screen of map.screens) {
     if (screen.parent === undefined) continue;
     if (screen.parent === screen.id) {
-      issues.push({
-        code: "parent_self",
-        message: `Screen "${screen.id}" lists itself as its parent.`,
-        path: `screens[id=${screen.id}].parent`,
-      });
+      err("parent_self", `Screen "${screen.id}" lists itself as its parent.`, `screens[id=${screen.id}].parent`);
       continue;
     }
     if (!seen.has(screen.parent)) {
-      issues.push({
-        code: "parent_unknown",
-        message: `Screen "${screen.id}" has unknown parent "${screen.parent}".`,
-        path: `screens[id=${screen.id}].parent`,
-      });
+      err("parent_unknown", `Screen "${screen.id}" has unknown parent "${screen.parent}".`, `screens[id=${screen.id}].parent`);
       continue;
     }
     parentOf.set(screen.id, screen.parent);
@@ -114,11 +127,7 @@ export function validateProjectMap(input: unknown): ValidationResult {
     let cur = parentOf.get(start);
     while (cur !== undefined) {
       if (visited.has(cur)) {
-        issues.push({
-          code: "parent_cycle",
-          message: `Parent chain from "${start}" forms a cycle at "${cur}".`,
-          path: `screens[id=${start}].parent`,
-        });
+        err("parent_cycle", `Parent chain from "${start}" forms a cycle at "${cur}".`, `screens[id=${start}].parent`);
         break;
       }
       visited.add(cur);
@@ -126,10 +135,9 @@ export function validateProjectMap(input: unknown): ValidationResult {
     }
   }
 
-  if (issues.length > 0) {
-    return { ok: false, map, issues };
-  }
-  return { ok: true, map, issues: [] };
+  // The gate fails only on ERROR-severity issues; warnings render anyway.
+  const ok = !issues.some((i) => i.severity === "error");
+  return { ok, map, issues };
 }
 
 /**

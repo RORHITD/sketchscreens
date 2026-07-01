@@ -11,6 +11,10 @@
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
+    },
+    "./audit": {
+      "types": "./dist/audit.d.ts",
+      "import": "./dist/audit.js"
     }
   },
   "files": [
@@ -26,6 +30,7 @@
     "zod": "^3.24.1"
   },
   "devDependencies": {
+    "@types/node": "^22.0.0",
     "tsx": "^4.19.2",
     "typescript": "^5.7.2"
   }

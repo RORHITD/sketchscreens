@@ -1241,6 +1241,190 @@
       ],
       "description": "Connect tools (Composio).",
       "group": "Integrations"
+    },
+    {
+      "id": "app-launch",
+      "name": "App Launch",
+      "route": "/",
+      "sourceFile": "src/app/(protected)/layout.tsx",
+      "elements": [
+        {
+          "type": "image",
+          "label": "AI Phone 360 logo"
+        },
+        {
+          "type": "text",
+          "label": "Loading…"
+        }
+      ],
+      "description": "First load: routes you to auth if signed out, or to the dashboard if signed in.",
+      "group": "Getting In"
+    },
+    {
+      "id": "signup",
+      "name": "Sign Up (new user)",
+      "route": "/auth?source=signup",
+      "sourceFile": "src/components/auth/LoginForm.tsx",
+      "elements": [
+        {
+          "type": "heading",
+          "label": "Create your account"
+        },
+        {
+          "type": "text",
+          "label": "Get an AI phone number in under two minutes."
+        },
+        {
+          "type": "input",
+          "label": "Phone number",
+          "required": true
+        },
+        {
+          "type": "button",
+          "label": "Continue",
+          "variant": "primary",
+          "align": "center"
+        },
+        {
+          "type": "divider",
+          "label": "or"
+        },
+        {
+          "type": "button",
+          "label": "Continue with Google",
+          "variant": "secondary",
+          "region": "bottom",
+          "align": "right"
+        },
+        {
+          "type": "button",
+          "label": "Continue with Apple",
+          "variant": "secondary",
+          "region": "bottom",
+          "align": "right"
+        }
+      ],
+      "description": "New-user path: phone-first sign up.",
+      "group": "Getting In › Sign Up"
+    },
+    {
+      "id": "login",
+      "name": "Login (returning)",
+      "route": "/auth",
+      "sourceFile": "src/components/auth/LoginForm.tsx",
+      "elements": [
+        {
+          "type": "heading",
+          "label": "Welcome back"
+        },
+        {
+          "type": "input",
+          "label": "Phone number",
+          "required": true
+        },
+        {
+          "type": "button",
+          "label": "Continue",
+          "variant": "primary",
+          "region": "bottom",
+          "align": "right"
+        },
+        {
+          "type": "button",
+          "label": "Continue with Google",
+          "variant": "secondary",
+          "region": "bottom",
+          "align": "right"
+        }
+      ],
+      "description": "Returning-user path: phone login.",
+      "group": "Getting In › Login"
+    },
+    {
+      "id": "verify-signup",
+      "name": "Verify code",
+      "route": "/verify",
+      "sourceFile": "src/app/(auth)/verify/page.tsx",
+      "elements": [
+        {
+          "type": "heading",
+          "label": "Verify your number"
+        },
+        {
+          "type": "text",
+          "label": "We sent a code to your phone"
+        },
+        {
+          "type": "input",
+          "label": "6-digit code",
+          "required": true
+        },
+        {
+          "type": "button",
+          "label": "Verify",
+          "variant": "primary",
+          "region": "bottom",
+          "align": "center"
+        }
+      ],
+      "description": "OTP after sign up.",
+      "group": "Getting In › Sign Up"
+    },
+    {
+      "id": "verify-login",
+      "name": "Verify code",
+      "route": "/verify",
+      "sourceFile": "src/app/(auth)/verify/page.tsx",
+      "elements": [
+        {
+          "type": "heading",
+          "label": "Verify your number"
+        },
+        {
+          "type": "input",
+          "label": "6-digit code",
+          "required": true
+        },
+        {
+          "type": "button",
+          "label": "Verify",
+          "variant": "primary",
+          "region": "bottom",
+          "align": "center"
+        }
+      ],
+      "description": "OTP after login.",
+      "group": "Getting In › Login"
+    },
+    {
+      "id": "onboarding",
+      "name": "Onboarding wizard",
+      "route": "/onboarding",
+      "sourceFile": "src/components/onboarding/OnboardingWizard.tsx",
+      "elements": [
+        {
+          "type": "heading",
+          "label": "Set up your AI phone"
+        },
+        {
+          "type": "input",
+          "label": "Business name",
+          "required": true
+        },
+        {
+          "type": "textarea",
+          "label": "What your business does"
+        },
+        {
+          "type": "button",
+          "label": "Choose a plan",
+          "variant": "primary",
+          "region": "bottom",
+          "align": "center"
+        }
+      ],
+      "description": "New users set up their business + AI before reaching the app.",
+      "group": "Getting In › Sign Up"
     }
   ],
   "edges": [
@@ -1458,6 +1642,31 @@
       "from": "billing-credits",
       "to": "billing-subscription",
       "trigger": "Manage Subscription"
+    },
+    {
+      "from": "signup",
+      "to": "verify-signup",
+      "trigger": "Continue"
+    },
+    {
+      "from": "login",
+      "to": "verify-login",
+      "trigger": "Continue"
+    },
+    {
+      "from": "verify-signup",
+      "to": "onboarding",
+      "trigger": "Verify"
+    },
+    {
+      "from": "onboarding",
+      "to": "dashboard-front-desk",
+      "trigger": "Finish setup"
+    },
+    {
+      "from": "verify-login",
+      "to": "dashboard-front-desk",
+      "trigger": "Verify"
     }
   ],
   "meta": {

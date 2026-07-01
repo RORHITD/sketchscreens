@@ -50,7 +50,7 @@ Produce a single JSON object matching this shape (validated by `@sketchscreens/c
 
 The renderer draws a **single top-down journey tree**, rooted at what the user sees FIRST, flowing the way people actually navigate. Model that, don't just bucket by feature:
 
-**`isEntry`** — mark exactly ONE screen as the entry point (`isEntry: true`): the first thing a user hits — a splash/launch screen, or the auth screen if there's no splash. The tree roots here.
+**`isEntry`** — mark **exactly one** screen `isEntry: true` (not zero, not two): the first thing a user hits — a splash/launch screen, or the auth screen if there's no splash. The tree roots here. (A layout/gate file that is the app's first paint — e.g. a protected `layout.tsx` that redirects to auth — IS a legitimate entry screen even though we otherwise skip layouts.)
 
 **`parent`** — set each screen's `parent` to the id of the screen a user reaches it FROM. This is the backbone:
 - The **entry** screen has no parent.
@@ -66,10 +66,11 @@ Keep the backbone to the *primary* way in. Secondary/cross links (e.g. a call ro
 ## Method (agent-first)
 
 1. **Pick the surface + its root.** One map = one surface. If the repo holds several (web + mobile + backend), map the one you were asked for.
-2. **Enumerate screens** using the stack profile below. Produce a screen per real, reachable screen — skip pure layouts, error boundaries, and API-only files.
-3. **For each screen, read its component to list elements.** Screens are often *thin* — a route file that just renders `<LoginForm />`. **Follow the import to the real component** and read *that* file's fields/buttons/headings. Resolve string constants (e.g. `AppString.continueWithPhone`) to their values when cheap.
+2. **Enumerate screens** using the stack profile below. Produce a screen per real, reachable screen — skip pure layouts (except an app-gating first-paint layout, see `isEntry`), error boundaries, and API-only files. **Aim for completeness**: if you're mapping a surface, cover its whole route set (don't silently drop the auth/onboarding flow — it's part of the app). A `id` is the **kebab-case of the route** (stable across runs), falling back to the name only when there's no route. A modal/dialog/wizard-step is its own screen only if it has a distinct URL or is a major task surface; otherwise fold it into its host screen's elements (and mark it `presentation: "modal"` if you do make it a screen).
+3. **For each screen, read its component to list elements.** Screens are often *thin* — a route file that just renders `<LoginForm />`. **Follow the import to the real component** and read *that* file's fields/buttons/headings. You MUST resolve any constant / i18n key that backs a visible label (`AppString.continueWithPhone`, `t("auth.continue")`) to its literal string — a raw identifier like `AppString.foo` is never an acceptable `label`.
 4. **List elements top-to-bottom in source order.** A form with 3 fields + a submit button → 3 `input` + 1 `button`. Don't invent elements that aren't there; don't omit obvious ones.
-5. **Infer edges** from navigation calls (see profile). The `trigger` is usually the button/link label that causes the transition.
+   - **Labels — verbatim by default.** Copy the exact visible text. For a repeated/dynamic region you can't see literally (a list, table, or data-driven card), describe its SHAPE — e.g. a `list` labeled `"Contacts (name · phone · identity)"` — and set `labelKind: "descriptive"`. **Never fabricate example rows** ("Item one", "John Smith"). A verbatim label may omit `labelKind` (it defaults to verbatim).
+5. **Infer edges** from navigation calls (see profile). **`trigger` MUST be the verbatim visible label** of the control that navigates (copy it exactly). If the navigation isn't tied to a labeled control — a whole row is clickable, a `redirect`, a card — leave `trigger` empty. Never write a description ("Call row") or a placeholder ("-").
 6. **Build the journey** per *The journey* section — mark the `isEntry` screen, set each screen's `parent` to what it's reached from (entry → auth → dashboard → sections), and set `group` labels. The result should read as: first screen → sign-up/login → main screen → feature areas.
 7. **Keep it honest.** If a screen's elements are genuinely dynamic/unknowable, emit the ones you can see and add a `note`. A smaller true map beats a padded guessed one.
 
