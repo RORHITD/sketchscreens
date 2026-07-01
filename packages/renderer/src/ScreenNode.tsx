@@ -1,4 +1,5 @@
 import { Handle, Position, type NodeProps } from "@xyflow/react";
+import { groupSegments } from "@sketchscreens/core-schema";
 import type { ScreenNode as ScreenNodeType } from "./layout";
 import { WireframeElement } from "./WireframeElement";
 import { RoughFrame } from "./RoughFrame";
@@ -38,11 +39,17 @@ function RowBand({ row, band }: { row: Row; band: string }) {
 export function ScreenNode({ data, selected }: NodeProps<ScreenNodeType>) {
   const { screen, isRoot } = data;
   // The deepest segment of the group path is the section label badge.
-  const section = screen.group?.split("›").map((s) => s.trim()).filter(Boolean).pop();
+  const section = groupSegments(screen.group).pop();
+  const isModal = screen.presentation && screen.presentation !== "screen";
   const layout = layoutElements(screen.elements);
   return (
     <div
-      className={`ss-screen${selected ? " ss-screen-selected" : ""}${isRoot ? " ss-screen-root" : ""}`}
+      className={
+        "ss-screen" +
+        (selected ? " ss-screen-selected" : "") +
+        (isRoot ? " ss-screen-root" : "") +
+        (isModal ? " ss-screen-modal" : "")
+      }
     >
       <Handle type="target" position={Position.Top} className="ss-handle" />
       <Handle type="target" position={Position.Left} className="ss-handle-hidden" />
@@ -52,9 +59,11 @@ export function ScreenNode({ data, selected }: NodeProps<ScreenNodeType>) {
           <div className="ss-screen-titlerow">
             <span className="ss-screen-name">{screen.name}</span>
             {isRoot && <span className="ss-root-badge">START</span>}
+            {isModal && <span className="ss-modal-badge">{screen.presentation}</span>}
             {!isRoot && section && <span className="ss-section-badge">{section}</span>}
           </div>
           {screen.route && <span className="ss-screen-route">{screen.route}</span>}
+          {screen.description && <span className="ss-screen-desc">{screen.description}</span>}
         </div>
 
         {screen.elements.length === 0 ? (
