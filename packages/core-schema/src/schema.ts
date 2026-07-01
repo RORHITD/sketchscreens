@@ -242,7 +242,7 @@ export const ProjectMap = z.object({
    * breaking change.
    */
   version: z.number().int().min(1).default(CONTRACT_VERSION),
-  /** Display name for this map (e.g. "AiPhone 360 — Web App"). */
+  /** Display name for this map (e.g. "Shopwave — Web App"). */
   name: z.string().min(1),
   /** Which surface this represents. */
   surface: Surface,

@@ -1,0 +1,918 @@
+{
+  "version": 1,
+  "name": "Shopwave — User Journey",
+  "surface": "web",
+  "screens": [
+    {
+      "id": "home",
+      "name": "Home",
+      "route": "/",
+      "sourceFile": "src/pages/Home.tsx",
+      "elements": [
+        {
+          "type": "nav",
+          "label": "Home · Shop · Cart · Account",
+          "region": "top",
+          "align": "full"
+        },
+        {
+          "type": "heading",
+          "label": "Fresh finds, delivered fast"
+        },
+        {
+          "type": "button",
+          "label": "Shop new arrivals"
+        },
+        {
+          "type": "card",
+          "label": "Featured collection grid"
+        },
+        {
+          "type": "card",
+          "label": "Promo banner (free shipping over $50)"
+        },
+        {
+          "type": "list",
+          "label": "Bestsellers carousel"
+        },
+        {
+          "type": "button",
+          "label": "Sign in"
+        }
+      ],
+      "description": "Landing storefront with featured collections and promos.",
+      "group": "Storefront",
+      "isEntry": true
+    },
+    {
+      "id": "catalog",
+      "name": "Catalog",
+      "route": "/shop",
+      "sourceFile": "src/pages/Catalog.tsx",
+      "elements": [
+        {
+          "type": "nav",
+          "label": "Home · Shop · Cart · Account",
+          "region": "top",
+          "align": "full"
+        },
+        {
+          "type": "input",
+          "label": "Search products (press /)"
+        },
+        {
+          "type": "tabs",
+          "label": "All · New · Sale · Popular",
+          "region": "top",
+          "align": "full"
+        },
+        {
+          "type": "list",
+          "label": "Filters (category · price · size · rating)"
+        },
+        {
+          "type": "list",
+          "label": "Product grid (image · title · price)"
+        },
+        {
+          "type": "button",
+          "label": "Load more"
+        }
+      ],
+      "description": "Browse all products with filters and sorting.",
+      "group": "Shopping",
+      "parent": "home"
+    },
+    {
+      "id": "category",
+      "name": "Category",
+      "route": "/shop/:category",
+      "sourceFile": "src/pages/Category.tsx",
+      "elements": [
+        {
+          "type": "nav",
+          "label": "Home · Shop · Cart · Account",
+          "region": "top",
+          "align": "full"
+        },
+        {
+          "type": "heading",
+          "label": "Outerwear"
+        },
+        {
+          "type": "list",
+          "label": "Refine (color · size · brand)"
+        },
+        {
+          "type": "list",
+          "label": "Product grid"
+        },
+        {
+          "type": "tabs",
+          "label": "Sort: Recommended · Price · Newest",
+          "region": "top"
+        }
+      ],
+      "description": "Products filtered to a single category.",
+      "group": "Shopping",
+      "parent": "catalog"
+    },
+    {
+      "id": "product",
+      "name": "Product Detail",
+      "route": "/product/:id",
+      "sourceFile": "src/pages/Product.tsx",
+      "elements": [
+        {
+          "type": "nav",
+          "label": "Home · Shop · Cart · Account",
+          "region": "top",
+          "align": "full"
+        },
+        {
+          "type": "card",
+          "label": "Image gallery"
+        },
+        {
+          "type": "heading",
+          "label": "Trailhead Insulated Jacket"
+        },
+        {
+          "type": "text",
+          "label": "$128.00"
+        },
+        {
+          "type": "input",
+          "label": "Size (S · M · L · XL)"
+        },
+        {
+          "type": "input",
+          "label": "Color (Slate · Moss · Rust)"
+        },
+        {
+          "type": "button",
+          "label": "Add to cart"
+        },
+        {
+          "type": "button",
+          "label": "Add to wishlist"
+        },
+        {
+          "type": "card",
+          "label": "Reviews (4.6 ★ · 214 ratings)"
+        }
+      ],
+      "description": "Single product with gallery, variants, and add-to-cart.",
+      "group": "Shopping",
+      "parent": "catalog"
+    },
+    {
+      "id": "reviews",
+      "name": "Reviews",
+      "route": "/product/:id/reviews",
+      "sourceFile": "src/pages/Reviews.tsx",
+      "elements": [
+        {
+          "type": "heading",
+          "label": "Customer reviews"
+        },
+        {
+          "type": "tabs",
+          "label": "Most helpful · Newest · Highest · Lowest",
+          "region": "top"
+        },
+        {
+          "type": "list",
+          "label": "Review cards (rating · author · body)"
+        },
+        {
+          "type": "button",
+          "label": "Write a review"
+        }
+      ],
+      "description": "Full customer review list for a product.",
+      "group": "Shopping",
+      "parent": "product"
+    },
+    {
+      "id": "wishlist",
+      "name": "Wishlist",
+      "route": "/wishlist",
+      "sourceFile": "src/pages/Wishlist.tsx",
+      "elements": [
+        {
+          "type": "heading",
+          "label": "Your wishlist"
+        },
+        {
+          "type": "list",
+          "label": "Saved products (image · title · price)"
+        },
+        {
+          "type": "button",
+          "label": "Move to cart"
+        }
+      ],
+      "description": "Saved items for later.",
+      "group": "Shopping",
+      "parent": "product"
+    },
+    {
+      "id": "cart",
+      "name": "Cart",
+      "route": "/cart",
+      "sourceFile": "src/pages/Cart.tsx",
+      "elements": [
+        {
+          "type": "nav",
+          "label": "Home · Shop · Cart · Account",
+          "region": "top",
+          "align": "full"
+        },
+        {
+          "type": "heading",
+          "label": "Your cart"
+        },
+        {
+          "type": "list",
+          "label": "Line items (product · qty · price)"
+        },
+        {
+          "type": "input",
+          "label": "Promo code"
+        },
+        {
+          "type": "card",
+          "label": "Order summary (subtotal · shipping · tax)"
+        },
+        {
+          "type": "button",
+          "label": "Proceed to checkout"
+        }
+      ],
+      "description": "Review items before checkout.",
+      "group": "Checkout",
+      "parent": "product"
+    },
+    {
+      "id": "checkout-shipping",
+      "name": "Checkout — Shipping",
+      "route": "/checkout/shipping",
+      "sourceFile": "src/pages/checkout/Shipping.tsx",
+      "elements": [
+        {
+          "type": "heading",
+          "label": "Shipping details"
+        },
+        {
+          "type": "input",
+          "label": "Full name"
+        },
+        {
+          "type": "input",
+          "label": "Address"
+        },
+        {
+          "type": "input",
+          "label": "City · State · ZIP"
+        },
+        {
+          "type": "tabs",
+          "label": "Standard · Express · Overnight"
+        },
+        {
+          "type": "button",
+          "label": "Continue to payment"
+        }
+      ],
+      "description": "Enter shipping address and method.",
+      "group": "Checkout",
+      "parent": "cart"
+    },
+    {
+      "id": "checkout-payment",
+      "name": "Checkout — Payment",
+      "route": "/checkout/payment",
+      "sourceFile": "src/pages/checkout/Payment.tsx",
+      "elements": [
+        {
+          "type": "heading",
+          "label": "Payment"
+        },
+        {
+          "type": "input",
+          "label": "Card number"
+        },
+        {
+          "type": "input",
+          "label": "Expiry · CVC"
+        },
+        {
+          "type": "input",
+          "label": "Billing ZIP"
+        },
+        {
+          "type": "card",
+          "label": "Order summary"
+        },
+        {
+          "type": "button",
+          "label": "Review order"
+        }
+      ],
+      "description": "Enter payment details.",
+      "group": "Checkout",
+      "parent": "checkout-shipping"
+    },
+    {
+      "id": "checkout-review",
+      "name": "Checkout — Review",
+      "route": "/checkout/review",
+      "sourceFile": "src/pages/checkout/Review.tsx",
+      "elements": [
+        {
+          "type": "heading",
+          "label": "Review your order"
+        },
+        {
+          "type": "card",
+          "label": "Shipping to …"
+        },
+        {
+          "type": "card",
+          "label": "Paying with •••• 4242"
+        },
+        {
+          "type": "list",
+          "label": "Items"
+        },
+        {
+          "type": "button",
+          "label": "Place order"
+        }
+      ],
+      "description": "Final review before placing the order.",
+      "group": "Checkout",
+      "parent": "checkout-payment"
+    },
+    {
+      "id": "order-confirm",
+      "name": "Order Confirmed",
+      "route": "/checkout/confirm",
+      "sourceFile": "src/pages/checkout/Confirm.tsx",
+      "elements": [
+        {
+          "type": "heading",
+          "label": "Thank you! Order #10428 confirmed"
+        },
+        {
+          "type": "text",
+          "label": "A receipt is on its way to your email"
+        },
+        {
+          "type": "button",
+          "label": "Track your order"
+        },
+        {
+          "type": "button",
+          "label": "Continue shopping"
+        }
+      ],
+      "description": "Order placed successfully.",
+      "group": "Checkout",
+      "parent": "checkout-review"
+    },
+    {
+      "id": "signin",
+      "name": "Sign In",
+      "route": "/signin",
+      "sourceFile": "src/pages/auth/SignIn.tsx",
+      "elements": [
+        {
+          "type": "heading",
+          "label": "Welcome back"
+        },
+        {
+          "type": "input",
+          "label": "Email"
+        },
+        {
+          "type": "input",
+          "label": "Password"
+        },
+        {
+          "type": "button",
+          "label": "Sign in"
+        },
+        {
+          "type": "button",
+          "label": "Create an account"
+        },
+        {
+          "type": "button",
+          "label": "Forgot password?"
+        }
+      ],
+      "description": "Existing customer sign in.",
+      "group": "System",
+      "parent": "home"
+    },
+    {
+      "id": "signup",
+      "name": "Create Account",
+      "route": "/signup",
+      "sourceFile": "src/pages/auth/SignUp.tsx",
+      "elements": [
+        {
+          "type": "heading",
+          "label": "Create your account"
+        },
+        {
+          "type": "input",
+          "label": "Name"
+        },
+        {
+          "type": "input",
+          "label": "Email"
+        },
+        {
+          "type": "input",
+          "label": "Password"
+        },
+        {
+          "type": "button",
+          "label": "Create account"
+        }
+      ],
+      "description": "New customer registration.",
+      "group": "System",
+      "parent": "signin"
+    },
+    {
+      "id": "forgot",
+      "name": "Forgot Password",
+      "route": "/forgot",
+      "sourceFile": "src/pages/auth/Forgot.tsx",
+      "elements": [
+        {
+          "type": "heading",
+          "label": "Reset your password"
+        },
+        {
+          "type": "input",
+          "label": "Email"
+        },
+        {
+          "type": "button",
+          "label": "Send reset link"
+        }
+      ],
+      "description": "Request a password reset link.",
+      "group": "System",
+      "parent": "signin"
+    },
+    {
+      "id": "account",
+      "name": "Account",
+      "route": "/account",
+      "sourceFile": "src/pages/account/Account.tsx",
+      "elements": [
+        {
+          "type": "nav",
+          "label": "Account · Orders · Addresses · Payment · Settings",
+          "region": "top",
+          "align": "full"
+        },
+        {
+          "type": "heading",
+          "label": "Hi, Jordan"
+        },
+        {
+          "type": "card",
+          "label": "Recent order #10428 — In transit"
+        },
+        {
+          "type": "list",
+          "label": "Quick links (orders · addresses · payment)"
+        }
+      ],
+      "description": "Account home with quick links.",
+      "group": "Account",
+      "parent": "signin"
+    },
+    {
+      "id": "orders",
+      "name": "Orders",
+      "route": "/account/orders",
+      "sourceFile": "src/pages/account/Orders.tsx",
+      "elements": [
+        {
+          "type": "heading",
+          "label": "Your orders"
+        },
+        {
+          "type": "tabs",
+          "label": "All · Processing · Shipped · Delivered",
+          "region": "top"
+        },
+        {
+          "type": "list",
+          "label": "Order rows (number · date · total · status)"
+        }
+      ],
+      "description": "Order history.",
+      "group": "Account",
+      "parent": "account"
+    },
+    {
+      "id": "order-detail",
+      "name": "Order Detail",
+      "route": "/account/orders/:id",
+      "sourceFile": "src/pages/account/OrderDetail.tsx",
+      "elements": [
+        {
+          "type": "heading",
+          "label": "Order #10428"
+        },
+        {
+          "type": "card",
+          "label": "Tracking timeline"
+        },
+        {
+          "type": "list",
+          "label": "Items (product · qty · price)"
+        },
+        {
+          "type": "button",
+          "label": "Buy again"
+        },
+        {
+          "type": "button",
+          "label": "Request return"
+        }
+      ],
+      "description": "Single order with tracking and items.",
+      "group": "Account",
+      "parent": "orders"
+    },
+    {
+      "id": "return",
+      "name": "Request Return",
+      "route": "/account/orders/:id/return",
+      "sourceFile": "src/pages/account/Return.tsx",
+      "elements": [
+        {
+          "type": "heading",
+          "label": "Return or exchange"
+        },
+        {
+          "type": "list",
+          "label": "Select items to return"
+        },
+        {
+          "type": "input",
+          "label": "Reason"
+        },
+        {
+          "type": "tabs",
+          "label": "Refund · Exchange · Store credit"
+        },
+        {
+          "type": "button",
+          "label": "Submit return"
+        }
+      ],
+      "description": "Start a return or exchange.",
+      "group": "Account",
+      "parent": "order-detail"
+    },
+    {
+      "id": "addresses",
+      "name": "Addresses",
+      "route": "/account/addresses",
+      "sourceFile": "src/pages/account/Addresses.tsx",
+      "elements": [
+        {
+          "type": "heading",
+          "label": "Saved addresses"
+        },
+        {
+          "type": "list",
+          "label": "Address cards"
+        },
+        {
+          "type": "button",
+          "label": "Add address"
+        }
+      ],
+      "description": "Saved shipping addresses.",
+      "group": "Account",
+      "parent": "account"
+    },
+    {
+      "id": "payment-methods",
+      "name": "Payment Methods",
+      "route": "/account/payment",
+      "sourceFile": "src/pages/account/Payment.tsx",
+      "elements": [
+        {
+          "type": "heading",
+          "label": "Payment methods"
+        },
+        {
+          "type": "list",
+          "label": "Cards (•••• 4242 · •••• 1881)"
+        },
+        {
+          "type": "button",
+          "label": "Add card"
+        }
+      ],
+      "description": "Saved cards and payment methods.",
+      "group": "Account",
+      "parent": "account"
+    },
+    {
+      "id": "settings",
+      "name": "Settings",
+      "route": "/account/settings",
+      "sourceFile": "src/pages/account/Settings.tsx",
+      "elements": [
+        {
+          "type": "heading",
+          "label": "Settings"
+        },
+        {
+          "type": "input",
+          "label": "Name"
+        },
+        {
+          "type": "input",
+          "label": "Email"
+        },
+        {
+          "type": "tabs",
+          "label": "Profile · Notifications · Security"
+        },
+        {
+          "type": "button",
+          "label": "Save changes"
+        }
+      ],
+      "description": "Profile and notification preferences.",
+      "group": "Account",
+      "parent": "account"
+    },
+    {
+      "id": "notifications",
+      "name": "Notifications",
+      "route": "/account/settings/notifications",
+      "sourceFile": "src/pages/account/Notifications.tsx",
+      "elements": [
+        {
+          "type": "heading",
+          "label": "Notifications"
+        },
+        {
+          "type": "list",
+          "label": "Toggles (order updates · promos · back-in-stock)"
+        },
+        {
+          "type": "button",
+          "label": "Save"
+        }
+      ],
+      "description": "Email and push notification toggles.",
+      "group": "Account",
+      "parent": "settings"
+    },
+    {
+      "id": "help",
+      "name": "Help Center",
+      "route": "/help",
+      "sourceFile": "src/pages/support/Help.tsx",
+      "elements": [
+        {
+          "type": "input",
+          "label": "Search help"
+        },
+        {
+          "type": "list",
+          "label": "Popular topics (shipping · returns · sizing)"
+        },
+        {
+          "type": "button",
+          "label": "Contact support"
+        }
+      ],
+      "description": "Support articles and contact options.",
+      "group": "Support",
+      "parent": "home"
+    },
+    {
+      "id": "contact",
+      "name": "Contact",
+      "route": "/help/contact",
+      "sourceFile": "src/pages/support/Contact.tsx",
+      "elements": [
+        {
+          "type": "heading",
+          "label": "Contact us"
+        },
+        {
+          "type": "input",
+          "label": "Subject"
+        },
+        {
+          "type": "input",
+          "label": "Message"
+        },
+        {
+          "type": "button",
+          "label": "Send message"
+        }
+      ],
+      "description": "Contact form for support requests.",
+      "group": "Support",
+      "parent": "help"
+    },
+    {
+      "id": "track",
+      "name": "Track Order",
+      "route": "/track",
+      "sourceFile": "src/pages/support/Track.tsx",
+      "elements": [
+        {
+          "type": "heading",
+          "label": "Track your order"
+        },
+        {
+          "type": "input",
+          "label": "Order number"
+        },
+        {
+          "type": "input",
+          "label": "Email"
+        },
+        {
+          "type": "button",
+          "label": "Track"
+        },
+        {
+          "type": "card",
+          "label": "Shipment status timeline"
+        }
+      ],
+      "description": "Track a shipment by order number.",
+      "group": "Support",
+      "parent": "order-confirm"
+    }
+  ],
+  "edges": [
+    {
+      "from": "home",
+      "to": "catalog",
+      "trigger": "Shop"
+    },
+    {
+      "from": "home",
+      "to": "signin",
+      "trigger": "Sign in"
+    },
+    {
+      "from": "home",
+      "to": "help",
+      "trigger": "Help"
+    },
+    {
+      "from": "catalog",
+      "to": "category",
+      "trigger": "Open category"
+    },
+    {
+      "from": "catalog",
+      "to": "product",
+      "trigger": "Open product"
+    },
+    {
+      "from": "category",
+      "to": "product",
+      "trigger": "Open product"
+    },
+    {
+      "from": "product",
+      "to": "reviews",
+      "trigger": "See all reviews"
+    },
+    {
+      "from": "product",
+      "to": "wishlist",
+      "trigger": "Add to wishlist"
+    },
+    {
+      "from": "product",
+      "to": "cart",
+      "trigger": "Add to cart"
+    },
+    {
+      "from": "cart",
+      "to": "checkout-shipping",
+      "trigger": "Checkout"
+    },
+    {
+      "from": "checkout-shipping",
+      "to": "checkout-payment",
+      "trigger": "Continue to payment"
+    },
+    {
+      "from": "checkout-payment",
+      "to": "checkout-review",
+      "trigger": "Review order"
+    },
+    {
+      "from": "checkout-review",
+      "to": "order-confirm",
+      "trigger": "Place order"
+    },
+    {
+      "from": "order-confirm",
+      "to": "track",
+      "trigger": "Track your order"
+    },
+    {
+      "from": "signin",
+      "to": "signup",
+      "trigger": "Create account"
+    },
+    {
+      "from": "signin",
+      "to": "forgot",
+      "trigger": "Forgot password"
+    },
+    {
+      "from": "signin",
+      "to": "account",
+      "trigger": "Sign in"
+    },
+    {
+      "from": "signup",
+      "to": "account",
+      "trigger": "Account created"
+    },
+    {
+      "from": "account",
+      "to": "orders",
+      "trigger": "Orders"
+    },
+    {
+      "from": "account",
+      "to": "addresses",
+      "trigger": "Addresses"
+    },
+    {
+      "from": "account",
+      "to": "payment-methods",
+      "trigger": "Payment"
+    },
+    {
+      "from": "account",
+      "to": "settings",
+      "trigger": "Settings"
+    },
+    {
+      "from": "orders",
+      "to": "order-detail",
+      "trigger": "Open order"
+    },
+    {
+      "from": "order-detail",
+      "to": "return",
+      "trigger": "Request return"
+    },
+    {
+      "from": "order-detail",
+      "to": "track",
+      "trigger": "Track"
+    },
+    {
+      "from": "settings",
+      "to": "notifications",
+      "trigger": "Notifications"
+    },
+    {
+      "from": "help",
+      "to": "contact",
+      "trigger": "Contact support"
+    },
+    {
+      "from": "help",
+      "to": "track",
+      "trigger": "Track an order"
+    }
+  ],
+  "meta": {
+    "generator": "sketchscreens-agent",
+    "repoRoot": "~/dev/shopwave-web",
+    "extraction": "agent"
+  }
+}

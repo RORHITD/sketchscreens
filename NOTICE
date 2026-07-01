@@ -1,0 +1,33 @@
+SketchScreens
+Copyright (c) 2026 Houston IT Developers
+
+This product is licensed under the MIT License (see LICENSE).
+
+--------------------------------------------------------------------------------
+Trademarks
+--------------------------------------------------------------------------------
+
+"SketchScreens" and the SketchScreens logo are trademarks of Houston IT
+Developers. The MIT License grants rights to the software's source code; it does
+not grant permission to use the "SketchScreens" name or logo in a way that
+suggests endorsement of, or affiliation with, a derivative or fork without prior
+written permission.
+
+You may, of course, state factually that your project is built on, uses, or is
+derived from SketchScreens.
+
+--------------------------------------------------------------------------------
+Attribution
+--------------------------------------------------------------------------------
+
+If you redistribute this software, in source or binary form, you must retain the
+copyright notice and the permission notice from the LICENSE file, as required by
+the MIT License.
+
+--------------------------------------------------------------------------------
+Example data
+--------------------------------------------------------------------------------
+
+The sample maps under examples/ ("Shopwave") depict a fictional e-commerce
+application created solely to demonstrate the renderer. Any resemblance to a real
+product, company, or service is coincidental.

@@ -35,4 +35,4 @@ jobs:
       # The whole adoption path in one check: build, then validate a real example
       # map through the gate (exercises the CLI + write-map + coverage).
       - name: Smoke-test the gate on an example map
-        run: node packages/cli/bin/sketchscreens.js map examples/aiphone-web-journey.map.json /tmp/ci.map.json --no-serve
+        run: node packages/cli/bin/sketchscreens.js map examples/shopwave-web-journey.map.json /tmp/ci.map.json --no-serve

@@ -1,6 +1,6 @@
 import { validateProjectMap, type ProjectMapT } from "@sketchscreens/core-schema";
 // Dev fallback, bundled at build time so `pnpm dev` always has something to show.
-import sampleMap from "../../../examples/aiphone-web-journey.map.json";
+import sampleMap from "../../../examples/shopwave-web-journey.map.json";
 
 declare global {
   interface Window {
@@ -15,7 +15,7 @@ declare global {
  * Priority:
  *  1. `window.__SKETCHSCREENS_MAP__` — injected by the local viewer or the skill.
  *  2. `?map=<url>` query param — fetch a map.json from a URL.
- *  3. Dev fallback — the committed AiPhone sample, so `pnpm dev` shows something.
+ *  3. Dev fallback — the committed Shopwave sample, so `pnpm dev` shows something.
  */
 export async function loadProjectMap(): Promise<ProjectMapT> {
   const injected = window.__SKETCHSCREENS_MAP__;
@@ -32,7 +32,7 @@ export async function loadProjectMap(): Promise<ProjectMapT> {
     return validated(await res.json(), url);
   }
 
-  return validated(sampleMap, "examples/aiphone-web.map.json (dev fallback)");
+  return validated(sampleMap, "examples/shopwave-web-journey.map.json (dev fallback)");
 }
 
 function validated(raw: unknown, source: string): ProjectMapT {

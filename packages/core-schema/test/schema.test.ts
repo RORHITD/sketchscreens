@@ -7,9 +7,9 @@ import { dirname, resolve } from "node:path";
 import { validateProjectMap, parseProjectMap, ProjectMap } from "../src/index.js";
 
 const here = dirname(fileURLToPath(import.meta.url));
-const examplePath = resolve(here, "../../../examples/aiphone-web.map.json");
+const examplePath = resolve(here, "../../../examples/shopwave-web.map.json");
 
-test("the committed AiPhone sample is a valid ProjectMap", () => {
+test("the committed Shopwave sample is a valid ProjectMap", () => {
   const raw = JSON.parse(readFileSync(examplePath, "utf8"));
   const result = validateProjectMap(raw);
   assert.equal(result.ok, true, JSON.stringify(result.issues, null, 2));

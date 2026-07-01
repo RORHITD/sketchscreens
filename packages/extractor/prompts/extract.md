@@ -9,7 +9,7 @@ Produce a single JSON object matching this shape (validated by `@sketchscreens/c
 ```jsonc
 {
   "version": 1,
-  "name": "<Display name, e.g. 'AI Phone 360 — Web App'>",
+  "name": "<Display name, e.g. 'Shopwave — Web App'>",
   "surface": "web",            // web | mobile | crm | admin | backend | desktop | other
   "meta": { "generator": "sketchscreens-agent", "repoRoot": "<abs path>", "extraction": "agent" },
   "screens": [

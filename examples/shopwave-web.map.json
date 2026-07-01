@@ -1,0 +1,269 @@
+{
+  "version": 1,
+  "name": "Shopwave — Storefront",
+  "surface": "web",
+  "screens": [
+    {
+      "id": "home",
+      "name": "Home",
+      "route": "/",
+      "sourceFile": "src/pages/Home.tsx",
+      "elements": [
+        {
+          "type": "nav",
+          "label": "Home · Shop · Cart · Account",
+          "region": "top",
+          "align": "full"
+        },
+        {
+          "type": "heading",
+          "label": "Fresh finds, delivered fast"
+        },
+        {
+          "type": "button",
+          "label": "Shop new arrivals"
+        },
+        {
+          "type": "card",
+          "label": "Featured collection grid"
+        },
+        {
+          "type": "card",
+          "label": "Promo banner (free shipping over $50)"
+        },
+        {
+          "type": "list",
+          "label": "Bestsellers carousel"
+        },
+        {
+          "type": "button",
+          "label": "Sign in"
+        }
+      ],
+      "description": "Landing storefront with featured collections and promos.",
+      "group": "Storefront",
+      "isEntry": true
+    },
+    {
+      "id": "catalog",
+      "name": "Catalog",
+      "route": "/shop",
+      "sourceFile": "src/pages/Catalog.tsx",
+      "elements": [
+        {
+          "type": "nav",
+          "label": "Home · Shop · Cart · Account",
+          "region": "top",
+          "align": "full"
+        },
+        {
+          "type": "input",
+          "label": "Search products (press /)"
+        },
+        {
+          "type": "tabs",
+          "label": "All · New · Sale · Popular",
+          "region": "top",
+          "align": "full"
+        },
+        {
+          "type": "list",
+          "label": "Filters (category · price · size · rating)"
+        },
+        {
+          "type": "list",
+          "label": "Product grid (image · title · price)"
+        },
+        {
+          "type": "button",
+          "label": "Load more"
+        }
+      ],
+      "description": "Browse all products with filters and sorting.",
+      "group": "Shopping",
+      "parent": "home"
+    },
+    {
+      "id": "product",
+      "name": "Product Detail",
+      "route": "/product/:id",
+      "sourceFile": "src/pages/Product.tsx",
+      "elements": [
+        {
+          "type": "nav",
+          "label": "Home · Shop · Cart · Account",
+          "region": "top",
+          "align": "full"
+        },
+        {
+          "type": "card",
+          "label": "Image gallery"
+        },
+        {
+          "type": "heading",
+          "label": "Trailhead Insulated Jacket"
+        },
+        {
+          "type": "text",
+          "label": "$128.00"
+        },
+        {
+          "type": "input",
+          "label": "Size (S · M · L · XL)"
+        },
+        {
+          "type": "input",
+          "label": "Color (Slate · Moss · Rust)"
+        },
+        {
+          "type": "button",
+          "label": "Add to cart"
+        },
+        {
+          "type": "button",
+          "label": "Add to wishlist"
+        },
+        {
+          "type": "card",
+          "label": "Reviews (4.6 ★ · 214 ratings)"
+        }
+      ],
+      "description": "Single product with gallery, variants, and add-to-cart.",
+      "group": "Shopping",
+      "parent": "catalog"
+    },
+    {
+      "id": "cart",
+      "name": "Cart",
+      "route": "/cart",
+      "sourceFile": "src/pages/Cart.tsx",
+      "elements": [
+        {
+          "type": "nav",
+          "label": "Home · Shop · Cart · Account",
+          "region": "top",
+          "align": "full"
+        },
+        {
+          "type": "heading",
+          "label": "Your cart"
+        },
+        {
+          "type": "list",
+          "label": "Line items (product · qty · price)"
+        },
+        {
+          "type": "input",
+          "label": "Promo code"
+        },
+        {
+          "type": "card",
+          "label": "Order summary (subtotal · shipping · tax)"
+        },
+        {
+          "type": "button",
+          "label": "Proceed to checkout"
+        }
+      ],
+      "description": "Review items before checkout.",
+      "group": "Checkout",
+      "parent": "product"
+    },
+    {
+      "id": "signin",
+      "name": "Sign In",
+      "route": "/signin",
+      "sourceFile": "src/pages/auth/SignIn.tsx",
+      "elements": [
+        {
+          "type": "heading",
+          "label": "Welcome back"
+        },
+        {
+          "type": "input",
+          "label": "Email"
+        },
+        {
+          "type": "input",
+          "label": "Password"
+        },
+        {
+          "type": "button",
+          "label": "Sign in"
+        },
+        {
+          "type": "button",
+          "label": "Create an account"
+        },
+        {
+          "type": "button",
+          "label": "Forgot password?"
+        }
+      ],
+      "description": "Existing customer sign in.",
+      "group": "System",
+      "parent": "home"
+    },
+    {
+      "id": "account",
+      "name": "Account",
+      "route": "/account",
+      "sourceFile": "src/pages/account/Account.tsx",
+      "elements": [
+        {
+          "type": "nav",
+          "label": "Account · Orders · Addresses · Payment · Settings",
+          "region": "top",
+          "align": "full"
+        },
+        {
+          "type": "heading",
+          "label": "Hi, Jordan"
+        },
+        {
+          "type": "card",
+          "label": "Recent order #10428 — In transit"
+        },
+        {
+          "type": "list",
+          "label": "Quick links (orders · addresses · payment)"
+        }
+      ],
+      "description": "Account home with quick links.",
+      "group": "Account",
+      "parent": "signin"
+    }
+  ],
+  "edges": [
+    {
+      "from": "home",
+      "to": "catalog",
+      "trigger": "Shop"
+    },
+    {
+      "from": "home",
+      "to": "signin",
+      "trigger": "Sign in"
+    },
+    {
+      "from": "catalog",
+      "to": "product",
+      "trigger": "Open product"
+    },
+    {
+      "from": "product",
+      "to": "cart",
+      "trigger": "Add to cart"
+    },
+    {
+      "from": "signin",
+      "to": "account",
+      "trigger": "Sign in"
+    }
+  ],
+  "meta": {
+    "generator": "sketchscreens-agent",
+    "repoRoot": "~/dev/shopwave-web",
+    "extraction": "agent"
+  }
+}
