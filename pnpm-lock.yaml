@@ -31,17 +31,17 @@ importers:
   packages/cli:
     dependencies:
       '@sketchscreens/core-schema':
-        specifier: workspace:*
-        version: link:../core-schema
+        specifier: ^0.1.0
+        version: 0.1.0
       '@sketchscreens/extractor':
-        specifier: workspace:*
-        version: link:../extractor
+        specifier: ^0.1.0
+        version: 0.1.0
       '@sketchscreens/renderer':
-        specifier: workspace:*
-        version: link:../renderer
+        specifier: ^0.1.0
+        version: 0.1.0(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)
       '@sketchscreens/viewer':
-        specifier: workspace:*
-        version: link:../../apps/viewer
+        specifier: ^0.1.0
+        version: 0.1.0
 
   packages/core-schema:
     dependencies:
@@ -394,6 +394,20 @@ packages:
 
   '@rolldown/pluginutils@1.0.1':
     resolution: {integrity: sha512-2j9bGt5Jh8hj+vPtgzPtl72j0yRxHAyumoo6TNfAjsLB04UtpSvPbPcDcBMxz7n+9CYB0c1GxQFxYRg2jimqGw==}
+
+  '@sketchscreens/core-schema@0.1.0':
+    resolution: {integrity: sha512-eQ77AtDSfG9I817G/oF5jjT7ZbNI3BMOw3CUc7x50DugZzns/kUtCt4zHWEhjugCPcNjZgagMsd7AGQyTmuRmg==}
+
+  '@sketchscreens/extractor@0.1.0':
+    resolution: {integrity: sha512-fmgInlWHXCoPV1q4ygZ2IkDeqZaP5jYdSd2mKh1P9+iCd5/KvOopzwXKenzOwkoPjAIlO5RC7JT9oAb1J+OMyQ==}
+    hasBin: true
+
+  '@sketchscreens/renderer@0.1.0':
+    resolution: {integrity: sha512-WyJgr04dklsj0SFhraEiXe5K6iuMrDjGKfCMZa0J2ef95EuHOCeM4uEvHXY8LDQEV6beA9cxyG84hNZJ6aO85Q==}
+
+  '@sketchscreens/viewer@0.1.0':
+    resolution: {integrity: sha512-Rhn4Hiiq9KJdJE9SFqFXLHMEqM/WnpBcmSMxy2X6RpfxkIBa/NHM2nach440FmIDZDw3acTLVz8WHeydEHwKRA==}
+    hasBin: true
 
   '@tybys/wasm-util@0.10.3':
     resolution: {integrity: sha512-F3fo1MYrRJYL3zER0OUOmkutjr1Vp23m7OsSgp7nq4SP6OqX6C/56XFIPAl5bt3zaBRjmW7SGz3u/6LwFpYcOg==}
@@ -899,6 +913,33 @@ snapshots:
     optional: true
 
   '@rolldown/pluginutils@1.0.1': {}
+
+  '@sketchscreens/core-schema@0.1.0':
+    dependencies:
+      zod: 3.25.76
+
+  '@sketchscreens/extractor@0.1.0':
+    dependencies:
+      '@sketchscreens/core-schema': link:packages/core-schema
+
+  '@sketchscreens/renderer@0.1.0(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)':
+    dependencies:
+      '@dagrejs/dagre': 3.0.0
+      '@sketchscreens/core-schema': link:packages/core-schema
+      '@xyflow/react': 12.11.1(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      html-to-image: 1.11.13
+      react: 19.2.7
+      react-dom: 19.2.7(react@19.2.7)
+      roughjs: 4.6.6
+    transitivePeerDependencies:
+      - '@types/react'
+      - '@types/react-dom'
+      - immer
+
+  '@sketchscreens/viewer@0.1.0':
+    dependencies:
+      '@sketchscreens/core-schema': link:packages/core-schema
+      '@sketchscreens/renderer': link:packages/renderer
 
   '@tybys/wasm-util@0.10.3':
     dependencies:

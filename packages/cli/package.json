@@ -1,13 +1,13 @@
 {
   "name": "sketchscreens",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Auto-generate hand-drawn sketch wireframes of an app's screens + user-journey flow, straight from its source code. Local-first, agent-driven.",
   "license": "MIT",
   "author": "Houston IT Developers",
   "homepage": "https://sketchscreens.com",
   "repository": {
     "type": "git",
-    "url": "https://github.com/houstonitd/sketchscreens.git"
+    "url": "git+https://github.com/houstonitd/sketchscreens.git"
   },
   "keywords": [
     "wireframe",
@@ -25,16 +25,16 @@
     "access": "public"
   },
   "bin": {
-    "sketchscreens": "./bin/sketchscreens.js"
+    "sketchscreens": "bin/sketchscreens.js"
   },
   "files": [
     "bin",
     "README.md"
   ],
   "dependencies": {
-    "@sketchscreens/core-schema": "workspace:*",
-    "@sketchscreens/extractor": "workspace:*",
-    "@sketchscreens/renderer": "workspace:*",
-    "@sketchscreens/viewer": "workspace:*"
+    "@sketchscreens/core-schema": "^0.1.0",
+    "@sketchscreens/extractor": "^0.1.0",
+    "@sketchscreens/renderer": "^0.1.0",
+    "@sketchscreens/viewer": "^0.1.0"
   }
 }
