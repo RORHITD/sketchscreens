@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: [20, 22]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      # Build from a clean checkout — guards the "a stranger can run it" story.
+      - run: pnpm -r build
+
+      - run: pnpm -r typecheck
+
+      - run: pnpm -r test
+
+      # The whole adoption path in one check: build, then validate a real example
+      # map through the gate (exercises the CLI + write-map + coverage).
+      - name: Smoke-test the gate on an example map
+        run: node packages/cli/bin/sketchscreens.js map examples/aiphone-web-journey.map.json /tmp/ci.map.json --no-serve

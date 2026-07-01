@@ -5,9 +5,9 @@ description: Auto-generate a hand-drawn sketch wireframe map of an app's screens
 
 # /visual-map — sketch an app's screens from its code
 
-Turn the current repository (or a chosen surface of it) into an interactive, hand-drawn **sketch wireframe map**: each screen drawn as a low-fidelity wireframe (its real fields/buttons/headings, roughly in order), connected by flow arrows. Then open it in a local, localhost-only viewer.
+Turn the current repository (or a chosen surface of it) into an interactive, hand-drawn **sketch wireframe map**: each screen drawn as a low-fidelity wireframe (its real fields/buttons/headings, roughly in place), organized as the user journey (entry → auth → main screen → sections), and opened in a local, localhost-only viewer.
 
-This is **agent-first extraction**: *you* read the code and produce the map — that's what lets it work on any stack. Follow this procedure.
+This is **agent-first extraction**: *you* read the code and produce the map — that's what lets it work on any stack. The `sketchscreens` CLI handles the mechanics (validating, serving, opening the browser); you do the reading.
 
 ## Safety & scope
 
@@ -16,50 +16,37 @@ This is **agent-first extraction**: *you* read the code and produce the map — 
 
 ## Procedure
 
-### 1. Locate the tool
-Find the SketchScreens repo root (it contains `packages/renderer`, `packages/extractor`, `apps/viewer`). It is typically at `~/C/sketchscreens`. Confirm the renderer is built:
+### 1. Read the extraction contract
+It defines the output shape (`ProjectMap`), the closed element enum, the journey model (`parent`/`isEntry`/`group`), the layout hints (`region`/`align`), and per-stack parse signals. Follow it exactly:
 
 ```bash
-ls <sketchscreens>/packages/renderer/dist/index.html 2>/dev/null \
-  || pnpm --dir <sketchscreens> --filter @sketchscreens/renderer build
-pnpm --dir <sketchscreens> --filter @sketchscreens/extractor build  # if dist/ missing
+sketchscreens prompt
 ```
 
-### 2. Read the extraction contract
-Read the extraction prompt and follow it exactly — it defines the output shape (`ProjectMap`), the closed element enum, and per-stack parse signals:
+(If `sketchscreens` isn't on PATH, it's the `sketchscreens` package's bin — `npx sketchscreens prompt`, or find the SketchScreens repo and run `node <repo>/packages/cli/bin/sketchscreens.js prompt`.)
 
+### 2. Extract the map
+Following the prompt:
+- **Identify the surface + enumerate its screens** (aim for the whole route set — don't drop auth/onboarding). Remember the **thin-page rule**: a route file that just renders `<SomeComponent />` — follow the import and read *that* component for the elements.
+- **For each screen**, list its elements top-to-bottom in source order using only the closed enum types; set `region`/`align` so the sketch mirrors the real layout; give lists/tables descriptive column labels (never fabricate rows).
+- **Build the journey**: mark the one `isEntry` screen, set each `parent` (entry → auth → dashboard → sections), set `group` labels, and infer `edges` (verbatim triggers, or empty).
+
+Write your `ProjectMap` JSON to a file (e.g. `sketchscreens.candidate.json`) with your file tools.
+
+### 3. Validate + open — one command
 ```bash
-cat <sketchscreens>/packages/extractor/prompts/extract.md
+sketchscreens map sketchscreens.candidate.json sketchscreens.map.json
 ```
 
-### 3. Identify the surface + enumerate screens
-- Detect the stack (Next.js App/Pages Router, Flutter, Express, or read a few files to learn an unknown one).
-- Enumerate screens per the profile. **Remember the thin-page rule:** a route file that just renders `<SomeComponent />` — follow the import and read *that* component for the elements.
-- Scope sensibly: for a large app, map the primary flow (auth → home → key sections) and note the scope rather than padding.
+This validates the candidate, writes `sketchscreens.map.json`, prints a **provenance + coverage report** (how many sourceFiles resolved on disk, and which discovered routes weren't mapped — check this for omissions), then opens the sketch map in the browser.
 
-### 4. Extract elements + edges per screen
-For each screen, read its component and list its elements **top-to-bottom in source order** using only the closed enum types. Infer edges from navigation calls; the `trigger` is the button/link label.
+If it prints **errors**, fix them and retry (every `edge.from`/`edge.to` must reference a real `screen.id`; ids unique; no self-edges). If it prints **coverage warnings** naming routes you meant to include (e.g. an auth flow), extract those too and re-run. Warnings don't block — but a "34/83 mapped" with the login screen in the miss list is a signal you dropped something.
 
-### 5. Write the map + validate
-Write your ProjectMap JSON to a temp file, then validate + persist it with the CLI (this is the gate — the viewer only sees a valid map):
-
-```bash
-# write your JSON to /tmp/ss-candidate.json (via your file tools), then:
-node <sketchscreens>/packages/extractor/bin/write-map.js /tmp/ss-candidate.json ./sketchscreens.map.json
-```
-
-If it prints validation errors, **fix them and retry** — every `edge.from`/`edge.to` must reference a real `screen.id`, ids must be unique, no self-edges.
-
-### 6. Open the viewer
-Launch the local viewer (opens the browser automatically):
-
-```bash
-node <sketchscreens>/apps/viewer/bin/view.js ./sketchscreens.map.json
-```
-
-This serves the sketch map at `http://127.0.0.1:4318/` and opens it. Tell the user it's open, summarize what you mapped (surface, screen count, the main flow), and note where `sketchscreens.map.json` was written (they can re-open it anytime, or hand it to the platform).
+### 4. Report
+Tell the user it's open, summarize what you mapped (surface, screen count, the main flow), mention the coverage number honestly (what's mapped vs deliberately scoped out), and note that `sketchscreens.map.json` is portable — re-open anytime with `sketchscreens open sketchscreens.map.json`.
 
 ## Tips
+- To re-open an existing map: `sketchscreens open sketchscreens.map.json`.
+- `sketchscreens doctor` checks the install and builds the renderer if needed.
 - If the user names a surface ("map the mobile app"), scope to that surface's directory.
-- Prefer accuracy over completeness — a smaller true map beats a padded guessed one.
-- The output `sketchscreens.map.json` is portable: it can be re-opened with the viewer or loaded into the SketchScreens platform later.
+- Prefer accuracy over padding — a smaller true map (with an honest coverage number) beats a guessed one.

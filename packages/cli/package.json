@@ -1,0 +1,19 @@
+{
+  "name": "sketchscreens",
+  "version": "0.0.0",
+  "description": "SketchScreens CLI — auto-generate hand-drawn sketch wireframes of an app's screens + flows from its source code.",
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "sketchscreens": "./bin/sketchscreens.js"
+  },
+  "files": [
+    "bin"
+  ],
+  "dependencies": {
+    "@sketchscreens/core-schema": "workspace:*",
+    "@sketchscreens/extractor": "workspace:*",
+    "@sketchscreens/renderer": "workspace:*",
+    "@sketchscreens/viewer": "workspace:*"
+  }
+}

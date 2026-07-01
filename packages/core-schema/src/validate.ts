@@ -1,4 +1,4 @@
-import { ProjectMap } from "./schema.js";
+import { ProjectMap, CONTRACT_VERSION } from "./schema.js";
 
 /** How serious a validation issue is. Errors fail the gate; warnings don't. */
 export type IssueSeverity = "error" | "warning";
@@ -20,7 +20,8 @@ export interface ValidationIssue {
     | "no_screens"
     | "entry_count"
     | "duplicate_edge"
-    | "sourcefile_missing";
+    | "sourcefile_missing"
+    | "unsupported_version";
   /** Error (fails the gate) or warning (renders anyway). Defaults to error. */
   severity: IssueSeverity;
   /** Human-readable message. */
@@ -63,6 +64,14 @@ export function validateProjectMap(input: unknown): ValidationResult {
     issues.push({ code, severity: "error", message, path });
   const warn = (code: ValidationIssue["code"], message: string, path?: string) =>
     issues.push({ code, severity: "warning", message, path });
+
+  // A map from a newer contract version — render what we can, but flag it.
+  if (map.version > CONTRACT_VERSION) {
+    warn(
+      "unsupported_version",
+      `Map is contract version ${map.version} but this SketchScreens speaks ${CONTRACT_VERSION} — some things may not render. Upgrade SketchScreens.`,
+    );
+  }
 
   // A map with no screens renders as a blank canvas — warn rather than crash.
   if (map.screens.length === 0) {

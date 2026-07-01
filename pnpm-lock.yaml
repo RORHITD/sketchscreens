@@ -28,6 +28,21 @@ importers:
         specifier: ^5.7.2
         version: 5.9.3
 
+  packages/cli:
+    dependencies:
+      '@sketchscreens/core-schema':
+        specifier: workspace:*
+        version: link:../core-schema
+      '@sketchscreens/extractor':
+        specifier: workspace:*
+        version: link:../extractor
+      '@sketchscreens/renderer':
+        specifier: workspace:*
+        version: link:../renderer
+      '@sketchscreens/viewer':
+        specifier: workspace:*
+        version: link:../../apps/viewer
+
   packages/core-schema:
     dependencies:
       zod:
@@ -53,6 +68,9 @@ importers:
       '@types/node':
         specifier: ^22.0.0
         version: 22.20.0
+      tsx:
+        specifier: ^4.19.2
+        version: 4.22.4
       typescript:
         specifier: ^5.7.2
         version: 5.9.3

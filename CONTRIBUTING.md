@@ -28,9 +28,9 @@ Everything plugs into the **ProjectMap** seam. If your change doesn't touch that
 
 ## Teaching it a new stack
 
-You do **not** edit the engine to support a new framework. You add an **extraction profile** — guidance that tells the agent how screens, navigation, and UI elements are expressed in that stack (the file conventions, the nav API to look for, what a "field" or "button" looks like in that language).
+You do **not** edit the engine to support a new framework. Because extraction is agent-first, a "profile" is just **prompt text** — a stack section in `packages/extractor/prompts/extract.md` that tells the agent how screens, navigation, and UI elements are expressed in that stack. Add a section under "Stack profiles" there. (Optionally, add a static screen-enumerator to `packages/extractor/src/enumerate.ts` so coverage reporting works for the stack — enumeration only; element reading stays with the agent.)
 
-See `packages/extractor` and `EXTRACTORS.md` (added in Phase 3) for the profile format. A good profile answers three questions:
+A good stack section answers three questions:
 
 1. **How do I enumerate screens?** (filesystem convention? a route table? a class-name pattern?)
 2. **How do I find navigation edges?** (which calls/props point from one screen to another?)

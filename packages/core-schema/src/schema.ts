@@ -230,10 +230,18 @@ export const ProjectMapMeta = z.object({
 });
 export type ProjectMapMeta = z.infer<typeof ProjectMapMeta>;
 
+/** The contract version this build of SketchScreens speaks. */
+export const CONTRACT_VERSION = 1;
+
 /** The whole thing: one surface's screens + the flow between them. */
 export const ProjectMap = z.object({
-  /** Contract version, so renderers can evolve safely. */
-  version: z.literal(1).default(1),
+  /**
+   * Contract version. Accepts any positive integer so an OLD renderer reading a
+   * NEWER map fails with a clear "upgrade" message (see validate.ts) rather than
+   * a generic zod "invalid literal". New fields are additive; bump only on a
+   * breaking change.
+   */
+  version: z.number().int().min(1).default(CONTRACT_VERSION),
   /** Display name for this map (e.g. "AiPhone 360 — Web App"). */
   name: z.string().min(1),
   /** Which surface this represents. */

@@ -45,19 +45,30 @@ Extraction is **agent-first**: a coding agent (Claude) reads each screen's compo
 
 ## Two ways to use it
 
-1. **Claude Code skill** — run `/visual-map` in any repo. It reads the code, writes `map.json`, and auto-opens the sketch map in your browser. *(the fast path)*
-2. **Self-hostable platform** — a standalone web app: pick a repo, save projects, re-scan, share. *(grows from the same core)*
+1. **Claude Code skill** — run `/visual-map` in any repo. It reads the code, produces the map, and auto-opens the sketch map in your browser. *(the fast path)*
+2. **The `sketchscreens` CLI** — one command for the mechanics:
+
+   ```bash
+   sketchscreens prompt                  # the extraction guide the agent follows
+   sketchscreens map map.candidate.json  # validate + coverage-check + open
+   sketchscreens open sketchscreens.map.json   # re-open a saved map
+   sketchscreens doctor                  # check the install
+   ```
+
+Every `map`/`open` run prints a **provenance + coverage report** — how many `sourceFile`s resolve on disk and which discovered routes weren't mapped — so a silently-omitted surface (a missing auth flow) can't hide.
 
 ## Project layout
 
 ```
 sketchscreens/
   packages/
-    core-schema/   the ProjectMap / ScreenSpec contract (TS types + zod)
-    extractor/     agent-first extraction (+ optional static pre-pass)
+    core-schema/   the ProjectMap / ScreenSpec contract (TS types + zod + validator)
+    extractor/     agent-first extraction prompt + the write-map gate + static
+                   screen enumeration (for coverage)
     renderer/      React Flow app — each node is a hand-drawn screen wireframe
+    cli/           the `sketchscreens` command (doctor/prompt/open/map)
   apps/
-    viewer/        thin local server: serve the renderer + a map.json
+    viewer/        thin localhost server: serve the renderer + a map.json
     platform/      (later) full self-hostable web app
   skill/           the /visual-map Claude Code skill
   examples/        sample map.json files (used by the renderer + tests)

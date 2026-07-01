@@ -12,13 +12,16 @@
   "files": ["dist", "src", "bin", "prompts"],
   "scripts": {
     "build": "tsc -p tsconfig.json",
-    "typecheck": "tsc -p tsconfig.json --noEmit"
+    "prepack": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "node --test --import tsx test/*.test.ts"
   },
   "dependencies": {
     "@sketchscreens/core-schema": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",
+    "tsx": "^4.19.2",
     "typescript": "^5.7.2"
   }
 }

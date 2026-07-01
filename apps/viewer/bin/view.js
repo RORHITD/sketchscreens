@@ -135,14 +135,31 @@ async function main() {
     }
   });
 
-  server.listen(port, "127.0.0.1", () => {
-    const url = `http://127.0.0.1:${port}/`;
-    console.log(`\n  SketchScreens — ${map.name}`);
-    console.log(`  ${map.screens.length} screens · ${map.edges.length} flows`);
-    console.log(`\n  ▶  ${url}\n`);
-    console.log("  (Ctrl+C to stop)\n");
-    if (open) openBrowser(url);
-  });
+  // Bind to the requested port; if it's busy, walk to the next free one (this
+  // tool is re-run-heavy — a stale server on the port shouldn't crash it).
+  let attempts = 0;
+  /** @param {number} p */
+  const listen = (p) => {
+    server.once("error", (/** @type {NodeJS.ErrnoException} */ err) => {
+      if (err.code === "EADDRINUSE" && attempts < 20) {
+        attempts++;
+        listen(p + 1);
+      } else {
+        console.error(`Could not start server: ${err.message}`);
+        process.exit(1);
+      }
+    });
+    server.listen(p, "127.0.0.1", () => {
+      const url = `http://127.0.0.1:${p}/`;
+      if (p !== port) console.log(`  (port ${port} was busy — using ${p})`);
+      console.log(`\n  SketchScreens — ${map.name}`);
+      console.log(`  ${map.screens.length} screens · ${map.edges.length} flows`);
+      console.log(`\n  ▶  ${url}\n`);
+      console.log("  (Ctrl+C to stop)\n");
+      if (open) openBrowser(url);
+    });
+  };
+  listen(port);
 }
 
 main().catch((e) => {
