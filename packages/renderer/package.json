@@ -1,6 +1,6 @@
 {
   "name": "@sketchscreens/renderer",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "description": "Renders a ProjectMap as an interactive canvas of hand-drawn screen wireframes connected by flow arrows.",
   "license": "MIT",
   "type": "module",
@@ -19,7 +19,7 @@
   ],
   "dependencies": {
     "@dagrejs/dagre": "3.0.0",
-    "@sketchscreens/core-schema": "workspace:*",
+    "@sketchscreens/core-schema": "^0.1.2",
     "@xyflow/react": "12.11.1",
     "html-to-image": "1.11.13",
     "react": "19.2.7",

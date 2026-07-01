@@ -1,6 +1,6 @@
 {
   "name": "sketchscreens",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Auto-generate hand-drawn sketch wireframes of an app's screens + user-journey flow, straight from its source code. Local-first, agent-driven.",
   "license": "MIT",
   "author": "Houston IT Developers",
@@ -32,9 +32,9 @@
     "README.md"
   ],
   "dependencies": {
-    "@sketchscreens/core-schema": "^0.1.0",
-    "@sketchscreens/extractor": "^0.1.0",
-    "@sketchscreens/renderer": "^0.1.0",
-    "@sketchscreens/viewer": "^0.1.0"
+    "@sketchscreens/core-schema": "^0.1.2",
+    "@sketchscreens/extractor": "^0.1.2",
+    "@sketchscreens/renderer": "^0.1.2",
+    "@sketchscreens/viewer": "^0.1.2"
   }
 }

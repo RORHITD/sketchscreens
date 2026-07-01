@@ -1,6 +1,6 @@
 {
   "name": "@sketchscreens/extractor",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "description": "The agent-first extraction contract: the prompt + parse-signal guidance an agent uses to turn a codebase into a ProjectMap, plus a validate-and-write helper.",
   "license": "MIT",
   "type": "module",
@@ -20,7 +20,7 @@
     "test": "node --test --import tsx test/*.test.ts"
   },
   "dependencies": {
-    "@sketchscreens/core-schema": "workspace:*"
+    "@sketchscreens/core-schema": "^0.1.2"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",
