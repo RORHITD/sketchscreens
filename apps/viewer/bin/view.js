@@ -12,7 +12,7 @@ import { createServer } from "node:http";
 import { readFile, writeFile, readdir } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
-import { dirname, extname, join, resolve } from "node:path";
+import { dirname, extname, join, resolve, sep } from "node:path";
 import { spawn } from "node:child_process";
 
 import { validateProjectMap } from "@sketchscreens/core-schema";
@@ -116,6 +116,11 @@ async function main() {
   const opts = parseArgs(process.argv.slice(2));
   const { mapPath, port, open } = opts;
 
+  if (!Number.isInteger(port) || port < 1 || port > 65535) {
+    console.error(`Invalid --port value (expected 1-65535).`);
+    process.exit(1);
+  }
+
   if (!mapPath) {
     console.error("Usage: sketchscreens-view <path-to-map.json> [--port N] [--no-open] [--export-html [file]]");
     process.exit(1);
@@ -172,9 +177,10 @@ async function main() {
       res.end(injected);
       return;
     }
-    // Serve built assets, guarding against path traversal.
+    // Serve built assets, guarding against path traversal. Compare against
+    // dist + sep so a sibling dir sharing the prefix (dist-foo) can't match.
     const filePath = join(dist, url);
-    if (!filePath.startsWith(dist) || !existsSync(filePath)) {
+    if (!filePath.startsWith(dist + sep) || !existsSync(filePath)) {
       res.writeHead(404).end("Not found");
       return;
     }

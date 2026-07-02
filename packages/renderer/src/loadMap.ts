@@ -25,11 +25,22 @@ export async function loadProjectMap(): Promise<ProjectMapT> {
 
   const url = new URLSearchParams(window.location.search).get("map");
   if (url) {
-    const res = await fetch(url);
+    // Only http(s) maps — blocks data:/javascript:/file: smuggled via ?map=.
+    const parsed = new URL(url, window.location.href);
+    if (parsed.protocol !== "http:" && parsed.protocol !== "https:") {
+      throw new Error(`Refusing to load map from ${parsed.protocol} URL — use http(s).`);
+    }
+    const res = await fetch(parsed);
     if (!res.ok) {
       throw new Error(`Failed to fetch map from ${url}: ${res.status}`);
     }
-    return validated(await res.json(), url);
+    let json: unknown;
+    try {
+      json = await res.json();
+    } catch {
+      throw new Error(`The response from ${url} is not valid JSON.`);
+    }
+    return validated(json, url);
   }
 
   return validated(sampleMap, "examples/shopwave-web-journey.map.json (dev fallback)");

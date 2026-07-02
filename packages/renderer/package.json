@@ -2,7 +2,24 @@
   "name": "@sketchscreens/renderer",
   "version": "0.1.3",
   "description": "Renders a ProjectMap as an interactive canvas of hand-drawn screen wireframes connected by flow arrows.",
+  "keywords": ["wireframe", "sketch", "react-flow", "roughjs", "sketchscreens"],
   "license": "MIT",
+  "author": {
+    "name": "Houston IT Developers",
+    "url": "https://houstonitdevelopers.com"
+  },
+  "homepage": "https://sketchscreens.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RORHITD/sketchscreens.git",
+    "directory": "packages/renderer"
+  },
+  "bugs": {
+    "url": "https://github.com/RORHITD/sketchscreens/issues"
+  },
+  "engines": {
+    "node": ">=20"
+  },
   "type": "module",
   "publishConfig": {
     "access": "public"
@@ -19,7 +36,7 @@
   ],
   "dependencies": {
     "@dagrejs/dagre": "3.0.0",
-    "@sketchscreens/core-schema": "^0.1.2",
+    "@sketchscreens/core-schema": "^0.1.3",
     "@xyflow/react": "12.11.1",
     "html-to-image": "1.11.13",
     "react": "19.2.7",

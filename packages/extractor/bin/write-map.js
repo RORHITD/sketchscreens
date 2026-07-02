@@ -71,6 +71,11 @@ if (repoRoot) {
       for (const d of cov.missing.slice(0, 20)) console.log(`      - ${d.route}  (${d.sourceFile})`);
       if (cov.missing.length > 20) console.log(`      … and ${cov.missing.length - 20} more`);
     }
+    if (cov.extra.length) {
+      console.log(`  ⚠ ${cov.extra.length} map screen(s) NOT among discovered files (agent-added; verify they exist):`);
+      for (const id of cov.extra.slice(0, 20)) console.log(`      - ${id}`);
+      if (cov.extra.length > 20) console.log(`      … and ${cov.extra.length - 20} more`);
+    }
   }
 } else {
   console.log("\n(no meta.repoRoot — skipped sourceFile + coverage checks)");

@@ -2,7 +2,24 @@
   "name": "@sketchscreens/extractor",
   "version": "0.1.3",
   "description": "The agent-first extraction contract: the prompt + parse-signal guidance an agent uses to turn a codebase into a ProjectMap, plus a validate-and-write helper.",
+  "keywords": ["wireframe", "extraction", "codebase", "coverage", "sketchscreens"],
   "license": "MIT",
+  "author": {
+    "name": "Houston IT Developers",
+    "url": "https://houstonitdevelopers.com"
+  },
+  "homepage": "https://sketchscreens.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RORHITD/sketchscreens.git",
+    "directory": "packages/extractor"
+  },
+  "bugs": {
+    "url": "https://github.com/RORHITD/sketchscreens/issues"
+  },
+  "engines": {
+    "node": ">=20"
+  },
   "type": "module",
   "publishConfig": {
     "access": "public"
@@ -25,7 +42,7 @@
     "test": "node --test --import tsx test/*.test.ts"
   },
   "dependencies": {
-    "@sketchscreens/core-schema": "^0.1.2"
+    "@sketchscreens/core-schema": "^0.1.3"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",

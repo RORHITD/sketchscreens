@@ -12,14 +12,16 @@ jobs:
       matrix:
         node: [20, 22]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       # Version comes from the "packageManager" field in package.json
-      # (pnpm@10.x). Do not also set `version:` here — action-setup@v4 errors
+      # (pnpm@10.x). Do not also set `version:` here — action-setup errors
       # on a conflict between the two (ERR_PNPM_BAD_PM_VERSION).
-      - uses: pnpm/action-setup@v4
+      # ORDER MATTERS: pnpm must be installed before setup-node so its
+      # `cache: pnpm` can locate the store.
+      - uses: pnpm/action-setup@v6
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: ${{ matrix.node }}
           cache: pnpm
@@ -33,7 +35,11 @@ jobs:
 
       - run: pnpm -r test
 
-      # The whole adoption path in one check: build, then validate a real example
-      # map through the gate (exercises the CLI + write-map + coverage).
-      - name: Smoke-test the gate on an example map
-        run: node packages/cli/bin/sketchscreens.js map examples/shopwave-web-journey.map.json /tmp/ci.map.json --no-serve
+      # The whole adoption path in one check: build, then validate every
+      # committed example map through the gate (CLI + write-map + coverage).
+      - name: Smoke-test the gate on the example maps
+        run: |
+          for m in examples/*.map.json; do
+            echo "--- $m"
+            node packages/cli/bin/sketchscreens.js map "$m" /tmp/ci.map.json --no-serve
+          done

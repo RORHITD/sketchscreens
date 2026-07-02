@@ -77,7 +77,9 @@ function usage() {
   sketchscreens doctor            check the install (builds the renderer if needed)
   sketchscreens prompt            print the extraction prompt the agent follows
   sketchscreens open <map.json>   validate + open a map in the local viewer
+                                  (--port N · --no-open · --export-html [file])
   sketchscreens map <cand> [out]  validate + write a candidate map, then open it
+                                  (--no-serve to validate + write only)
 
 Run /visual-map in your coding agent to generate a map, or author one by hand
 following \`sketchscreens prompt\`.`);
@@ -100,8 +102,9 @@ async function main() {
       const okE = ensureExtractorBuilt();
       console.log(`renderer build: ${okR ? "ok" : "MISSING"}`);
       console.log(`extractor build: ${okE ? "ok" : "MISSING"}`);
-      const p = extractorBin("write-map.js");
-      console.log(`extraction prompt: ${p ? "available (sketchscreens prompt)" : "unknown"}`);
+      const dir = pkgDir("@sketchscreens/extractor");
+      const promptFile = dir && join(dir, "prompts", "extract.md");
+      console.log(`extraction prompt: ${promptFile && existsSync(promptFile) ? "available (sketchscreens prompt)" : "MISSING"}`);
       return okR && okE ? 0 : 1;
     }
 
@@ -147,6 +150,7 @@ async function main() {
       if (noServe) return 0; // validate + write only (scripts / CI)
       ensureRendererBuilt();
       const bin = viewerBin();
+      if (!bin) return (console.error("Viewer not found."), 1);
       return run(process.execPath, [bin, out, ...flags.filter((f) => f !== "--no-serve")]);
     }
 

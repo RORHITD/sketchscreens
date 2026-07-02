@@ -63,7 +63,7 @@ Extraction is **agent-first**: a coding agent (Claude) reads each screen's compo
    sketchscreens doctor                  # check the install
    ```
 
-Every `map`/`open` run prints a **provenance + coverage report** — how many `sourceFile`s resolve on disk and which discovered routes weren't mapped — so a silently-omitted surface (a missing auth flow) can't hide.
+Every `map` run prints a **provenance + coverage report** — how many `sourceFile`s resolve on disk and which discovered routes weren't mapped — so a silently-omitted surface (a missing auth flow) can't hide.
 
 ## Project layout
 
@@ -103,4 +103,4 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md). Teaching it a new stack means writing 
 
 ## License
 
-[MIT](./LICENSE) © Houston IT Developers
+[MIT](./LICENSE) © Houston IT Developers — see [NOTICE](./NOTICE) for trademark terms (the "SketchScreens" name/logo) and the example-data disclaimer.

@@ -33,7 +33,7 @@ sketchscreens doctor              # check the install
 
 Extraction is **agent-first**: a coding agent (e.g. Claude Code, via the `/visual-map` skill) reads each screen's component and emits a small stack-agnostic JSON — the **ProjectMap** — which the renderer draws as hand-drawn wireframes. That's what lets it work on any stack (Next.js, Flutter, Express, …) with no per-framework parser.
 
-Every `map`/`open` run prints a **provenance + coverage report** — how many source files resolve on disk and which discovered routes weren't mapped — so a silently-omitted surface (like a missing auth flow) can't hide.
+Every `map` run prints a **provenance + coverage report** — how many source files resolve on disk and which discovered routes weren't mapped — so a silently-omitted surface (like a missing auth flow) can't hide.
 
 ## Safe by design
 
@@ -47,4 +47,4 @@ Runs entirely on your machine. The viewer binds to `localhost`. Nothing about yo
 
 ## License
 
-[MIT](https://github.com/RORHITD/sketchscreens) © [Houston IT Developers](https://houstonitdevelopers.com)
+[MIT](https://github.com/RORHITD/sketchscreens/blob/main/LICENSE) © [Houston IT Developers](https://houstonitdevelopers.com)

@@ -80,10 +80,13 @@ function kebab(s: string): string {
 /** Next.js App Router: each `page.{tsx,jsx}` is a route; folder path → URL. */
 function enumerateNextApp(repoRoot: string): DiscoveredScreen[] {
   const appDir = existsSync(join(repoRoot, "src/app")) ? join(repoRoot, "src/app") : join(repoRoot, "app");
-  const files = walk(appDir, (f) => /[/\\]page\.(tsx|jsx|ts|js)$/.test(f));
+  const files = walk(appDir, (f) => /[/\\]page\.(tsx|jsx|ts|js)$/.test(f))
+    // A `_private` folder makes its WHOLE subtree non-routable — drop the file,
+    // don't just strip the segment (that would invent a phantom route).
+    .filter((f) => !relative(appDir, f).split(sep).some((s) => s.startsWith("_")));
   return files.map((abs) => {
     const relFromApp = relative(appDir, abs).split(sep).slice(0, -1); // drop page.tsx
-    // Strip (route groups); [param] -> :param; @slots and _private are skipped later.
+    // Strip (route groups) and @slots from the URL; [param] -> :param.
     const segs = relFromApp
       .filter((s) => !(s.startsWith("(") && s.endsWith(")")))
       .filter((s) => !s.startsWith("@"))

@@ -58,7 +58,6 @@ function pairable(a: LaidOutElement, b: LaidOutElement): boolean {
 
 export function layoutElements(elements: ScreenElementT[]): BandedLayout {
   const bands: Record<ElementRegionT, Row[]> = { top: [], main: [], bottom: [] };
-  const lastAlign: Record<ElementRegionT, string | null> = { top: null, main: null, bottom: null };
 
   for (const el of elements) {
     const region = regionOf(el);
@@ -71,15 +70,9 @@ export function layoutElements(elements: ScreenElementT[]): BandedLayout {
     } else {
       rows.push([item]);
     }
-    lastAlign[region] = item.align;
   }
 
   return { top: bands.top, main: bands.main, bottom: bands.bottom };
-}
-
-/** Total number of rendered rows across all bands (for height estimation). */
-export function rowCount(layout: BandedLayout): number {
-  return layout.top.length + layout.main.length + layout.bottom.length;
 }
 
 /**
