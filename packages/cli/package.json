@@ -1,6 +1,6 @@
 {
   "name": "sketchscreens",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Auto-generate hand-drawn sketch wireframes of an app's screens + user-journey flow, straight from its source code. Local-first, agent-driven.",
   "license": "MIT",
   "author": {

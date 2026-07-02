@@ -1,8 +1,14 @@
 {
   "name": "@sketchscreens/extractor",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "The agent-first extraction contract: the prompt + parse-signal guidance an agent uses to turn a codebase into a ProjectMap, plus a validate-and-write helper.",
-  "keywords": ["wireframe", "extraction", "codebase", "coverage", "sketchscreens"],
+  "keywords": [
+    "wireframe",
+    "extraction",
+    "codebase",
+    "coverage",
+    "sketchscreens"
+  ],
   "license": "MIT",
   "author": {
     "name": "Houston IT Developers",
