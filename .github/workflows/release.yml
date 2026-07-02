@@ -1,0 +1,69 @@
+name: Release
+
+# Publish to npm when a version tag is pushed:
+#   git tag v0.1.5 && git push --tags
+#
+# Publishes every public workspace package whose committed version is not
+# already on the registry, in dependency order. Requires the NPM_TOKEN
+# repository secret (granular automation token, read-write on the
+# @sketchscreens packages + sketchscreens).
+on:
+  push:
+    tags: ["v*"]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v7
+
+      # Version comes from the "packageManager" field in package.json.
+      # ORDER MATTERS: pnpm before setup-node so `cache: pnpm` works.
+      - uses: pnpm/action-setup@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: pnpm
+          registry-url: "https://registry.npmjs.org"
+
+      - run: pnpm install --frozen-lockfile
+
+      - run: pnpm -r build
+
+      - run: pnpm -r test
+
+      # Gate the release on the same smoke check CI runs.
+      - name: Smoke-test the gate on the example maps
+        run: |
+          for m in examples/*.map.json; do
+            node packages/cli/bin/sketchscreens.js map "$m" /tmp/ci.map.json --no-serve
+          done
+
+      - name: Publish changed packages (dependency order)
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          set -euo pipefail
+          for dir in packages/core-schema packages/extractor packages/renderer apps/viewer packages/cli; do
+            NAME=$(node -p "require('./$dir/package.json').name")
+            VER=$(node -p "require('./$dir/package.json').version")
+            if npm view "$NAME@$VER" version >/dev/null 2>&1; then
+              echo "── $NAME@$VER already published — skipping"
+            else
+              echo "── publishing $NAME@$VER"
+              (cd "$dir" && npm publish --access public)
+            fi
+          done
+
+      - name: Verify everything the tag claims is live
+        run: |
+          sleep 15
+          for dir in packages/core-schema packages/extractor packages/renderer apps/viewer packages/cli; do
+            NAME=$(node -p "require('./$dir/package.json').name")
+            VER=$(node -p "require('./$dir/package.json').version")
+            GOT=$(npm view "$NAME@$VER" version 2>/dev/null || true)
+            [ "$GOT" = "$VER" ] && echo "✅ $NAME@$VER live" || { echo "❌ $NAME@$VER NOT live"; exit 1; }
+          done

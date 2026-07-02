@@ -1,6 +1,6 @@
 {
   "name": "@sketchscreens/renderer",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Renders a ProjectMap as an interactive canvas of hand-drawn screen wireframes connected by flow arrows.",
   "keywords": [
     "wireframe",
