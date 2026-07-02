@@ -30,3 +30,7 @@ apps/**/dist/
 # logs
 npm-debug.log*
 pnpm-debug.log*
+
+# playwright visual-test artifacts (baselines in tests/**/­*-snapshots ARE committed)
+test-results/
+playwright-report/

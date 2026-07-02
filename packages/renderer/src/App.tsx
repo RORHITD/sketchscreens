@@ -13,7 +13,7 @@ import "@xyflow/react/dist/style.css";
 import { toPng } from "html-to-image";
 
 import { groupSegments, type ProjectMapT } from "@sketchscreens/core-schema";
-import { buildGraph, type AnyNode } from "./layout";
+import { buildGraph, sectionColors, type AnyNode } from "./layout";
 import { ScreenNode } from "./ScreenNode";
 import { loadProjectMap } from "./loadMap";
 import { DetailPanel } from "./DetailPanel";
@@ -45,9 +45,10 @@ function Canvas({ map }: { map: ProjectMapT }) {
   const flowWrapRef = useRef<HTMLDivElement>(null);
   const { fitView } = useReactFlow();
 
+  const [hoveredId, setHoveredId] = useState<string | null>(null);
   const graph = useMemo(() => buildGraph(map), [map]);
 
-  // Top-level sections for the filter dropdown.
+  // Top-level sections (sorted) + their identity colors, for the legend.
   const sections = useMemo(() => {
     const set = new Set<string>();
     for (const s of map.screens) {
@@ -56,6 +57,25 @@ function Canvas({ map }: { map: ProjectMapT }) {
     }
     return [...set].sort();
   }, [map]);
+  const colors = useMemo(() => sectionColors(map), [map]);
+
+  // Adjacency for hover-highlighting: nodeId → its edges + neighbor nodes.
+  const adjacency = useMemo(() => {
+    const m = new Map<string, { nodes: Set<string>; edges: Set<string> }>();
+    const entry = (id: string) => {
+      let e = m.get(id);
+      if (!e) m.set(id, (e = { nodes: new Set([id]), edges: new Set() }));
+      return e;
+    };
+    for (const e of graph.edges) {
+      entry(e.source).nodes.add(e.target);
+      entry(e.source).edges.add(e.id);
+      entry(e.target).nodes.add(e.source);
+      entry(e.target).edges.add(e.id);
+    }
+    return m;
+  }, [graph.edges]);
+  const hovered = hoveredId ? adjacency.get(hoveredId) : undefined;
 
   // Which screen ids are "active" given the search + section filter.
   const activeIds = useMemo(() => {
@@ -70,25 +90,61 @@ function Canvas({ map }: { map: ProjectMapT }) {
 
   const filtering = query.length > 0 || sectionFilter.length > 0;
 
-  // Dim non-matching nodes/edges when filtering.
+  // Journey trace: the tree path from START down to the selected screen —
+  // "how does a user actually reach this?" Highlighted whenever selected,
+  // and it survives hover (the mouse is usually still on the clicked node).
+  const path = useMemo(() => {
+    const pairs = new Set<string>();
+    const nodes = new Set<string>();
+    if (!selectedId) return { pairs, nodes };
+    const byId = new Map(map.screens.map((s) => [s.id, s]));
+    nodes.add(selectedId);
+    let cur = byId.get(selectedId);
+    const seen = new Set<string>();
+    while (cur?.parent && !seen.has(cur.id)) {
+      seen.add(cur.id);
+      pairs.add(`${cur.parent}->${cur.id}`);
+      nodes.add(cur.parent);
+      cur = byId.get(cur.parent);
+    }
+    return { pairs, nodes };
+  }, [map, selectedId]);
+
+  // Emphasis rules, in priority order: hover-connectivity > journey trace >
+  // search/section filter > everything plain.
+  const tracing = path.pairs.size > 0;
   const nodes = useMemo(
     () =>
-      graph.nodes.map((n) => ({
-        ...n,
-        style: { ...n.style, opacity: filtering && !activeIds.has(n.id) ? 0.18 : 1 },
-      })),
-    [graph.nodes, filtering, activeIds],
+      graph.nodes.map((n) => {
+        let opacity = 1;
+        const onPath = tracing && path.nodes.has(n.id);
+        if (hovered) opacity = hovered.nodes.has(n.id) || onPath ? 1 : 0.2;
+        else if (tracing) opacity = onPath ? 1 : 0.35;
+        else if (filtering) opacity = activeIds.has(n.id) ? 1 : 0.18;
+        return { ...n, style: { ...n.style, opacity } };
+      }),
+    [graph.nodes, hovered, filtering, activeIds, tracing, path.nodes],
   );
   const edges = useMemo(
     () =>
-      graph.edges.map((e) => ({
-        ...e,
-        style: {
-          ...e.style,
-          opacity: filtering && !(activeIds.has(e.source) && activeIds.has(e.target)) ? 0.08 : undefined,
-        },
-      })),
-    [graph.edges, filtering, activeIds],
+      graph.edges.map((e) => {
+        const onPath = tracing && path.pairs.has(`${e.source}->${e.target}`);
+        let style = { ...e.style };
+        if (onPath) {
+          // The journey trace outranks everything — visible even mid-hover.
+          style = { ...style, stroke: "#2f6f8f", strokeWidth: 3, opacity: 1 };
+        } else if (hovered) {
+          style = hovered.edges.has(e.id)
+            ? { ...style, opacity: 1, strokeWidth: Number(style.strokeWidth ?? 1.4) + 1 }
+            : { ...style, opacity: 0.06 };
+        } else if (tracing) {
+          style = { ...style, opacity: 0.2 }; // quiet everything off-path
+        } else if (filtering && !(activeIds.has(e.source) && activeIds.has(e.target))) {
+          style = { ...style, opacity: 0.08 };
+        }
+        return { ...e, style };
+      }),
+    [graph.edges, hovered, filtering, activeIds, tracing, path.pairs],
   );
 
   const onNodeClick = useCallback((_: unknown, node: Node) => setSelectedId(node.id), []);
@@ -133,18 +189,39 @@ function Canvas({ map }: { map: ProjectMapT }) {
             onChange={(e) => setQuery(e.target.value)}
           />
           {sections.length > 1 && (
-            <select
-              className="ss-section-select"
-              value={sectionFilter}
-              onChange={(e) => setSectionFilter(e.target.value)}
-            >
-              <option value="">All sections</option>
+            <div className="ss-legend" role="group" aria-label="Sections">
+              <button
+                className={`ss-chip${!sectionFilter ? " ss-chip-active" : ""}`}
+                onClick={() => {
+                  setSectionFilter("");
+                  fitView({ duration: 450, padding: 0.1 });
+                }}
+              >
+                All
+              </button>
               {sections.map((s) => (
-                <option key={s} value={s}>
+                <button
+                  key={s}
+                  className={`ss-chip${sectionFilter === s ? " ss-chip-active" : ""}`}
+                  style={{ "--ss-chip-color": colors.get(s) } as React.CSSProperties}
+                  onClick={() => {
+                    const next = sectionFilter === s ? "" : s;
+                    setSectionFilter(next);
+                    if (next) {
+                      const ids = map.screens
+                        .filter((sc) => groupSegments(sc.group)[0] === s)
+                        .map((sc) => ({ id: sc.id }));
+                      fitView({ nodes: ids, duration: 450, padding: 0.2, maxZoom: 1 });
+                    } else {
+                      fitView({ duration: 450, padding: 0.1 });
+                    }
+                  }}
+                >
+                  <span className="ss-chip-dot" />
                   {s}
-                </option>
+                </button>
               ))}
-            </select>
+            </div>
           )}
           <button className="ss-export-btn" onClick={exportPng} disabled={exporting}>
             {exporting ? "Exporting…" : "Export PNG"}
@@ -161,6 +238,8 @@ function Canvas({ map }: { map: ProjectMapT }) {
           edges={edges}
           nodeTypes={nodeTypes}
           onNodeClick={onNodeClick}
+          onNodeMouseEnter={(_, n) => setHoveredId(n.id)}
+          onNodeMouseLeave={() => setHoveredId(null)}
           onPaneClick={() => setSelectedId(null)}
           fitView
           minZoom={0.1}

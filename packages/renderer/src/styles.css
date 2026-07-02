@@ -779,3 +779,41 @@ body,
   background: color-mix(in srgb, var(--ss-section-color, var(--ss-accent)) 14%, #fdfdfb);
   color: var(--ss-section-color, var(--ss-accent));
 }
+
+/* --- section legend chips (filter + zoom-to-section) -------------------- */
+.ss-legend {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.ss-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--ss-ui-font);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border: 1px solid var(--ss-line);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--ss-ink-soft);
+  cursor: pointer;
+  transition: border-color 0.12s, color 0.12s, background 0.12s;
+}
+.ss-chip:hover {
+  border-color: var(--ss-chip-color, var(--ss-accent));
+  color: var(--ss-chip-color, var(--ss-accent));
+}
+.ss-chip-active {
+  border-color: var(--ss-chip-color, var(--ss-accent));
+  background: color-mix(in srgb, var(--ss-chip-color, var(--ss-accent)) 12%, #fff);
+  color: var(--ss-chip-color, var(--ss-accent));
+}
+.ss-chip-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--ss-chip-color, var(--ss-accent));
+}

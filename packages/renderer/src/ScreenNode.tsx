@@ -64,8 +64,7 @@ export function ScreenNode({ data, selected }: NodeProps<ScreenNodeType>) {
         }
         style={{ "--ss-section-color": sectionColor ?? "#9aa0a6" } as React.CSSProperties}
       >
-        <Handle type="target" position={Position.Top} className="ss-handle" />
-        <Handle type="target" position={Position.Left} className="ss-handle-hidden" />
+        <NodeHandles />
         <RoughFrame className="ss-screen-card" seed={seedFor(screen.id)}>
           <div className="ss-overview-body" style={{ width, minHeight: height - 20 }}>
             {isRoot && <span className="ss-root-badge ss-overview-start">START</span>}
@@ -74,8 +73,6 @@ export function ScreenNode({ data, selected }: NodeProps<ScreenNodeType>) {
             {section && <span className="ss-overview-section">{section}</span>}
           </div>
         </RoughFrame>
-        <Handle type="source" position={Position.Bottom} className="ss-handle-hidden" />
-        <Handle type="source" position={Position.Right} className="ss-handle-hidden" />
       </div>
     );
   }
@@ -90,8 +87,7 @@ export function ScreenNode({ data, selected }: NodeProps<ScreenNodeType>) {
       }
       style={{ "--ss-section-color": sectionColor ?? "#9aa0a6" } as React.CSSProperties}
     >
-      <Handle type="target" position={Position.Top} className="ss-handle" />
-      <Handle type="target" position={Position.Left} className="ss-handle-hidden" />
+      <NodeHandles />
 
       <RoughFrame className="ss-screen-card" seed={seedFor(screen.id)}>
         <div className="ss-screen-titlebar">
@@ -134,8 +130,25 @@ export function ScreenNode({ data, selected }: NodeProps<ScreenNodeType>) {
         )}
       </RoughFrame>
 
-      <Handle type="source" position={Position.Bottom} className="ss-handle-hidden" />
-      <Handle type="source" position={Position.Right} className="ss-handle-hidden" />
     </div>
+  );
+}
+
+/**
+ * Handles on all four sides (targets: top/left/right, sources:
+ * bottom/left/right) so the layout can route each edge through the side that
+ * actually faces its other end — backward/sideways nav edges no longer loop
+ * from the bottom all the way around to the top.
+ */
+function NodeHandles() {
+  return (
+    <>
+      <Handle id="tt" type="target" position={Position.Top} className="ss-handle" />
+      <Handle id="tl" type="target" position={Position.Left} className="ss-handle-hidden" />
+      <Handle id="tr" type="target" position={Position.Right} className="ss-handle-hidden" />
+      <Handle id="sb" type="source" position={Position.Bottom} className="ss-handle-hidden" />
+      <Handle id="sl" type="source" position={Position.Left} className="ss-handle-hidden" />
+      <Handle id="sr" type="source" position={Position.Right} className="ss-handle-hidden" />
+    </>
   );
 }

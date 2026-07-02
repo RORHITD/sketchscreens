@@ -84,7 +84,9 @@ export function buildGraph(map: ProjectMapT): { nodes: AnyNode[]; edges: Edge[] 
   // With an accurate per-type height estimate (elementHeight), separation can be
   // modest — screens are spaced, not sprawling. (Was cranked to 90/130 only to
   // paper over a height estimate that under-counted tall elements.)
-  g.setGraph({ rankdir: "TB", nodesep: 48, ranksep: 90, marginx: 48, marginy: 48 });
+  // tight-tree compacts long linear chains (the checkout-funnel problem);
+  // separations kept modest since per-type heights are accurate.
+  g.setGraph({ rankdir: "TB", nodesep: 40, ranksep: 64, marginx: 40, marginy: 40, ranker: "tight-tree" });
 
   const ids = new Set(map.screens.map((s) => s.id));
   const root = pickRoot(map);
@@ -128,6 +130,27 @@ export function buildGraph(map: ProjectMapT): { nodes: AnyNode[]; edges: Edge[] 
     };
   });
 
+  // Node centers, for picking which side each nav edge should leave/enter.
+  const center = new Map(map.screens.map((s) => {
+    const p = g.node(s.id);
+    return [s.id, { x: p.x, y: p.y }] as const;
+  }));
+
+  /**
+   * Route an edge through the sides that face each other. Downward edges use
+   * bottom→top (the tree direction). Upward/backward edges leave and enter
+   * through the facing left/right sides instead of looping bottom-to-top
+   * across the whole canvas.
+   */
+  function pickHandles(from: string, to: string): { sourceHandle: string; targetHandle: string } {
+    const a = center.get(from)!;
+    const b = center.get(to)!;
+    if (b.y >= a.y) return { sourceHandle: "sb", targetHandle: "tt" };
+    return b.x >= a.x
+      ? { sourceHandle: "sr", targetHandle: "tl" }
+      : { sourceHandle: "sl", targetHandle: "tr" };
+  }
+
   const edges: Edge[] = [];
   // Structural journey edges (solid, arrowed — the dominant layer).
   treeEdges.forEach(({ from, to }, i) => {
@@ -135,6 +158,8 @@ export function buildGraph(map: ProjectMapT): { nodes: AnyNode[]; edges: Edge[] 
       id: `tree-${i}-${from}-${to}`,
       source: from,
       target: to,
+      sourceHandle: "sb",
+      targetHandle: "tt",
       type: "smoothstep",
       style: { stroke: "#8a8f95", strokeWidth: 2 },
       markerEnd: { type: MarkerType.ArrowClosed, color: "#8a8f95", width: 16, height: 16 },
@@ -149,6 +174,7 @@ export function buildGraph(map: ProjectMapT): { nodes: AnyNode[]; edges: Edge[] 
       id: `flow-${i}-${edge.from}-${edge.to}`,
       source: edge.from,
       target: edge.to,
+      ...pickHandles(edge.from, edge.to),
       label: edge.trigger,
       type: "bezier",
       animated: false,

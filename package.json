@@ -21,9 +21,11 @@
     "build": "pnpm -r --filter=./packages/* build",
     "typecheck": "pnpm -r typecheck",
     "test": "pnpm -r test",
-    "dev:renderer": "pnpm --filter @sketchscreens/renderer dev"
+    "dev:renderer": "pnpm --filter @sketchscreens/renderer dev",
+    "test:visual": "playwright test"
   },
   "devDependencies": {
+    "@playwright/test": "^1.61.1",
     "typescript": "^5.7.2"
   }
 }
