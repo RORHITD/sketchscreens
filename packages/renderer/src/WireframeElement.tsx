@@ -75,15 +75,17 @@ export function WireframeElement({ element }: { element: ScreenElementT }) {
       return <SketchButton label={label || "Button"} variant={element.variant} />;
 
     case "checkbox":
-      return <SketchCheckbox label={label} />;
+      return <SketchCheckbox label={label} checked={element.checked ?? false} />;
 
     case "radio":
-      return <SketchRadio label={label} />;
+      return <SketchRadio label={label} checked={element.checked ?? false} />;
 
     case "toggle":
+      // Unknown state draws "on" — a filled switch reads as a toggle at sketch
+      // fidelity; an explicit checked:false draws it off.
       return (
         <label className="ss-inline">
-          <RoughToggle on />
+          <RoughToggle on={element.checked ?? true} />
           {label && <span>{label}</span>}
         </label>
       );

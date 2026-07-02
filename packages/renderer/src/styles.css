@@ -727,3 +727,55 @@ body,
   max-width: 640px;
   white-space: pre-wrap;
 }
+
+/* --- semantic-zoom overview cards (zoom < threshold) --------------------
+   At fit-view the full wireframes are unreadable smudge; each node instead
+   renders as a big titled card in its section color, so the map communicates
+   structure at a glance. Same node dimensions — the layout never shifts. */
+.ss-overview-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 16px 14px;
+  box-sizing: border-box;
+  text-align: center;
+  background: color-mix(in srgb, var(--ss-section-color) 6%, transparent);
+}
+.ss-overview-name {
+  font-weight: 700;
+  font-size: 30px;
+  line-height: 1.08;
+  overflow-wrap: anywhere;
+}
+.ss-overview-route {
+  font-size: 16px;
+  color: var(--ss-ink-soft);
+  font-family: var(--ss-ui-font);
+  overflow-wrap: anywhere;
+}
+.ss-overview-section {
+  font-family: var(--ss-ui-font);
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 3px 12px;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--ss-section-color) 16%, #fdfdfb);
+  color: var(--ss-section-color);
+}
+.ss-overview-start {
+  font-size: 14px;
+  padding: 3px 12px;
+}
+/* section-identity accent on the detailed card too */
+.ss-screen-titlebar {
+  border-left: 3px solid var(--ss-section-color, transparent);
+  margin-left: -3px;
+}
+.ss-section-badge {
+  background: color-mix(in srgb, var(--ss-section-color, var(--ss-accent)) 14%, #fdfdfb);
+  color: var(--ss-section-color, var(--ss-accent));
+}

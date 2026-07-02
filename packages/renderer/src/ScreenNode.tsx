@@ -1,9 +1,18 @@
-import { Handle, Position, type NodeProps } from "@xyflow/react";
+import { Handle, Position, useStore, type NodeProps } from "@xyflow/react";
 import { groupSegments } from "@sketchscreens/core-schema";
-import type { ScreenNode as ScreenNodeType } from "./layout";
+import { estimateScreenSize, type ScreenNode as ScreenNodeType } from "./layout";
 import { WireframeElement } from "./WireframeElement";
 import { RoughFrame } from "./RoughFrame";
 import { layoutElements, type Row } from "./elementLayout";
+
+/**
+ * Below this zoom the full wireframe is unreadable smudge — switch to a
+ * semantic "overview card": big name + route + section chip at the SAME node
+ * size, so the map communicates structure at fit-view. The boolean selector
+ * means nodes re-render only when the threshold is crossed, not on every
+ * zoom tick.
+ */
+const OVERVIEW_ZOOM = 0.55;
 
 // A small stable hash so each screen's sketch frame has its own hand-drawn
 // wobble (deterministic per id — same screen redraws identically).
@@ -37,11 +46,40 @@ function RowBand({ row, band }: { row: Row; band: string }) {
 }
 
 export function ScreenNode({ data, selected }: NodeProps<ScreenNodeType>) {
-  const { screen, isRoot } = data;
+  const { screen, isRoot, sectionColor } = data;
+  const overview = useStore((s) => s.transform[2] < OVERVIEW_ZOOM);
   // The deepest segment of the group path is the section label badge.
   const section = groupSegments(screen.group).pop();
   const isModal = screen.presentation && screen.presentation !== "screen";
   const layout = layoutElements(screen.elements);
+
+  if (overview) {
+    const { width, height } = estimateScreenSize(screen);
+    return (
+      <div
+        className={
+          "ss-screen ss-screen-overview" +
+          (selected ? " ss-screen-selected" : "") +
+          (isRoot ? " ss-screen-root" : "")
+        }
+        style={{ "--ss-section-color": sectionColor ?? "#9aa0a6" } as React.CSSProperties}
+      >
+        <Handle type="target" position={Position.Top} className="ss-handle" />
+        <Handle type="target" position={Position.Left} className="ss-handle-hidden" />
+        <RoughFrame className="ss-screen-card" seed={seedFor(screen.id)}>
+          <div className="ss-overview-body" style={{ width, minHeight: height - 20 }}>
+            {isRoot && <span className="ss-root-badge ss-overview-start">START</span>}
+            <span className="ss-overview-name">{screen.name}</span>
+            {screen.route && <span className="ss-overview-route">{screen.route}</span>}
+            {section && <span className="ss-overview-section">{section}</span>}
+          </div>
+        </RoughFrame>
+        <Handle type="source" position={Position.Bottom} className="ss-handle-hidden" />
+        <Handle type="source" position={Position.Right} className="ss-handle-hidden" />
+      </div>
+    );
+  }
+
   return (
     <div
       className={
@@ -50,6 +88,7 @@ export function ScreenNode({ data, selected }: NodeProps<ScreenNodeType>) {
         (isRoot ? " ss-screen-root" : "") +
         (isModal ? " ss-screen-modal" : "")
       }
+      style={{ "--ss-section-color": sectionColor ?? "#9aa0a6" } as React.CSSProperties}
     >
       <Handle type="target" position={Position.Top} className="ss-handle" />
       <Handle type="target" position={Position.Left} className="ss-handle-hidden" />

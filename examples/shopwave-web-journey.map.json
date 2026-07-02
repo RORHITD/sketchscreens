@@ -674,8 +674,24 @@
           "label": "Notifications"
         },
         {
-          "type": "list",
-          "label": "Toggles (order updates · promos · back-in-stock)"
+          "type": "toggle",
+          "label": "Order updates",
+          "checked": true
+        },
+        {
+          "type": "toggle",
+          "label": "Back-in-stock alerts",
+          "checked": true
+        },
+        {
+          "type": "toggle",
+          "label": "Promotions & offers",
+          "checked": false
+        },
+        {
+          "type": "checkbox",
+          "label": "Also send by SMS",
+          "checked": false
         },
         {
           "type": "button",

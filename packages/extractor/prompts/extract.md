@@ -39,6 +39,7 @@ Produce a single JSON object matching this shape (validated by `@sketchscreens/c
 - `label` = the visible text (button caption, field label, heading text).
 - `variant` (buttons): `primary | secondary | destructive | ghost | link`.
 - `secure: true` for password fields; `required: true` if the source marks it required.
+- `checked` (toggles/checkboxes/radios): the default state when the source shows one (`defaultChecked`, `checked`, an enabled `<Switch>`). Omit when unknown.
 - element `group` = an optional key; elements sharing it render inside one card/section (distinct from the screen-level `group` below).
 
 **Layout — make the sketch mirror the real screen.** Set each element's coarse position so it's drawn where it actually sits (still hand-drawn, just arranged right):

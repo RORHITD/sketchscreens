@@ -84,6 +84,12 @@ export const ScreenElement = z.object({
   /** True if the element is marked required in the source. */
   required: z.boolean().optional(),
   /**
+   * Initial on/selected state for toggles, checkboxes, and radios — when the
+   * source shows a default (`defaultChecked`, `checked`, an enabled Switch).
+   * Omit when unknown; the renderer then draws toggles on and boxes empty.
+   */
+  checked: z.boolean().optional(),
+  /**
    * Optional grouping key. Elements sharing a group render inside one
    * card/section, preserving the source's visual grouping.
    */

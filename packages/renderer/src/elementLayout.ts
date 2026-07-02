@@ -65,7 +65,9 @@ export function layoutElements(elements: ScreenElementT[]): BandedLayout {
     const rows = bands[region];
     const prevRow = rows[rows.length - 1];
 
-    if (prevRow && prevRow.length > 0 && pairable(prevRow[prevRow.length - 1]!, item)) {
+    // Cap merged rows at 3 — a 4th+ adjacent button wraps to a new row instead
+    // of cramming the 260px frame.
+    if (prevRow && prevRow.length > 0 && prevRow.length < 3 && pairable(prevRow[prevRow.length - 1]!, item)) {
       prevRow.push(item); // extend the current row (e.g. [Cancel][Save])
     } else {
       rows.push([item]);

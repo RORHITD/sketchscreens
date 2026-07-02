@@ -173,8 +173,11 @@ function Canvas({ map }: { map: ProjectMapT }) {
           <MiniMap
             pannable
             zoomable
-            nodeColor={(n) => (n.data?.isRoot ? "#2f6f8f" : "#d9d6cc")}
-            maskColor="rgba(253,253,251,0.7)"
+            nodeColor={(n) => (n.data?.sectionColor as string) ?? "#c9c5b8"}
+            nodeStrokeColor="#8a877c"
+            nodeStrokeWidth={2}
+            maskColor="rgba(230,228,218,0.75)"
+            style={{ border: "1px solid #d9d6cc", borderRadius: 6 }}
           />
         </ReactFlow>
 
