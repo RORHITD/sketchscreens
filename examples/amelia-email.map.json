@@ -1,0 +1,366 @@
+{
+  "version": 1,
+  "name": "Amelia's Agent — Email flow",
+  "surface": "other",
+  "meta": {
+    "generator": "hand-extracted from src/lifecycle.ts, billing.ts, hosted.ts, server.ts",
+    "repoRoot": "~/C/amelia-accounts",
+    "extraction": "manual",
+    "generatedAt": "2026-09-05"
+  },
+  "screens": [
+    {
+      "id": "new-account",
+      "name": "A new account",
+      "isEntry": true,
+      "sourceFile": "src/lifecycle.ts",
+      "description": "Every lifecycle email starts here. Nobody gets one unless all four hold.",
+      "elements": [
+        {
+          "type": "heading",
+          "label": "Who can be emailed at all"
+        },
+        {
+          "type": "checkbox",
+          "label": "Has an email address",
+          "checked": true
+        },
+        {
+          "type": "checkbox",
+          "label": "Not @ameliasagent.com",
+          "checked": true
+        },
+        {
+          "type": "checkbox",
+          "label": "Not a house account",
+          "checked": true
+        },
+        {
+          "type": "checkbox",
+          "label": "Has not unsubscribed",
+          "checked": true
+        }
+      ]
+    },
+    {
+      "id": "hourly-sweep",
+      "name": "Hourly sweep",
+      "parent": "new-account",
+      "route": "sweepLifecycle",
+      "sourceFile": "src/server.ts",
+      "group": "Automatic",
+      "description": "Runs every hour under LOCK.lifecycle. Does nothing at all — and claims nothing — if RESEND_API_KEY is unset, so the day the key arrives everyone still eligible gets their mail.",
+      "elements": [
+        {
+          "type": "text",
+          "label": "Every hour · one process at a time"
+        },
+        {
+          "type": "text",
+          "label": "Claim first, then send. A crash loses one mail, never loops.",
+          "labelKind": "descriptive"
+        },
+        {
+          "type": "list",
+          "label": "welcome · stalled_day2 · trial_exhausted · unpublished_build",
+          "labelKind": "descriptive"
+        }
+      ]
+    },
+    {
+      "id": "welcome",
+      "name": "Welcome",
+      "parent": "hourly-sweep",
+      "group": "Automatic › Onboarding",
+      "sourceFile": "src/lifecycle.ts",
+      "description": "1 to 48 hours after signing up. The 48h ceiling stops a deploy greeting every account ever created.",
+      "elements": [
+        {
+          "type": "heading",
+          "label": "Welcome — tell Amelia what you want to build"
+        },
+        {
+          "type": "text",
+          "label": "Type what you want the way you'd tell a friend — the planning is free."
+        },
+        {
+          "type": "button",
+          "label": "Start building",
+          "variant": "primary",
+          "align": "center"
+        }
+      ]
+    },
+    {
+      "id": "stalled-day2",
+      "name": "Stalled on day 2",
+      "parent": "hourly-sweep",
+      "group": "Automatic › Onboarding",
+      "sourceFile": "src/lifecycle.ts",
+      "description": "2 to 4 days after signup and they have never signed in. Gives one concrete sentence to type, because 'type anything' is exactly what a stalled person cannot do.",
+      "elements": [
+        {
+          "type": "heading",
+          "label": "Not sure what to type first? Try this"
+        },
+        {
+          "type": "text",
+          "label": "“a website for my business, with a contact form”"
+        },
+        {
+          "type": "button",
+          "label": "Start building",
+          "variant": "primary",
+          "align": "center"
+        }
+      ]
+    },
+    {
+      "id": "trial-exhausted",
+      "name": "Trial used up",
+      "parent": "hourly-sweep",
+      "group": "Automatic › Billing",
+      "sourceFile": "src/lifecycle.ts",
+      "description": "On the trial plan and spend has reached the cap. The first sentence is checkAccess's refusal copy verbatim, so the app and the inbox cannot drift apart.",
+      "elements": [
+        {
+          "type": "heading",
+          "label": "Your free trial is used — everything you made is saved"
+        },
+        {
+          "type": "text",
+          "label": "Plans start at $10 a month billed annually — $12 month to month."
+        },
+        {
+          "type": "button",
+          "label": "Add a plan",
+          "variant": "primary",
+          "align": "center"
+        }
+      ]
+    },
+    {
+      "id": "unpublished-build",
+      "name": "Finished, nobody can see it",
+      "parent": "hourly-sweep",
+      "group": "Automatic › Building",
+      "sourceFile": "src/lifecycle.ts",
+      "description": "Built 20 hours to 14 days ago, never published, not a deployed app. One per project, at most one per person per week. Exists because 72 projects were built and 2 ever published.",
+      "elements": [
+        {
+          "type": "heading",
+          "label": "<Project> is finished — nobody can see it yet"
+        },
+        {
+          "type": "text",
+          "label": "It's at <slug>.thxamelia.com once you put it online."
+        },
+        {
+          "type": "button",
+          "label": "Put it online",
+          "variant": "primary",
+          "align": "center"
+        }
+      ]
+    },
+    {
+      "id": "machine-reaper",
+      "name": "Machine put away",
+      "parent": "new-account",
+      "route": "reapIdle / reapExpired",
+      "sourceFile": "src/hosted.ts",
+      "group": "On an event",
+      "description": "Every minute the reaper stops idle or expired machines. If the person has no push notification set up, they get an email instead.",
+      "elements": [
+        {
+          "type": "text",
+          "label": "Machine idle or expired → stopped"
+        },
+        {
+          "type": "text",
+          "label": "Has push? → notification. No push? → email.",
+          "labelKind": "descriptive"
+        }
+      ]
+    },
+    {
+      "id": "machine-reaped",
+      "name": "Your machine was put away",
+      "parent": "machine-reaper",
+      "group": "On an event › Building",
+      "sourceFile": "src/lifecycle.ts",
+      "description": "At most once a day per person, however many machines were reaped.",
+      "elements": [
+        {
+          "type": "heading",
+          "label": "Your machine finished and was put away"
+        },
+        {
+          "type": "text",
+          "label": "Everything is saved. Open the project to start it again."
+        },
+        {
+          "type": "button",
+          "label": "Open your project",
+          "variant": "primary",
+          "align": "center"
+        }
+      ]
+    },
+    {
+      "id": "card-declined",
+      "name": "Card declined",
+      "parent": "new-account",
+      "route": "Stripe webhook",
+      "sourceFile": "src/billing.ts",
+      "group": "On an event",
+      "description": "Stripe reports a failed charge. Stripe retries on its own; if the card is never updated the plan pauses at period end.",
+      "elements": [
+        {
+          "type": "text",
+          "label": "invoice.payment_failed → dunningNotice(customer)"
+        }
+      ]
+    },
+    {
+      "id": "dunning",
+      "name": "Update your card",
+      "parent": "card-declined",
+      "group": "On an event › Billing",
+      "sourceFile": "src/lifecycle.ts",
+      "description": "At most once a week per person, so Stripe's retries do not become four emails.",
+      "elements": [
+        {
+          "type": "heading",
+          "label": "Your card was declined — your plan pauses unless it's updated"
+        },
+        {
+          "type": "text",
+          "label": "Everything you built stays. Update the card and nothing changes."
+        },
+        {
+          "type": "button",
+          "label": "Update your card",
+          "variant": "primary",
+          "align": "center"
+        }
+      ]
+    },
+    {
+      "id": "product-update",
+      "name": "Product update",
+      "parent": "new-account",
+      "route": "POST /v1/admin/product-update/send",
+      "sourceFile": "src/productUpdate.ts",
+      "group": "By hand",
+      "description": "Sent by Richy, one edition at a time, always tested to one address first. Each edition reaches each person once.",
+      "elements": [
+        {
+          "type": "heading",
+          "label": "Just shipped"
+        },
+        {
+          "type": "card",
+          "label": "One hero item, in colour, under a subject you write"
+        },
+        {
+          "type": "list",
+          "label": "Also new — five lines with ticks, then 'and N more'",
+          "labelKind": "descriptive"
+        },
+        {
+          "type": "button",
+          "label": "See everything that shipped",
+          "variant": "primary",
+          "align": "center"
+        }
+      ]
+    },
+    {
+      "id": "unsubscribed",
+      "name": "Unsubscribed",
+      "sourceFile": "src/mail.ts",
+      "group": "End",
+      "presentation": "sheet",
+      "description": "One click from any email above. Sets lifecycle_optout; nothing on this map is ever sent again. Sign-in codes and 'your build finished' are not lifecycle mail and still arrive.",
+      "elements": [
+        {
+          "type": "text",
+          "label": "lifecycle_optout = true"
+        },
+        {
+          "type": "text",
+          "label": "Still receives: sign-in codes, build finished, receipts",
+          "labelKind": "descriptive"
+        }
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "from": "hourly-sweep",
+      "to": "welcome",
+      "trigger": "1–48 h old"
+    },
+    {
+      "from": "hourly-sweep",
+      "to": "stalled-day2",
+      "trigger": "2–4 days, never signed in"
+    },
+    {
+      "from": "hourly-sweep",
+      "to": "trial-exhausted",
+      "trigger": "trial cap reached"
+    },
+    {
+      "from": "hourly-sweep",
+      "to": "unpublished-build",
+      "trigger": "built 20 h–14 d ago, not published"
+    },
+    {
+      "from": "machine-reaper",
+      "to": "machine-reaped",
+      "trigger": "no push set up"
+    },
+    {
+      "from": "card-declined",
+      "to": "dunning",
+      "trigger": "charge failed"
+    },
+    {
+      "from": "welcome",
+      "to": "unsubscribed",
+      "trigger": "Unsubscribe"
+    },
+    {
+      "from": "stalled-day2",
+      "to": "unsubscribed",
+      "trigger": "Unsubscribe"
+    },
+    {
+      "from": "trial-exhausted",
+      "to": "unsubscribed",
+      "trigger": "Unsubscribe"
+    },
+    {
+      "from": "unpublished-build",
+      "to": "unsubscribed",
+      "trigger": "Unsubscribe"
+    },
+    {
+      "from": "machine-reaped",
+      "to": "unsubscribed",
+      "trigger": "Unsubscribe"
+    },
+    {
+      "from": "dunning",
+      "to": "unsubscribed",
+      "trigger": "Unsubscribe"
+    },
+    {
+      "from": "product-update",
+      "to": "unsubscribed",
+      "trigger": "Unsubscribe"
+    }
+  ]
+}
