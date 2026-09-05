@@ -10,6 +10,7 @@ build/
 # vite
 .vite/
 packages/**/dist/
+packages/**/dist-embed/
 apps/**/dist/
 
 # generated maps (users run the tool here; don't commit their app maps)

@@ -7,23 +7,76 @@
 :root {
   --ss-sketch-font: "Kalam", "Comic Sans MS", cursive;
   --ss-ui-font: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+
+  /* --- light theme (default) --- */
   --ss-paper: #fdfdfb;
   --ss-paper-2: #f6f5f0;
   --ss-ink: #2b2b2b;
   --ss-ink-soft: #6a6a6a;
   --ss-line: #d9d6cc;
+  --ss-line-strong: #b9b6ac;
+  --ss-faint: #cfccc2;
+  --ss-muted: #a8a49a;
+  --ss-skeleton: #e6e3da;
   --ss-accent: #2f6f8f;
   --ss-accent-soft: #d7e6ee;
+  --ss-accent-soft-hover: #c7ddea;
+  --ss-destructive: #a6432b;
+  --ss-destructive-soft: #f3ddd7;
+  --ss-modal-bg: #efe7d6;
+  --ss-modal-fg: #8a6d2f;
+  --ss-tree-edge: #8a8f95;
+  --ss-tree-edge-label: #6a6a6a;
+  --ss-flow-edge: #b9a9dd;
+  --ss-flow-edge-label: #7a6fa5;
+  --ss-loop: #0f766e;
+  --ss-dot: #e2e0d8;
+  --ss-minimap-stroke: #8a877c;
+  --ss-minimap-mask: rgba(230, 228, 218, 0.75);
+  --ss-minimap-fallback: #c9c5b8;
+  --ss-shadow: rgba(0, 0, 0, 0.06);
 }
 
-* {
+/* --- dark theme: applied on the themed root (`data-theme="dark"`), so it
+   cascades to every descendant without touching anything outside it --- */
+.ss-scope[data-theme="dark"] {
+  --ss-paper: #1c1d1f;
+  --ss-paper-2: #232427;
+  --ss-ink: #ececea;
+  --ss-ink-soft: #a7a5a0;
+  --ss-line: #3a3b3e;
+  --ss-line-strong: #55575b;
+  --ss-faint: #4a4b4e;
+  --ss-muted: #86847e;
+  --ss-skeleton: #3a3b3e;
+  --ss-accent: #6fb6e0;
+  --ss-accent-soft: #24404e;
+  --ss-accent-soft-hover: #2d4d5d;
+  --ss-destructive: #e5876c;
+  --ss-destructive-soft: #4a2a22;
+  --ss-modal-bg: #4a3d22;
+  --ss-modal-fg: #e0c27a;
+  --ss-tree-edge: #9a9ea3;
+  --ss-tree-edge-label: #b7b5b0;
+  --ss-flow-edge: #a893d6;
+  --ss-flow-edge-label: #c3b3ea;
+  --ss-loop: #4fd1c0;
+  --ss-dot: #2c2d30;
+  --ss-minimap-stroke: #9a978d;
+  --ss-minimap-mask: rgba(10, 10, 11, 0.72);
+  --ss-minimap-fallback: #55575b;
+  --ss-shadow: rgba(0, 0, 0, 0.5);
+}
+
+/* --- scoping: everything below is confined to `.ss-scope` (the mount root),
+   never to `html`/`body`/`#root` or a bare `*` — an embedded instance must not
+   restyle the host page or collide with a host `#root` it doesn't own. --- */
+.ss-scope,
+.ss-scope * {
   box-sizing: border-box;
 }
 
-html,
-body,
-#root {
-  margin: 0;
+.ss-scope {
   height: 100%;
   background: var(--ss-paper);
   color: var(--ss-ink);
@@ -80,7 +133,7 @@ body,
   cursor: pointer;
 }
 .ss-export-btn:hover {
-  background: #c7ddea;
+  background: var(--ss-accent-soft-hover);
 }
 .ss-export-btn:disabled {
   opacity: 0.6;
@@ -119,6 +172,22 @@ body,
 }
 .react-flow__renderer {
   background: var(--ss-paper);
+}
+/* xyflow's Controls panel has no color-token props (unlike Background/
+   MiniMap), so it's themed with plain CSS here instead. */
+.react-flow__controls {
+  box-shadow: 0 0 2px 1px var(--ss-shadow);
+}
+.react-flow__controls-button {
+  background: var(--ss-paper);
+  border-bottom: 1px solid var(--ss-line);
+  color: var(--ss-ink);
+}
+.react-flow__controls-button:hover {
+  background: var(--ss-paper-2);
+}
+.react-flow__controls-button svg {
+  fill: var(--ss-ink);
 }
 
 /* --- screen node (the wireframe) --- */
@@ -168,7 +237,7 @@ body,
 }
 .ss-screen-desc {
   font-size: 11px;
-  color: #7c786e;
+  color: var(--ss-ink-soft);
   line-height: 1.25;
   margin-top: 3px;
   font-family: var(--ss-ui-font);
@@ -185,8 +254,8 @@ body,
   letter-spacing: 0.03em;
   padding: 1px 6px;
   border-radius: 8px;
-  background: #efe7d6;
-  color: #8a6d2f;
+  background: var(--ss-modal-bg);
+  color: var(--ss-modal-fg);
 }
 /* --- banded layout (top nav / main / bottom bar) --- */
 .ss-screen-layout {
@@ -289,7 +358,7 @@ body,
   position: relative;
   padding: 0 8px;
   font-size: 12px;
-  color: #a8a49a;
+  color: var(--ss-muted);
   line-height: 1.1;
 }
 .ss-prim-textarea {
@@ -314,7 +383,7 @@ body,
   font-weight: 700;
 }
 .ss-btn-destructive .ss-prim-btn-label {
-  color: #a6432b;
+  color: var(--ss-destructive);
 }
 .ss-btn-link {
   min-width: 0;
@@ -351,7 +420,7 @@ body,
 .ss-prim-divider-label {
   position: relative;
   font-size: 10px;
-  color: #a8a49a;
+  color: var(--ss-muted);
   background: var(--ss-paper);
   padding: 0 6px;
   text-transform: uppercase;
@@ -381,7 +450,7 @@ body,
 /* --- descriptive (tool-summarized) labels read distinctly --- */
 .ss-descriptive {
   font-style: italic;
-  color: #9a968c;
+  color: var(--ss-muted);
 }
 
 /* --- list: real column headers + skeleton rows (no fake "Item one") --- */
@@ -419,7 +488,7 @@ body,
 .ss-list-row {
   height: 5px;
   border-radius: 3px;
-  background: repeating-linear-gradient(90deg, #e6e3da 0 40%, transparent 40% 46%, #e6e3da 46% 100%);
+  background: repeating-linear-gradient(90deg, var(--ss-skeleton) 0 40%, transparent 40% 46%, var(--ss-skeleton) 46% 100%);
   opacity: 0.7;
 }
 .ss-list-row:nth-child(2) {
@@ -444,7 +513,7 @@ body,
 .ss-subcard-line {
   height: 5px;
   border-radius: 3px;
-  background: #e6e3da;
+  background: var(--ss-skeleton);
   opacity: 0.7;
 }
 .ss-subcard-line-short {
@@ -526,6 +595,21 @@ body,
   pointer-events: none;
 }
 
+/* --- loop/automation edges: labels for LoopEdge (self-loops + back-edges to
+   an ancestor). Rendered via EdgeLabelRenderer (an HTML overlay), not SVG
+   text, so it gets a real border/background instead of labelStyle/labelBgStyle
+   SVG-fill conventions. */
+.ss-loop-label {
+  font-family: var(--ss-sketch-font);
+  font-size: 11px;
+  color: var(--ss-loop);
+  background: var(--ss-paper);
+  border: 1.5px solid var(--ss-loop);
+  border-radius: 5px;
+  padding: 1px 6px;
+  white-space: nowrap;
+}
+
 /* --- screen title row: name + section/root badge --- */
 .ss-screen-titlerow {
   display: flex;
@@ -553,12 +637,12 @@ body,
   letter-spacing: 0.05em;
   padding: 1px 7px;
   border-radius: 8px;
-  background: #2f6f8f;
-  color: #fdfdfb;
+  background: var(--ss-accent);
+  color: var(--ss-paper);
 }
 /* the journey root screen gets a bolder frame */
 .ss-screen-root .ss-screen-name {
-  color: #2f6f8f;
+  color: var(--ss-accent);
 }
 
 /* --- detail panel --- */
@@ -572,7 +656,7 @@ body,
   border-left: 1px solid var(--ss-line);
   padding: 16px 18px;
   overflow-y: auto;
-  box-shadow: -4px 0 16px rgba(0, 0, 0, 0.06);
+  box-shadow: -4px 0 16px var(--ss-shadow);
 }
 .ss-detail-head {
   display: flex;
@@ -591,6 +675,43 @@ body,
   cursor: pointer;
   color: var(--ss-ink-soft);
   line-height: 1;
+}
+/* --- host-supplied actions (embed MountOpts.actions) --- */
+.ss-detail-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 12px;
+}
+.ss-detail-action {
+  font-family: var(--ss-ui-font);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 5px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  border: 1.5px solid var(--ss-accent);
+  background: var(--ss-accent-soft);
+  color: var(--ss-accent);
+}
+.ss-detail-action:hover {
+  background: var(--ss-accent-soft-hover);
+}
+.ss-detail-action-primary {
+  background: var(--ss-accent);
+  color: var(--ss-paper);
+}
+.ss-detail-action-primary:hover {
+  filter: brightness(1.08);
+}
+.ss-detail-action-ghost {
+  background: transparent;
+  border-color: var(--ss-line);
+  color: var(--ss-ink-soft);
+}
+.ss-detail-action-ghost:hover {
+  border-color: var(--ss-accent);
+  color: var(--ss-accent);
 }
 .ss-detail-row {
   display: flex;
@@ -662,7 +783,7 @@ body,
 }
 .ss-detail-note {
   font-size: 10px;
-  color: #a6432b;
+  color: var(--ss-destructive);
   width: 100%;
 }
 .ss-detail-elements {
@@ -702,8 +823,8 @@ body,
   color: var(--ss-accent);
 }
 .ss-detail-tag.ss-req {
-  background: #f3ddd7;
-  color: #a6432b;
+  background: var(--ss-destructive-soft);
+  color: var(--ss-destructive);
 }
 
 /* --- loading / error --- */
@@ -720,7 +841,7 @@ body,
 .ss-error pre {
   font-family: var(--ss-ui-font);
   font-size: 13px;
-  color: #a6432b;
+  color: var(--ss-destructive);
   background: var(--ss-paper-2);
   padding: 12px 16px;
   border-radius: 6px;
@@ -763,7 +884,7 @@ body,
   letter-spacing: 0.06em;
   padding: 3px 12px;
   border-radius: 12px;
-  background: color-mix(in srgb, var(--ss-section-color) 16%, #fdfdfb);
+  background: color-mix(in srgb, var(--ss-section-color) 16%, var(--ss-paper));
   color: var(--ss-section-color);
 }
 .ss-overview-start {
@@ -776,7 +897,7 @@ body,
   margin-left: -3px;
 }
 .ss-section-badge {
-  background: color-mix(in srgb, var(--ss-section-color, var(--ss-accent)) 14%, #fdfdfb);
+  background: color-mix(in srgb, var(--ss-section-color, var(--ss-accent)) 14%, var(--ss-paper));
   color: var(--ss-section-color, var(--ss-accent));
 }
 
@@ -797,7 +918,7 @@ body,
   padding: 4px 10px;
   border: 1px solid var(--ss-line);
   border-radius: 999px;
-  background: #fff;
+  background: var(--ss-paper);
   color: var(--ss-ink-soft);
   cursor: pointer;
   transition: border-color 0.12s, color 0.12s, background 0.12s;
@@ -808,7 +929,7 @@ body,
 }
 .ss-chip-active {
   border-color: var(--ss-chip-color, var(--ss-accent));
-  background: color-mix(in srgb, var(--ss-chip-color, var(--ss-accent)) 12%, #fff);
+  background: color-mix(in srgb, var(--ss-chip-color, var(--ss-accent)) 12%, var(--ss-paper));
   color: var(--ss-chip-color, var(--ss-accent));
 }
 .ss-chip-dot {

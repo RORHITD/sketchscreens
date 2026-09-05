@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import rough from "roughjs";
+import { cssVar } from "./theme";
 
 /**
  * A hand-drawn rectangular frame that auto-sizes to its content.
@@ -42,11 +43,11 @@ export function RoughFrame({
     const rc = rough.svg(svg);
     svg.appendChild(
       rc.rectangle(2, 2, size.w - 4, size.h - 4, {
-        stroke: "#2b2b2b",
+        stroke: cssVar(svg, "--ss-ink", "#2b2b2b"),
         strokeWidth: 1.1,
         roughness,
         seed,
-        fill: "#fdfdfb",
+        fill: cssVar(svg, "--ss-paper", "#fdfdfb"),
         fillStyle: "solid",
       }),
     );

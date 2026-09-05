@@ -31,6 +31,28 @@ jobs:
       # Build from a clean checkout — guards the "a stranger can run it" story.
       - run: pnpm -r build
 
+      # The embeddable bundle is a separate build (vite.embed.config.ts,
+      # `build:embed` script) — `pnpm -r build` above doesn't touch it. Build
+      # it here and gate on the two things that make it usable as a plain-JS
+      # drop-in: it actually exists, and it hasn't quietly bloated past a size
+      # a host page would balk at loading.
+      - run: pnpm --filter @sketchscreens/renderer build:embed
+
+      - name: Check the embed bundle exists and stays under 800 KB
+        run: |
+          FILE=packages/renderer/dist-embed/sketchscreens-embed.js
+          if [ ! -f "$FILE" ]; then
+            echo "❌ $FILE was not produced by build:embed"
+            exit 1
+          fi
+          SIZE=$(stat -c%s "$FILE" 2>/dev/null || stat -f%z "$FILE")
+          LIMIT=$((800 * 1024))
+          echo "$FILE is $SIZE bytes (limit $LIMIT)"
+          if [ "$SIZE" -ge "$LIMIT" ]; then
+            echo "❌ $FILE is $SIZE bytes — at or over the 800 KB budget"
+            exit 1
+          fi
+
       - run: pnpm -r typecheck
 
       - run: pnpm -r test

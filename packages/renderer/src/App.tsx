@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import {
   Background,
   BackgroundVariant,
@@ -9,16 +9,35 @@ import {
   ReactFlowProvider,
   type Node,
 } from "@xyflow/react";
-import "@xyflow/react/dist/style.css";
+// NOTE: xyflow's stylesheet is intentionally NOT imported here — App.tsx is
+// shared by both the standalone entry (main.tsx) and the embed entry
+// (embed.tsx), and each needs different CSS delivery (a normal asset link vs.
+// a single inlined <style> tag). Each entry point imports it itself.
 import { toPng } from "html-to-image";
 
-import { groupSegments, type ProjectMapT } from "@sketchscreens/core-schema";
+import { groupSegments, type ProjectMapT, type ScreenSpecT } from "@sketchscreens/core-schema";
 import { buildGraph, sectionColors, type AnyNode } from "./layout";
-import { ScreenNode } from "./ScreenNode";
+import { ScreenNode, OVERVIEW_ZOOM } from "./ScreenNode";
+import { LoopEdge } from "./LoopEdge";
 import { loadProjectMap } from "./loadMap";
 import { DetailPanel } from "./DetailPanel";
+import { cssVar } from "./theme";
 
 const nodeTypes = { screen: ScreenNode };
+const edgeTypes = { loop: LoopEdge };
+
+/** A host-supplied action button, rendered at the top of the DetailPanel. */
+export interface ScreenAction {
+  label: string;
+  kind?: "primary" | "ghost";
+  onClick: (screen: ScreenSpecT) => void;
+}
+
+/** Imperative controls handed back to an embedder via a ref. */
+export interface CanvasApi {
+  select: (id: string | null) => void;
+  fit: () => void;
+}
 
 /** Does a screen match the search query (name / route / element labels)? */
 function screenMatches(
@@ -37,16 +56,102 @@ function screenMatches(
   return hay.includes(q.toLowerCase());
 }
 
-function Canvas({ map }: { map: ProjectMapT }) {
+export function Canvas({
+  map,
+  chromeless = false,
+  actions,
+  onSelect,
+  apiRef,
+}: {
+  map: ProjectMapT;
+  /** Hide the brand/logo + map name from the top bar. Everything else stays. */
+  chromeless?: boolean;
+  /** Rendered as buttons at the top of the DetailPanel for the selected screen. */
+  actions?: ScreenAction[];
+  /** Fires whenever selection changes, including deselect (-> null). */
+  onSelect?: (screen: ScreenSpecT | null) => void;
+  /** Populated with imperative controls (select/fit) once mounted. */
+  apiRef?: React.MutableRefObject<CanvasApi | null>;
+}) {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [query, setQuery] = useState("");
   const [sectionFilter, setSectionFilter] = useState<string>("");
   const [exporting, setExporting] = useState(false);
   const flowWrapRef = useRef<HTMLDivElement>(null);
-  const { fitView } = useReactFlow();
+  const { fitView, getViewport, setViewport } = useReactFlow();
 
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const graph = useMemo(() => buildGraph(map), [map]);
+  const rootNode = useMemo(() => graph.nodes.find((n) => n.data.isRoot), [graph.nodes]);
+
+  // A small/short map fits at OVERVIEW_ZOOM (floored — see the `fitView` prop
+  // below) whenever the graph is taller than the canvas box; fitView then
+  // vertically CENTERS that oversized graph, slicing the top half off the root
+  // node — the first thing anyone sees is a beheaded START card, or (in a
+  // short enough box) no root at all: `onlyRenderVisibleElements` doesn't even
+  // mount it. After any fit (initial mount, or an embedder's handle.fit()),
+  // nudge the viewport down — same zoom, so nothing re-scales — until the
+  // root's top edge sits a comfortable ~24px below the canvas top. A no-op
+  // when the root is already comfortably in view (most maps don't hit the
+  // zoom floor at all).
+  const TOP_MARGIN = 24;
+  const openAtTop = useCallback(() => {
+    if (!rootNode) return;
+    const vp = getViewport();
+    const rootTopScreenY = rootNode.position.y * vp.zoom + vp.y;
+    if (rootTopScreenY < TOP_MARGIN) {
+      setViewport({ x: vp.x, y: TOP_MARGIN - rootNode.position.y * vp.zoom, zoom: vp.zoom });
+    }
+  }, [rootNode, getViewport, setViewport]);
+
+  // The initial `fitView` prop applies itself as soon as the graph mounts —
+  // node dimensions are known upfront (buildGraph stamps `initialWidth`/
+  // `initialHeight` on every node precisely so fitView doesn't have to wait on
+  // DOM measurement), so there's no "nodes measured" signal to key off here
+  // the way there would be for an unsized graph. (`useNodesInitialized` looks
+  // like that signal but isn't one in this app: with `onlyRenderVisibleElements`
+  // on, a node scrolled entirely out of the initial viewport never mounts into
+  // the DOM to be measured, so that hook can sit at `false` forever — which is
+  // exactly the "root nowhere in view" case this effect exists to fix.) A
+  // short fixed delay after mount is what's actually reliable: long enough for
+  // the prop-driven fit to have landed, imperceptible to a viewer. Re-runs
+  // whenever the graph is rebuilt (a new `map`, e.g. an embedder's update()),
+  // since `openAtTop` (and the mount it's tied to) changes identity then too.
+  useEffect(() => {
+    const t = setTimeout(openAtTop, 100);
+    return () => clearTimeout(t);
+  }, [openAtTop]);
+
+  // Every selection change (click, deselect, arrives-from/goes-to jump, or an
+  // embedder calling handle.select()) funnels through here so onSelect always
+  // fires and the fit-to-node behavior stays in one place.
+  const selectScreen = useCallback(
+    (id: string | null, opts?: { fit?: boolean }) => {
+      setSelectedId(id);
+      const screen = id ? map.screens.find((s) => s.id === id) ?? null : null;
+      onSelect?.(screen);
+      if (opts?.fit && id) fitView({ nodes: [{ id }], duration: 400, maxZoom: 1 });
+    },
+    [map, onSelect, fitView],
+  );
+
+  // Populate the imperative handle synchronously with the commit (not a
+  // regular effect) so it's ready the instant an embedder's mount() returns.
+  useLayoutEffect(() => {
+    if (!apiRef) return;
+    apiRef.current = {
+      select: (id) => selectScreen(id, { fit: !!id }),
+      fit: () =>
+        void fitView({
+          duration: 300,
+          padding: 0.1,
+          minZoom: map.screens.length <= 12 ? OVERVIEW_ZOOM : undefined,
+        }).then(openAtTop),
+    };
+    return () => {
+      apiRef.current = null;
+    };
+  }, [apiRef, selectScreen, fitView, openAtTop]);
 
   // Top-level sections (sorted) + their identity colors, for the legend.
   const sections = useMemo(() => {
@@ -132,7 +237,7 @@ function Canvas({ map }: { map: ProjectMapT }) {
         let style = { ...e.style };
         if (onPath) {
           // The journey trace outranks everything — visible even mid-hover.
-          style = { ...style, stroke: "#2f6f8f", strokeWidth: 3, opacity: 1 };
+          style = { ...style, stroke: "var(--ss-accent)", strokeWidth: 3, opacity: 1 };
         } else if (hovered) {
           style = hovered.edges.has(e.id)
             ? { ...style, opacity: 1, strokeWidth: Number(style.strokeWidth ?? 1.4) + 1 }
@@ -147,7 +252,7 @@ function Canvas({ map }: { map: ProjectMapT }) {
     [graph.edges, hovered, filtering, activeIds, tracing, path.pairs],
   );
 
-  const onNodeClick = useCallback((_: unknown, node: Node) => setSelectedId(node.id), []);
+  const onNodeClick = useCallback((_: unknown, node: Node) => selectScreen(node.id), [selectScreen]);
   const selectedScreen = useMemo(
     () => map.screens.find((s) => s.id === selectedId) ?? null,
     [map, selectedId],
@@ -158,8 +263,11 @@ function Canvas({ map }: { map: ProjectMapT }) {
     if (!el) return;
     setExporting(true);
     try {
+      // toPng needs a literal color, not a CSS var — read the live paper
+      // token so a dark-themed embed exports on a dark background too.
+      const backgroundColor = cssVar(flowWrapRef.current, "--ss-paper", "#fdfdfb");
       const dataUrl = await toPng(el, {
-        backgroundColor: "#fdfdfb",
+        backgroundColor,
         pixelRatio: 2,
         // Capture the full graph regardless of current pan/zoom.
         width: el.scrollWidth,
@@ -178,8 +286,8 @@ function Canvas({ map }: { map: ProjectMapT }) {
   return (
     <div className="ss-root">
       <header className="ss-topbar">
-        <span className="ss-logo">SketchScreens</span>
-        <span className="ss-map-name">{map.name}</span>
+        {!chromeless && <span className="ss-logo">SketchScreens</span>}
+        {!chromeless && <span className="ss-map-name">{map.name}</span>}
         <span className="ss-surface-badge">{map.surface}</span>
         <div className="ss-topbar-tools">
           <input
@@ -237,26 +345,36 @@ function Canvas({ map }: { map: ProjectMapT }) {
           nodes={nodes}
           edges={edges}
           nodeTypes={nodeTypes}
+          edgeTypes={edgeTypes}
           onNodeClick={onNodeClick}
           onNodeMouseEnter={(_, n) => setHoveredId(n.id)}
           onNodeMouseLeave={() => setHoveredId(null)}
-          onPaneClick={() => setSelectedId(null)}
+          onPaneClick={() => selectScreen(null)}
           fitView
+          /* A small map opens at sketch zoom, not as overview cards. fitView
+             on a tall home page in a 70vh box lands under OVERVIEW_ZOOM and the
+             first thing anybody sees is three blank rectangles — the detail
+             is there, one scroll-wheel notch away, which is one notch too
+             many for a first impression. Floor the initial zoom for maps
+             that fit in a screenful; a forty-screen map still opens as an
+             overview, which for forty screens is the right first view. */
+          fitViewOptions={{ padding: 0.1, minZoom: map.screens.length <= 12 ? OVERVIEW_ZOOM : undefined }}
           minZoom={0.1}
           nodesDraggable={false}
           onlyRenderVisibleElements
           proOptions={{ hideAttribution: true }}
         >
-          <Background variant={BackgroundVariant.Dots} gap={20} size={1} color="#e2e0d8" />
+          <Background variant={BackgroundVariant.Dots} gap={20} size={1} color="var(--ss-dot)" />
           <Controls showInteractive={false} />
           <MiniMap
             pannable
             zoomable
-            nodeColor={(n) => (n.data?.sectionColor as string) ?? "#c9c5b8"}
-            nodeStrokeColor="#8a877c"
+            bgColor="var(--ss-paper-2)"
+            nodeColor={(n) => (n.data?.sectionColor as string) ?? "var(--ss-minimap-fallback)"}
+            nodeStrokeColor="var(--ss-minimap-stroke)"
             nodeStrokeWidth={2}
-            maskColor="rgba(230,228,218,0.75)"
-            style={{ border: "1px solid #d9d6cc", borderRadius: 6 }}
+            maskColor="var(--ss-minimap-mask)"
+            style={{ border: "1px solid var(--ss-line)", borderRadius: 6 }}
           />
         </ReactFlow>
 
@@ -265,11 +383,9 @@ function Canvas({ map }: { map: ProjectMapT }) {
             screen={selectedScreen}
             map={map}
             repoRoot={map.meta?.repoRoot}
-            onSelect={(id) => {
-              setSelectedId(id);
-              fitView({ nodes: [{ id }], duration: 400, maxZoom: 1 });
-            }}
-            onClose={() => setSelectedId(null)}
+            actions={actions}
+            onSelect={(id) => selectScreen(id, { fit: true })}
+            onClose={() => selectScreen(null)}
           />
         )}
       </div>

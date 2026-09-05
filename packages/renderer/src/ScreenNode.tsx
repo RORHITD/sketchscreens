@@ -12,7 +12,7 @@ import { layoutElements, type Row } from "./elementLayout";
  * means nodes re-render only when the threshold is crossed, not on every
  * zoom tick.
  */
-const OVERVIEW_ZOOM = 0.55;
+export const OVERVIEW_ZOOM = 0.55;
 
 // A small stable hash so each screen's sketch frame has its own hand-drawn
 // wobble (deterministic per id — same screen redraws identically).
@@ -139,6 +139,14 @@ export function ScreenNode({ data, selected }: NodeProps<ScreenNodeType>) {
  * bottom/left/right) so the layout can route each edge through the side that
  * actually faces its other end — backward/sideways nav edges no longer loop
  * from the bottom all the way around to the top.
+ *
+ * `sloop`/`tloop` are a SECOND pair of right-side handles, offset to the
+ * upper-right corner instead of dead center, reserved for self-loop edges
+ * (LoopEdge). A node can carry both a back-edge to an ancestor (anchored at
+ * `sr`, mid-height) and a self-loop (anchored at `sloop`) at once — see
+ * examples/automation-loop.map.json's "Job runner" node — and without a
+ * separate anchor point the two would leave from the exact same pixel and
+ * read as one tangled line instead of two distinct loops.
  */
 function NodeHandles() {
   return (
@@ -149,6 +157,8 @@ function NodeHandles() {
       <Handle id="sb" type="source" position={Position.Bottom} className="ss-handle-hidden" />
       <Handle id="sl" type="source" position={Position.Left} className="ss-handle-hidden" />
       <Handle id="sr" type="source" position={Position.Right} className="ss-handle-hidden" />
+      <Handle id="tloop" type="target" position={Position.Right} className="ss-handle-hidden" style={{ top: "28%" }} />
+      <Handle id="sloop" type="source" position={Position.Right} className="ss-handle-hidden" style={{ top: "28%" }} />
     </>
   );
 }

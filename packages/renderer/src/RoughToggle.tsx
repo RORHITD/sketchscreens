@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import rough from "roughjs";
+import { cssVar } from "./theme";
 
 /**
  * A hand-drawn on/off toggle drawn with rough.js.
@@ -19,15 +20,16 @@ export function RoughToggle({ on = false, seed = 5 }: { on?: boolean; seed?: num
     svg.setAttribute("viewBox", `0 0 ${w} ${h}`);
     while (svg.firstChild) svg.removeChild(svg.firstChild);
     const rc = rough.svg(svg);
+    const ink = cssVar(svg, "--ss-ink", "#2b2b2b");
     // Track (a rounded-ish rectangle; rough.js has no rounded rect, so a plain
     // one reads fine at sketch fidelity).
     svg.appendChild(
       rc.rectangle(1, 3, w - 2, h - 6, {
-        stroke: "#2b2b2b",
+        stroke: ink,
         strokeWidth: 1,
         roughness: 1.2,
         seed,
-        fill: on ? "#d7e6ee" : "transparent",
+        fill: on ? cssVar(svg, "--ss-accent-soft", "#d7e6ee") : "transparent",
         fillStyle: "solid",
       }),
     );
@@ -35,11 +37,11 @@ export function RoughToggle({ on = false, seed = 5 }: { on?: boolean; seed?: num
     const knobX = on ? w - 8 : 8;
     svg.appendChild(
       rc.circle(knobX, h / 2, 12, {
-        stroke: "#2b2b2b",
+        stroke: ink,
         strokeWidth: 1,
         roughness: 1.1,
         seed: seed + 1,
-        fill: "#fdfdfb",
+        fill: cssVar(svg, "--ss-paper", "#fdfdfb"),
         fillStyle: "solid",
       }),
     );

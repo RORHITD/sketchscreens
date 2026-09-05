@@ -151,9 +151,37 @@ export function buildGraph(map: ProjectMapT): { nodes: AnyNode[]; edges: Edge[] 
       : { sourceHandle: "sl", targetHandle: "tr" };
   }
 
+  // A tree edge (parent -> child) that ALSO appears as a real navigation edge
+  // in `map.edges` gets that edge's trigger as its label instead of drawing a
+  // second, faint, duplicate arrow on top of it. First match wins when the map
+  // (rarely) lists the same from->to pair more than once.
+  const edgeTrigger = new Map<string, string | undefined>();
+  for (const edge of map.edges) {
+    const key = `${edge.from}->${edge.to}`;
+    if (!edgeTrigger.has(key)) edgeTrigger.set(key, edge.trigger);
+  }
+
+  // child id -> its tree parent, for the ancestor check below.
+  const treeParent = new Map(treeEdges.map(({ from, to }) => [to, from]));
+
+  /** Is `candidate` an ancestor of `id` in the journey tree? */
+  function isAncestor(candidate: string, id: string): boolean {
+    const seen = new Set<string>();
+    let cur = treeParent.get(id);
+    while (cur && !seen.has(cur)) {
+      if (cur === candidate) return true;
+      seen.add(cur);
+      cur = treeParent.get(cur);
+    }
+    return false;
+  }
+
   const edges: Edge[] = [];
-  // Structural journey edges (solid, arrowed — the dominant layer).
+  // Structural journey edges (solid, arrowed — the dominant layer). Labeled
+  // whenever a real nav edge lines up with this exact parent->child hop.
   treeEdges.forEach(({ from, to }, i) => {
+    const key = `${from}->${to}`;
+    const trigger = edgeTrigger.get(key);
     edges.push({
       id: `tree-${i}-${from}-${to}`,
       source: from,
@@ -161,15 +189,49 @@ export function buildGraph(map: ProjectMapT): { nodes: AnyNode[]; edges: Edge[] 
       sourceHandle: "sb",
       targetHandle: "tt",
       type: "smoothstep",
-      style: { stroke: "#8a8f95", strokeWidth: 2 },
-      markerEnd: { type: MarkerType.ArrowClosed, color: "#8a8f95", width: 16, height: 16 },
+      label: trigger,
+      style: { stroke: "var(--ss-tree-edge)", strokeWidth: 2 },
+      markerEnd: { type: MarkerType.ArrowClosed, color: "var(--ss-tree-edge)", width: 16, height: 16 },
+      labelStyle: { fill: "var(--ss-tree-edge-label)", fontSize: 11, fontFamily: "var(--ss-sketch-font)" },
+      labelBgStyle: { fill: "var(--ss-paper)", fillOpacity: 0.9 },
       selectable: false,
     });
   });
-  // Secondary nav edges (dashed, arrowed) — skip ones that duplicate a tree edge.
+  // Secondary nav edges (dashed, arrowed) — skip ones that duplicate a tree
+  // edge (its trigger already labels the tree edge above).
   const treeKey = new Set(treeEdges.map((e) => `${e.from}->${e.to}`));
   map.edges.forEach((edge, i) => {
     if (treeKey.has(`${edge.from}->${edge.to}`)) return;
+
+    // Automation/loop edges — a self-loop, an explicit `kind: "loop"`, or a
+    // target that's an ancestor of its source in the journey tree (A -> ... ->
+    // B -> A). These are cycles, not "another route to a new place"; drawing
+    // them like the faint secondary layer would bury the one thing a reviewer
+    // most needs to notice ("this re-fires on its own"). They get their own
+    // edge type (LoopEdge) so a self-loop can render as a visible loop and a
+    // back-edge can bulge clear of the backbone instead of crossing it.
+    const isSelfLoop = edge.from === edge.to;
+    const isLoop = isSelfLoop || edge.kind === "loop" || isAncestor(edge.to, edge.from);
+    if (isLoop) {
+      // Self-loops get their own upper-right anchor (sloop/tloop) so they
+      // don't leave from the exact same pixel as a back-edge to an ancestor
+      // that also happens to originate on this node (sr/tr, mid-height) —
+      // see NodeHandles in ScreenNode.tsx.
+      edges.push({
+        id: `loop-${i}-${edge.from}-${edge.to}`,
+        source: edge.from,
+        target: edge.to,
+        sourceHandle: isSelfLoop ? "sloop" : "sr",
+        targetHandle: isSelfLoop ? "tloop" : "tr",
+        type: "loop",
+        data: { isSelfLoop },
+        label: edge.trigger ? `↻ ${edge.trigger}` : "↻",
+        style: { stroke: "var(--ss-loop)", strokeWidth: 2.5, strokeDasharray: "3 6" },
+        markerEnd: { type: MarkerType.ArrowClosed, color: "var(--ss-loop)", width: 16, height: 16 },
+      });
+      return;
+    }
+
     edges.push({
       id: `flow-${i}-${edge.from}-${edge.to}`,
       source: edge.from,
@@ -178,10 +240,10 @@ export function buildGraph(map: ProjectMapT): { nodes: AnyNode[]; edges: Edge[] 
       label: edge.trigger,
       type: "bezier",
       animated: false,
-      style: { stroke: "#b9a9dd", strokeWidth: 1.4, strokeDasharray: "5 4" },
-      markerEnd: { type: MarkerType.ArrowClosed, color: "#b9a9dd", width: 14, height: 14 },
-      labelStyle: { fill: "#7a6fa5", fontSize: 11, fontFamily: "var(--ss-sketch-font)" },
-      labelBgStyle: { fill: "#fdfdfb", fillOpacity: 0.85 },
+      style: { stroke: "var(--ss-flow-edge)", strokeWidth: 1.4, strokeDasharray: "5 4" },
+      markerEnd: { type: MarkerType.ArrowClosed, color: "var(--ss-flow-edge)", width: 14, height: 14 },
+      labelStyle: { fill: "var(--ss-flow-edge-label)", fontSize: 11, fontFamily: "var(--ss-sketch-font)" },
+      labelBgStyle: { fill: "var(--ss-paper)", fillOpacity: 0.85 },
     });
   });
 
