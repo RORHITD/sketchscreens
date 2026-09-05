@@ -1,6 +1,6 @@
 {
   "name": "@sketchscreens/renderer",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Renders a ProjectMap as an interactive canvas of hand-drawn screen wireframes connected by flow arrows.",
   "keywords": [
     "wireframe",
@@ -48,7 +48,7 @@
   ],
   "dependencies": {
     "@dagrejs/dagre": "3.0.0",
-    "@sketchscreens/core-schema": "^0.1.3",
+    "@sketchscreens/core-schema": "^0.1.5",
     "@xyflow/react": "12.11.1",
     "html-to-image": "1.11.13",
     "react": "19.2.7",

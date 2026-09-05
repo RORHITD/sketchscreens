@@ -82,6 +82,17 @@ test("rejects a self-referential edge", () => {
   assert.ok(result.issues.some((i) => i.code === "self_edge"));
 });
 
+test("accepts a self-referential edge explicitly flagged kind: loop", () => {
+  const result = validateProjectMap({
+    name: "RetryLoop",
+    surface: "web",
+    screens: [{ id: "a", name: "A", elements: [] }],
+    edges: [{ from: "a", to: "a", trigger: "retry until claimed", kind: "loop" }],
+  });
+  assert.equal(result.ok, true);
+  assert.ok(!result.issues.some((i) => i.code === "self_edge"));
+});
+
 test("accepts a valid journey with parent + isEntry", () => {
   const result = validateProjectMap({
     name: "Journey",

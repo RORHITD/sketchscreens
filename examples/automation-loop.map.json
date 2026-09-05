@@ -1,0 +1,58 @@
+{
+  "version": 1,
+  "name": "Automation — Retry Loop",
+  "surface": "backend",
+  "meta": {
+    "generator": "hand-written for loop-edge rendering test",
+    "extraction": "manual",
+    "generatedAt": "2026-09-05"
+  },
+  "screens": [
+    {
+      "id": "scheduler",
+      "name": "Scheduler",
+      "isEntry": true,
+      "route": "cron: claimNextJob",
+      "sourceFile": "src/scheduler.ts",
+      "description": "Fires on a timer, forever. Every tick looks for one unclaimed job and hands it to a worker.",
+      "elements": [
+        { "type": "heading", "label": "Scheduler tick" },
+        { "type": "text", "label": "Every hour, on the hour" },
+        { "type": "list", "label": "unclaimed → claimed → job started", "labelKind": "descriptive" }
+      ]
+    },
+    {
+      "id": "job",
+      "name": "Job runner",
+      "parent": "scheduler",
+      "route": "runJob(id)",
+      "sourceFile": "src/worker.ts",
+      "group": "Automatic",
+      "description": "Runs the claimed job. If nothing claims it before the lock expires, it falls back to the scheduler for another pass — and it may retry itself in place before giving up.",
+      "elements": [
+        { "type": "heading", "label": "Running job" },
+        { "type": "text", "label": "Holds a lease while it works" },
+        { "type": "button", "label": "Mark complete", "variant": "primary", "align": "center" }
+      ]
+    },
+    {
+      "id": "outcome",
+      "name": "Job outcome",
+      "parent": "job",
+      "route": "recordOutcome(id)",
+      "sourceFile": "src/worker.ts",
+      "group": "Automatic",
+      "description": "Terminal state once a run finishes cleanly. Nothing loops back from here.",
+      "elements": [
+        { "type": "heading", "label": "Job finished" },
+        { "type": "text", "label": "Result recorded, lease released" }
+      ]
+    }
+  ],
+  "edges": [
+    { "from": "scheduler", "to": "job", "trigger": "claims a job" },
+    { "from": "job", "to": "outcome", "trigger": "completes" },
+    { "from": "job", "to": "scheduler", "trigger": "every hour", "kind": "loop" },
+    { "from": "job", "to": "job", "trigger": "retry until claimed", "kind": "loop" }
+  ]
+}

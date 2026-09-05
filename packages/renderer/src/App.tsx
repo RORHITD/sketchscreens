@@ -18,11 +18,13 @@ import { toPng } from "html-to-image";
 import { groupSegments, type ProjectMapT, type ScreenSpecT } from "@sketchscreens/core-schema";
 import { buildGraph, sectionColors, type AnyNode } from "./layout";
 import { ScreenNode, OVERVIEW_ZOOM } from "./ScreenNode";
+import { LoopEdge } from "./LoopEdge";
 import { loadProjectMap } from "./loadMap";
 import { DetailPanel } from "./DetailPanel";
 import { cssVar } from "./theme";
 
 const nodeTypes = { screen: ScreenNode };
+const edgeTypes = { loop: LoopEdge };
 
 /** A host-supplied action button, rendered at the top of the DetailPanel. */
 export interface ScreenAction {
@@ -76,7 +78,49 @@ export function Canvas({
   const [sectionFilter, setSectionFilter] = useState<string>("");
   const [exporting, setExporting] = useState(false);
   const flowWrapRef = useRef<HTMLDivElement>(null);
-  const { fitView } = useReactFlow();
+  const { fitView, getViewport, setViewport } = useReactFlow();
+
+  const [hoveredId, setHoveredId] = useState<string | null>(null);
+  const graph = useMemo(() => buildGraph(map), [map]);
+  const rootNode = useMemo(() => graph.nodes.find((n) => n.data.isRoot), [graph.nodes]);
+
+  // A small/short map fits at OVERVIEW_ZOOM (floored — see the `fitView` prop
+  // below) whenever the graph is taller than the canvas box; fitView then
+  // vertically CENTERS that oversized graph, slicing the top half off the root
+  // node — the first thing anyone sees is a beheaded START card, or (in a
+  // short enough box) no root at all: `onlyRenderVisibleElements` doesn't even
+  // mount it. After any fit (initial mount, or an embedder's handle.fit()),
+  // nudge the viewport down — same zoom, so nothing re-scales — until the
+  // root's top edge sits a comfortable ~24px below the canvas top. A no-op
+  // when the root is already comfortably in view (most maps don't hit the
+  // zoom floor at all).
+  const TOP_MARGIN = 24;
+  const openAtTop = useCallback(() => {
+    if (!rootNode) return;
+    const vp = getViewport();
+    const rootTopScreenY = rootNode.position.y * vp.zoom + vp.y;
+    if (rootTopScreenY < TOP_MARGIN) {
+      setViewport({ x: vp.x, y: TOP_MARGIN - rootNode.position.y * vp.zoom, zoom: vp.zoom });
+    }
+  }, [rootNode, getViewport, setViewport]);
+
+  // The initial `fitView` prop applies itself as soon as the graph mounts —
+  // node dimensions are known upfront (buildGraph stamps `initialWidth`/
+  // `initialHeight` on every node precisely so fitView doesn't have to wait on
+  // DOM measurement), so there's no "nodes measured" signal to key off here
+  // the way there would be for an unsized graph. (`useNodesInitialized` looks
+  // like that signal but isn't one in this app: with `onlyRenderVisibleElements`
+  // on, a node scrolled entirely out of the initial viewport never mounts into
+  // the DOM to be measured, so that hook can sit at `false` forever — which is
+  // exactly the "root nowhere in view" case this effect exists to fix.) A
+  // short fixed delay after mount is what's actually reliable: long enough for
+  // the prop-driven fit to have landed, imperceptible to a viewer. Re-runs
+  // whenever the graph is rebuilt (a new `map`, e.g. an embedder's update()),
+  // since `openAtTop` (and the mount it's tied to) changes identity then too.
+  useEffect(() => {
+    const t = setTimeout(openAtTop, 100);
+    return () => clearTimeout(t);
+  }, [openAtTop]);
 
   // Every selection change (click, deselect, arrives-from/goes-to jump, or an
   // embedder calling handle.select()) funnels through here so onSelect always
@@ -97,15 +141,17 @@ export function Canvas({
     if (!apiRef) return;
     apiRef.current = {
       select: (id) => selectScreen(id, { fit: !!id }),
-      fit: () => fitView({ duration: 300, padding: 0.1, minZoom: map.screens.length <= 12 ? OVERVIEW_ZOOM : undefined }),
+      fit: () =>
+        void fitView({
+          duration: 300,
+          padding: 0.1,
+          minZoom: map.screens.length <= 12 ? OVERVIEW_ZOOM : undefined,
+        }).then(openAtTop),
     };
     return () => {
       apiRef.current = null;
     };
-  }, [apiRef, selectScreen, fitView]);
-
-  const [hoveredId, setHoveredId] = useState<string | null>(null);
-  const graph = useMemo(() => buildGraph(map), [map]);
+  }, [apiRef, selectScreen, fitView, openAtTop]);
 
   // Top-level sections (sorted) + their identity colors, for the legend.
   const sections = useMemo(() => {
@@ -299,6 +345,7 @@ export function Canvas({
           nodes={nodes}
           edges={edges}
           nodeTypes={nodeTypes}
+          edgeTypes={edgeTypes}
           onNodeClick={onNodeClick}
           onNodeMouseEnter={(_, n) => setHoveredId(n.id)}
           onNodeMouseLeave={() => setHoveredId(null)}

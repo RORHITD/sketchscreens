@@ -161,6 +161,21 @@ export function buildGraph(map: ProjectMapT): { nodes: AnyNode[]; edges: Edge[] 
     if (!edgeTrigger.has(key)) edgeTrigger.set(key, edge.trigger);
   }
 
+  // child id -> its tree parent, for the ancestor check below.
+  const treeParent = new Map(treeEdges.map(({ from, to }) => [to, from]));
+
+  /** Is `candidate` an ancestor of `id` in the journey tree? */
+  function isAncestor(candidate: string, id: string): boolean {
+    const seen = new Set<string>();
+    let cur = treeParent.get(id);
+    while (cur && !seen.has(cur)) {
+      if (cur === candidate) return true;
+      seen.add(cur);
+      cur = treeParent.get(cur);
+    }
+    return false;
+  }
+
   const edges: Edge[] = [];
   // Structural journey edges (solid, arrowed — the dominant layer). Labeled
   // whenever a real nav edge lines up with this exact parent->child hop.
@@ -187,6 +202,36 @@ export function buildGraph(map: ProjectMapT): { nodes: AnyNode[]; edges: Edge[] 
   const treeKey = new Set(treeEdges.map((e) => `${e.from}->${e.to}`));
   map.edges.forEach((edge, i) => {
     if (treeKey.has(`${edge.from}->${edge.to}`)) return;
+
+    // Automation/loop edges — a self-loop, an explicit `kind: "loop"`, or a
+    // target that's an ancestor of its source in the journey tree (A -> ... ->
+    // B -> A). These are cycles, not "another route to a new place"; drawing
+    // them like the faint secondary layer would bury the one thing a reviewer
+    // most needs to notice ("this re-fires on its own"). They get their own
+    // edge type (LoopEdge) so a self-loop can render as a visible loop and a
+    // back-edge can bulge clear of the backbone instead of crossing it.
+    const isSelfLoop = edge.from === edge.to;
+    const isLoop = isSelfLoop || edge.kind === "loop" || isAncestor(edge.to, edge.from);
+    if (isLoop) {
+      // Self-loops get their own upper-right anchor (sloop/tloop) so they
+      // don't leave from the exact same pixel as a back-edge to an ancestor
+      // that also happens to originate on this node (sr/tr, mid-height) —
+      // see NodeHandles in ScreenNode.tsx.
+      edges.push({
+        id: `loop-${i}-${edge.from}-${edge.to}`,
+        source: edge.from,
+        target: edge.to,
+        sourceHandle: isSelfLoop ? "sloop" : "sr",
+        targetHandle: isSelfLoop ? "tloop" : "tr",
+        type: "loop",
+        data: { isSelfLoop },
+        label: edge.trigger ? `↻ ${edge.trigger}` : "↻",
+        style: { stroke: "var(--ss-loop)", strokeWidth: 2.5, strokeDasharray: "3 6" },
+        markerEnd: { type: MarkerType.ArrowClosed, color: "var(--ss-loop)", width: 16, height: 16 },
+      });
+      return;
+    }
+
     edges.push({
       id: `flow-${i}-${edge.from}-${edge.to}`,
       source: edge.from,

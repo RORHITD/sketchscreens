@@ -29,6 +29,7 @@
   --ss-tree-edge-label: #6a6a6a;
   --ss-flow-edge: #b9a9dd;
   --ss-flow-edge-label: #7a6fa5;
+  --ss-loop: #0f766e;
   --ss-dot: #e2e0d8;
   --ss-minimap-stroke: #8a877c;
   --ss-minimap-mask: rgba(230, 228, 218, 0.75);
@@ -59,6 +60,7 @@
   --ss-tree-edge-label: #b7b5b0;
   --ss-flow-edge: #a893d6;
   --ss-flow-edge-label: #c3b3ea;
+  --ss-loop: #4fd1c0;
   --ss-dot: #2c2d30;
   --ss-minimap-stroke: #9a978d;
   --ss-minimap-mask: rgba(10, 10, 11, 0.72);
@@ -591,6 +593,21 @@
   border: none;
   background: transparent;
   pointer-events: none;
+}
+
+/* --- loop/automation edges: labels for LoopEdge (self-loops + back-edges to
+   an ancestor). Rendered via EdgeLabelRenderer (an HTML overlay), not SVG
+   text, so it gets a real border/background instead of labelStyle/labelBgStyle
+   SVG-fill conventions. */
+.ss-loop-label {
+  font-family: var(--ss-sketch-font);
+  font-size: 11px;
+  color: var(--ss-loop);
+  background: var(--ss-paper);
+  border: 1.5px solid var(--ss-loop);
+  border-radius: 5px;
+  padding: 1px 6px;
+  white-space: nowrap;
 }
 
 /* --- screen title row: name + section/root badge --- */

@@ -18,7 +18,7 @@ importers:
   apps/viewer:
     dependencies:
       '@sketchscreens/core-schema':
-        specifier: ^0.1.3
+        specifier: ^0.1.5
         version: link:../../packages/core-schema
       '@sketchscreens/renderer':
         specifier: ^0.1.3
@@ -34,7 +34,7 @@ importers:
   packages/cli:
     dependencies:
       '@sketchscreens/core-schema':
-        specifier: ^0.1.3
+        specifier: ^0.1.5
         version: link:../core-schema
       '@sketchscreens/extractor':
         specifier: ^0.1.3
@@ -65,7 +65,7 @@ importers:
   packages/extractor:
     dependencies:
       '@sketchscreens/core-schema':
-        specifier: ^0.1.3
+        specifier: ^0.1.5
         version: link:../core-schema
     devDependencies:
       '@types/node':
@@ -84,7 +84,7 @@ importers:
         specifier: 3.0.0
         version: 3.0.0
       '@sketchscreens/core-schema':
-        specifier: ^0.1.3
+        specifier: ^0.1.5
         version: link:../core-schema
       '@xyflow/react':
         specifier: 12.11.1

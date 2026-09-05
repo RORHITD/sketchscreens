@@ -105,8 +105,16 @@ export function validateProjectMap(input: unknown): ValidationResult {
     if (!seen.has(edge.to)) {
       err("edge_unknown_to", `Edge #${idx} references unknown target screen "${edge.to}".`, `edges[${idx}].to`);
     }
-    if (edge.from === edge.to) {
-      err("self_edge", `Edge #${idx} points screen "${edge.from}" at itself.`, `edges[${idx}]`);
+    // A screen pointing at itself is invalid EXCEPT a deliberate automation
+    // self-loop (kind: "loop") — a retry/poll that re-fires on the same
+    // screen, which the renderer draws as a visible loop rather than treating
+    // as a mistake.
+    if (edge.from === edge.to && edge.kind !== "loop") {
+      err(
+        "self_edge",
+        `Edge #${idx} points screen "${edge.from}" at itself. Set kind: "loop" if this is a deliberate self-loop.`,
+        `edges[${idx}]`,
+      );
     }
     const key = `${edge.from}->${edge.to}`;
     if (edgeKeys.has(key)) {

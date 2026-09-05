@@ -39,7 +39,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@sketchscreens/core-schema": "^0.1.3",
+    "@sketchscreens/core-schema": "^0.1.5",
     "@sketchscreens/renderer": "^0.1.3"
   },
   "devDependencies": {
