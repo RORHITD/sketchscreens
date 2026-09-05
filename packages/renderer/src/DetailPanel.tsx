@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import type { ProjectMapT, ScreenSpecT } from "@sketchscreens/core-schema";
+import type { ScreenAction } from "./App";
 
 /**
  * Slide-in panel: a screen's provenance + navigation + full element list. The
@@ -10,12 +11,18 @@ export function DetailPanel({
   screen,
   map,
   repoRoot,
+  actions,
   onSelect,
   onClose,
 }: {
   screen: ScreenSpecT;
   map: ProjectMapT;
   repoRoot?: string;
+  /** Host-supplied buttons (an embed's MountOpts.actions). Replaces the
+   * vscode:// Source link with plain text when present; today's behaviour
+   * (a clickable vscode:// link when repoRoot is known) is unchanged when
+   * no actions are given. */
+  actions?: ScreenAction[];
   onSelect: (id: string) => void;
   onClose: () => void;
 }) {
@@ -24,11 +31,13 @@ export function DetailPanel({
     return (id: string) => m.get(id) ?? id;
   }, [map]);
 
+  const hasActions = !!actions && actions.length > 0;
   const arrivesFrom = map.edges.filter((e) => e.to === screen.id);
   const goesTo = map.edges.filter((e) => e.from === screen.id);
-  const sourceHref = screen.sourceFile
-    ? `vscode://file/${(repoRoot ? repoRoot.replace(/\/$/, "") + "/" : "") + screen.sourceFile}`
-    : undefined;
+  const sourceHref =
+    !hasActions && screen.sourceFile
+      ? `vscode://file/${(repoRoot ? repoRoot.replace(/\/$/, "") + "/" : "") + screen.sourceFile}`
+      : undefined;
 
   return (
     <aside className="ss-detail">
@@ -38,6 +47,20 @@ export function DetailPanel({
           ×
         </button>
       </div>
+
+      {hasActions && (
+        <div className="ss-detail-actions">
+          {actions!.map((action, i) => (
+            <button
+              key={i}
+              className={`ss-detail-action ss-detail-action-${action.kind ?? "ghost"}`}
+              onClick={() => action.onClick(screen)}
+            >
+              {action.label}
+            </button>
+          ))}
+        </div>
+      )}
 
       {screen.route && (
         <div className="ss-detail-row">

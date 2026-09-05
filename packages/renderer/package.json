@@ -30,15 +30,21 @@
   "publishConfig": {
     "access": "public"
   },
+  "exports": {
+    "./embed": "./dist-embed/sketchscreens-embed.js",
+    "./package.json": "./package.json"
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "prepack": "vite build",
+    "build:embed": "vite build --config vite.embed.config.ts",
+    "prepack": "vite build && vite build --config vite.embed.config.ts",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit"
   },
   "files": [
-    "dist"
+    "dist",
+    "dist-embed"
   ],
   "dependencies": {
     "@dagrejs/dagre": "3.0.0",
