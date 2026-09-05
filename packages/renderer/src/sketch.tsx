@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import rough from "roughjs";
 import type { RoughSVG } from "roughjs/bin/svg";
+import { cssVar } from "./theme";
 
 /**
  * The hand-drawn primitive kit — all wireframe shapes drawn with rough.js, one
@@ -15,7 +16,14 @@ import type { RoughSVG } from "roughjs/bin/svg";
  * top (the same approach Excalidraw uses).
  */
 
-const INK = "#2b2b2b";
+/**
+ * rough.js needs a literal stroke/fill color, not `var(--ss-ink)` — read the
+ * cascaded value off the (already-mounted) svg node each primitive draws
+ * into. See ./theme.ts.
+ */
+function ink(el: Element): string {
+  return cssVar(el, "--ss-ink", "#2b2b2b");
+}
 
 /**
  * Measure a host element's width with a ResizeObserver and hand it to a draw
@@ -65,7 +73,7 @@ export function SketchInput({
     h,
     (rc, w) => {
       svgRef.current!.appendChild(
-        rc.rectangle(1.5, 1.5, w - 3, h - 3, { stroke: INK, strokeWidth: 0.9, roughness: 1.3, seed }),
+        rc.rectangle(1.5, 1.5, w - 3, h - 3, { stroke: ink(svgRef.current!), strokeWidth: 0.9, roughness: 1.3, seed }),
       );
     },
     [seed],
@@ -85,7 +93,7 @@ export function SketchTextarea({ placeholder, rows = 2, seed = 2 }: { placeholde
     h,
     (rc, w) => {
       svgRef.current!.appendChild(
-        rc.rectangle(1.5, 1.5, w - 3, h - 3, { stroke: INK, strokeWidth: 0.9, roughness: 1.3, seed }),
+        rc.rectangle(1.5, 1.5, w - 3, h - 3, { stroke: ink(svgRef.current!), strokeWidth: 0.9, roughness: 1.3, seed }),
       );
     },
     [seed, rows],
@@ -98,30 +106,35 @@ export function SketchTextarea({ placeholder, rows = 2, seed = 2 }: { placeholde
   );
 }
 
-const BUTTON_FILL: Record<string, string | undefined> = {
-  primary: "#d7e6ee",
-  secondary: undefined,
-  destructive: "#f3ddd7",
-  ghost: undefined,
-  link: undefined,
-};
+/** Resolve a button variant's fill from the current theme (rough.js needs a
+ * literal color, see ink() above). */
+function buttonFill(el: Element, variant: string | undefined): string | undefined {
+  switch (variant) {
+    case "primary":
+      return cssVar(el, "--ss-accent-soft", "#d7e6ee");
+    case "destructive":
+      return cssVar(el, "--ss-destructive-soft", "#f3ddd7");
+    default:
+      return undefined;
+  }
+}
 
 /** A hand-drawn button; variant controls fill/stroke/emphasis. */
 export function SketchButton({ label, variant, seed = 3 }: { label: string; variant?: string; seed?: number }) {
   const h = 28;
   const isLink = variant === "link";
-  const fill = variant ? BUTTON_FILL[variant] : undefined;
   const { hostRef, svgRef } = useRoughDraw(
     h,
     (rc, w) => {
       if (isLink) return; // links are underlined text, no box
-      svgRef.current!.appendChild(
+      const svg = svgRef.current!;
+      svg.appendChild(
         rc.rectangle(1.5, 1.5, w - 3, h - 3, {
-          stroke: variant === "destructive" ? "#a6432b" : INK,
+          stroke: variant === "destructive" ? cssVar(svg, "--ss-destructive", "#a6432b") : ink(svg),
           strokeWidth: variant === "primary" ? 1.3 : 1,
           roughness: 1.2,
           seed,
-          fill,
+          fill: buttonFill(svg, variant),
           fillStyle: "solid",
         }),
       );
@@ -147,10 +160,11 @@ export function SketchCheckbox({ label, checked = false, seed = 4 }: { label?: s
     s,
     (rc) => {
       const svg = svgRef.current!;
-      svg.appendChild(rc.rectangle(1, 1, s - 2, s - 2, { stroke: INK, strokeWidth: 0.9, roughness: 1.1, seed }));
+      const strokeColor = ink(svg);
+      svg.appendChild(rc.rectangle(1, 1, s - 2, s - 2, { stroke: strokeColor, strokeWidth: 0.9, roughness: 1.1, seed }));
       if (checked) {
         svg.appendChild(
-          rc.linearPath([[3, 8], [7, 12], [13, 3]], { stroke: INK, strokeWidth: 1.2, roughness: 0.8, seed }),
+          rc.linearPath([[3, 8], [7, 12], [13, 3]], { stroke: strokeColor, strokeWidth: 1.2, roughness: 0.8, seed }),
         );
       }
     },
@@ -173,8 +187,9 @@ export function SketchRadio({ label, checked = false, seed = 5 }: { label?: stri
     s,
     (rc) => {
       const svg = svgRef.current!;
-      svg.appendChild(rc.circle(s / 2, s / 2, s - 3, { stroke: INK, strokeWidth: 0.9, roughness: 1.1, seed }));
-      if (checked) svg.appendChild(rc.circle(s / 2, s / 2, 6, { stroke: INK, fill: INK, fillStyle: "solid", seed }));
+      const strokeColor = ink(svg);
+      svg.appendChild(rc.circle(s / 2, s / 2, s - 3, { stroke: strokeColor, strokeWidth: 0.9, roughness: 1.1, seed }));
+      if (checked) svg.appendChild(rc.circle(s / 2, s / 2, 6, { stroke: strokeColor, fill: strokeColor, fillStyle: "solid", seed }));
     },
     [checked, seed],
   );
@@ -197,10 +212,11 @@ export function SketchDivider({ label, seed = 6 }: { label?: string; seed?: numb
       const y = h / 2;
       if (label) {
         const gap = 30;
-        svgRef.current!.appendChild(rc.line(0, y, w / 2 - gap, y, { stroke: "#b9b6ac", strokeWidth: 0.8, roughness: 1, seed }));
-        svgRef.current!.appendChild(rc.line(w / 2 + gap, y, w, y, { stroke: "#b9b6ac", strokeWidth: 0.8, roughness: 1, seed }));
+        const lineColor = cssVar(svgRef.current!, "--ss-line-strong", "#b9b6ac");
+        svgRef.current!.appendChild(rc.line(0, y, w / 2 - gap, y, { stroke: lineColor, strokeWidth: 0.8, roughness: 1, seed }));
+        svgRef.current!.appendChild(rc.line(w / 2 + gap, y, w, y, { stroke: lineColor, strokeWidth: 0.8, roughness: 1, seed }));
       } else {
-        svgRef.current!.appendChild(rc.line(0, y, w, y, { stroke: "#b9b6ac", strokeWidth: 0.8, roughness: 1, seed }));
+        svgRef.current!.appendChild(rc.line(0, y, w, y, { stroke: cssVar(svgRef.current!, "--ss-line-strong", "#b9b6ac"), strokeWidth: 0.8, roughness: 1, seed }));
       }
     },
     [label, seed],
@@ -220,11 +236,12 @@ export function SketchSelect({ value, seed = 7 }: { value?: string; seed?: numbe
     h,
     (rc, w) => {
       const svg = svgRef.current!;
-      svg.appendChild(rc.rectangle(1.5, 1.5, w - 3, h - 3, { stroke: INK, strokeWidth: 0.9, roughness: 1.3, seed }));
+      const strokeColor = ink(svg);
+      svg.appendChild(rc.rectangle(1.5, 1.5, w - 3, h - 3, { stroke: strokeColor, strokeWidth: 0.9, roughness: 1.3, seed }));
       const cx = w - 14;
       const cy = h / 2 - 1;
       svg.appendChild(
-        rc.linearPath([[cx - 4, cy - 2], [cx, cy + 3], [cx + 4, cy - 2]], { stroke: INK, strokeWidth: 1, roughness: 1, seed }),
+        rc.linearPath([[cx - 4, cy - 2], [cx, cy + 3], [cx + 4, cy - 2]], { stroke: strokeColor, strokeWidth: 1, roughness: 1, seed }),
       );
     },
     [seed],
@@ -244,10 +261,11 @@ export function SketchImage({ label, seed = 8 }: { label?: string; seed?: number
     h,
     (rc, w) => {
       const svg = svgRef.current!;
-      svg.appendChild(rc.rectangle(1.5, 1.5, w - 3, h - 3, { stroke: "#b9b6ac", strokeWidth: 0.9, roughness: 1.2, seed }));
+      svg.appendChild(rc.rectangle(1.5, 1.5, w - 3, h - 3, { stroke: cssVar(svg, "--ss-line-strong", "#b9b6ac"), strokeWidth: 0.9, roughness: 1.2, seed }));
       // The universal "image" wireframe glyph: an X across the box.
-      svg.appendChild(rc.line(2, 2, w - 2, h - 2, { stroke: "#cfccc2", strokeWidth: 0.8, roughness: 1, seed }));
-      svg.appendChild(rc.line(w - 2, 2, 2, h - 2, { stroke: "#cfccc2", strokeWidth: 0.8, roughness: 1, seed }));
+      const faint = cssVar(svg, "--ss-faint", "#cfccc2");
+      svg.appendChild(rc.line(2, 2, w - 2, h - 2, { stroke: faint, strokeWidth: 0.8, roughness: 1, seed }));
+      svg.appendChild(rc.line(w - 2, 2, 2, h - 2, { stroke: faint, strokeWidth: 0.8, roughness: 1, seed }));
     },
     [seed],
   );
