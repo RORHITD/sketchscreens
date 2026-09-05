@@ -12,7 +12,7 @@ import { layoutElements, type Row } from "./elementLayout";
  * means nodes re-render only when the threshold is crossed, not on every
  * zoom tick.
  */
-const OVERVIEW_ZOOM = 0.55;
+export const OVERVIEW_ZOOM = 0.55;
 
 // A small stable hash so each screen's sketch frame has its own hand-drawn
 // wobble (deterministic per id — same screen redraws identically).

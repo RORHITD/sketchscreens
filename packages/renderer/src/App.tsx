@@ -17,7 +17,7 @@ import { toPng } from "html-to-image";
 
 import { groupSegments, type ProjectMapT, type ScreenSpecT } from "@sketchscreens/core-schema";
 import { buildGraph, sectionColors, type AnyNode } from "./layout";
-import { ScreenNode } from "./ScreenNode";
+import { ScreenNode, OVERVIEW_ZOOM } from "./ScreenNode";
 import { loadProjectMap } from "./loadMap";
 import { DetailPanel } from "./DetailPanel";
 import { cssVar } from "./theme";
@@ -97,7 +97,7 @@ export function Canvas({
     if (!apiRef) return;
     apiRef.current = {
       select: (id) => selectScreen(id, { fit: !!id }),
-      fit: () => fitView({ duration: 300, padding: 0.1 }),
+      fit: () => fitView({ duration: 300, padding: 0.1, minZoom: map.screens.length <= 12 ? OVERVIEW_ZOOM : undefined }),
     };
     return () => {
       apiRef.current = null;
@@ -304,6 +304,14 @@ export function Canvas({
           onNodeMouseLeave={() => setHoveredId(null)}
           onPaneClick={() => selectScreen(null)}
           fitView
+          /* A small map opens at sketch zoom, not as overview cards. fitView
+             on a tall home page in a 70vh box lands under OVERVIEW_ZOOM and the
+             first thing anybody sees is three blank rectangles — the detail
+             is there, one scroll-wheel notch away, which is one notch too
+             many for a first impression. Floor the initial zoom for maps
+             that fit in a screenful; a forty-screen map still opens as an
+             overview, which for forty screens is the right first view. */
+          fitViewOptions={{ padding: 0.1, minZoom: map.screens.length <= 12 ? OVERVIEW_ZOOM : undefined }}
           minZoom={0.1}
           nodesDraggable={false}
           onlyRenderVisibleElements
